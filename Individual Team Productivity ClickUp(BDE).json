@@ -1,0 +1,245 @@
+{
+  "updatedAt": "2025-08-27T10:23:25.000Z",
+  "createdAt": "2025-08-11T18:46:56.248Z",
+  "id": "AHdpdpvp7wMzaMl4",
+  "name": "Individual Team Productivity ClickUp(BDE)",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "26ede84a-64ae-4734-8a7d-1ad54e246fb8",
+      "name": "When clicking 'Execute workflow'",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -784,
+        224
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "// =========================\n// Helper: Parse dates from ClickUp with proper IST handling\n// =========================\nconst parseDate = (dateValue) => {\n  if (!dateValue) return null;\n\n  let date;\n  \n  // Handle Unix timestamp (ClickUp typically uses milliseconds)\n  if (/^\\d+$/.test(String(dateValue))) {\n    const timestamp = Number(dateValue);\n    // ClickUp timestamps are usually in milliseconds\n    date = new Date(timestamp);\n    \n    // If the timestamp seems to be in seconds (very old timestamp), convert to milliseconds\n    if (timestamp < 10000000000) {\n      date = new Date(timestamp * 1000);\n    }\n  } else {\n    // Handle string dates\n    date = new Date(dateValue);\n  }\n\n  return isNaN(date.getTime()) ? null : date;\n};\n\n// =========================\n// Helper: Convert UTC date to IST and get date-only\n// =========================\nconst convertToISTDateOnly = (utcDate) => {\n  if (!utcDate) return null;\n  \n  // Create a new date in IST (UTC + 5:30)\n  const istDate = new Date(utcDate.getTime() + (5.5 * 60 * 60 * 1000));\n  \n  // Return date-only (remove time component)\n  return new Date(istDate.getFullYear(), istDate.getMonth(), istDate.getDate());\n};\n\n// =========================\n// Helper: Get current IST date-only\n// =========================\nconst getCurrentISTDateOnly = () => {\n  const now = new Date();\n  return convertToISTDateOnly(now);\n};\n\n// =========================\n// Helper: Check if due today (IST)\n// =========================\nconst isDueToday = (dueDate) => {\n  if (!dueDate) return false;\n  const today = getCurrentISTDateOnly();\n  const due = convertToISTDateOnly(dueDate);\n  return today.getTime() === due.getTime();\n};\n\n// =========================\n// Helper: Check if due soon (next 3 days, IST)\n// =========================\nconst isDueSoon = (dueDate) => {\n  if (!dueDate) return false;\n  const today = getCurrentISTDateOnly();\n  const due = convertToISTDateOnly(dueDate);\n  const diffDays = Math.floor((due.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));\n  return diffDays >= 1 && diffDays <= 3;\n};\n\n// =========================\n// Helper: Format date to IST string\n// =========================\nconst formatDateIST = (date) => {\n  if (!date) return 'No Due Date';\n  \n  // Convert to IST\n  const istDate = new Date(date.getTime() + (5.5 * 60 * 60 * 1000));\n  \n  return istDate.toLocaleDateString('en-US', { \n    month: 'short', \n    day: 'numeric', \n    year: 'numeric',\n    timeZone: 'UTC' // Since we already converted to IST\n  });\n};\n\n// =========================\n// Helper: Calculate days difference in IST\n// =========================\nconst calculateDaysDifference = (dueDate) => {\n  if (!dueDate) return null;\n  \n  const today = getCurrentISTDateOnly();\n  const due = convertToISTDateOnly(dueDate);\n  \n  return Math.floor((due.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));\n};\n\n// =========================\n// Helper: Normalize status\n// =========================\nconst normalizeStatus = (status) => {\n  if (!status) return 'No Status';\n  const lower = String(status).toLowerCase();\n  if (lower.includes('complete') || lower.includes('done')) return 'Completed';\n  if (lower.includes('progress')) return 'In Progress';\n  if (lower.includes('review')) return 'Review';\n  if (lower.includes('backlog')) return 'Backlog';\n  if (lower.includes('to do') || lower.includes('todo')) return 'To Do';\n  return String(status);\n};\n\n// =========================\n// Helper: Normalize priority\n// =========================\nconst normalizePriority = (priority) => {\n  if (!priority) return 'Normal';\n  const lower = String(priority).toLowerCase();\n  if (lower.includes('urgent')) return 'Urgent';\n  if (lower.includes('high')) return 'High';\n  if (lower.includes('medium')) return 'Medium';\n  if (lower.includes('low')) return 'Low';\n  return String(priority);\n};\n\n// =========================\n// Helper: Safe number parsing\n// =========================\nconst parseNumber = (value, defaultValue = 0) => {\n  if (value === null || value === undefined) return defaultValue;\n  const num = Number(value);\n  return isNaN(num) ? defaultValue : num;\n};\n\n// =========================\n// Helper: Safe array access\n// =========================\nconst safeArray = (value) => Array.isArray(value) ? value : [];\n\n// =========================\n// Main Processing Function\n// =========================\nconst processSprintData = (inputData) => {\n  const allTasksMap = new Map();\n  let inputItems = [];\n\n  if (Array.isArray(inputData)) {\n    inputItems = inputData;\n  } else if (inputData && typeof inputData === 'object') {\n    inputItems = [inputData];\n  } else {\n    return { error: 'Invalid input data format', processedTasks: [], tasksByStatus: {}, tasksByAssignee: {}, summary: {} };\n  }\n\n  // Extract tasks\n  inputItems.forEach((item) => {\n    try {\n      let task = item.json || item;\n      if (task.tasks && Array.isArray(task.tasks)) {\n        task.tasks.forEach(nestedTask => {\n          if (nestedTask && nestedTask.id) allTasksMap.set(nestedTask.id, nestedTask);\n        });\n      } else if (task && task.id) {\n        allTasksMap.set(task.id, task);\n      }\n    } catch (error) {\n      console.error('Error processing input item:', error);\n    }\n  });\n\n  const uniqueTasks = Array.from(allTasksMap.values());\n\n  const processedTasks = uniqueTasks.map((task, index) => {\n    try {\n      const dueDate = parseDate(task.due_date);\n      const startDate = parseDate(task.start_date);\n      const dateCreated = parseDate(task.date_created);\n      const dateUpdated = parseDate(task.date_updated);\n      const dateClosed = parseDate(task.date_closed);\n      const dateDone = parseDate(task.date_done);\n\n      let dueDateStatus = 'No Due Date';\n      let daysDifference = null;\n\n      if (dueDate) {\n        daysDifference = calculateDaysDifference(dueDate);\n\n        if (daysDifference < 0) {\n          dueDateStatus = 'Overdue';\n        } else if (isDueToday(dueDate)) {\n          dueDateStatus = 'Due Today';\n        } else if (isDueSoon(dueDate)) {\n          dueDateStatus = 'Due Soon';\n        } else {\n          dueDateStatus = 'Upcoming';\n        }\n      }\n\n      const assignees = safeArray(task.assignees);\n      const assignee = assignees.length > 0\n        ? assignees[0]\n        : { username: 'Unassigned', email: null, initials: 'NA', color: '#808080' };\n\n      const timeSpentHours = Math.round((parseNumber(task.time_spent) / (1000 * 60 * 60)) * 10) / 10;\n      const timeEstimateHours = Math.round((parseNumber(task.time_estimate) / (1000 * 60 * 60)) * 10) / 10;\n\n      const priority = task.priority || {};\n      const priorityText = priority.priority || priority.name || 'Normal';\n\n      const status = task.status || {};\n      const statusText = status.status || status.name || 'No Status';\n\n      return {\n        id: task.id || `task-${index}`,\n        name: task.name || 'Untitled Task',\n        assignee: assignee.username || 'Unassigned',\n        assigneeEmail: assignee.email,\n        assigneeInitials: assignee.initials || 'NA',\n        assigneeColor: assignee.color || '#808080',\n        dueDate: formatDateIST(dueDate),\n        dueDateRaw: dueDate,\n        dueDateStatus,\n        daysDifference,\n        startDate: startDate ? formatDateIST(startDate) : null,\n        startDateRaw: startDate,\n        priority: normalizePriority(priorityText),\n        priorityLevel: parseNumber(priority.orderindex, 3),\n        priorityColor: priority.color || '#6fddff',\n        sprintPoints: parseNumber(task.points),\n        status: normalizeStatus(statusText),\n        statusOriginal: statusText,\n        statusColor: status.color || '#d3d3d3',\n        url: task.url || '',\n        description: task.description || '',\n        tags: safeArray(task.tags).map(tag => typeof tag === 'string' ? tag : (tag.name || '')).join(', '),\n        dateCreated: dateCreated ? formatDateIST(dateCreated) : '',\n        dateCreatedRaw: dateCreated,\n        dateUpdated: dateUpdated ? formatDateIST(dateUpdated) : '',\n        dateUpdatedRaw: dateUpdated,\n        dateClosed: dateClosed ? formatDateIST(dateClosed) : '',\n        dateDone: dateDone ? formatDateIST(dateDone) : '',\n        timeSpent: timeSpentHours,\n        timeEstimate: timeEstimateHours,\n        timeProgress: timeEstimateHours > 0 ? Math.min(100, Math.round((timeSpentHours / timeEstimateHours) * 100)) : 0,\n        isArchived: Boolean(task.archived),\n        customFields: safeArray(task.custom_fields),\n        dependencies: safeArray(task.dependencies),\n        checklistItems: safeArray(task.checklists).flatMap(cl => safeArray(cl.items || cl.checklist_items)),\n        parentTask: task.parent || null\n      };\n    } catch (error) {\n      console.error(`Error processing task ${task.id || index}:`, error);\n      return null;\n    }\n  }).filter(Boolean);\n\n  // Grouping\n  const tasksByStatus = {};\n  const tasksByAssignee = {};\n  processedTasks.forEach(task => {\n    if (!tasksByStatus[task.status]) tasksByStatus[task.status] = [];\n    tasksByStatus[task.status].push(task);\n\n    if (!tasksByAssignee[task.assignee]) {\n      tasksByAssignee[task.assignee] = { tasks: [], timeSpent: 0, timeEstimate: 0, dueTodayTasks: 0 };\n    }\n    tasksByAssignee[task.assignee].tasks.push(task);\n    tasksByAssignee[task.assignee].timeSpent += task.timeSpent;\n    tasksByAssignee[task.assignee].timeEstimate += task.timeEstimate;\n    if (task.dueDateStatus === 'Due Today') tasksByAssignee[task.assignee].dueTodayTasks++;\n  });\n\n  // Summary\n  const summary = {\n    totalTasks: processedTasks.length,\n    overdueTasks: processedTasks.filter(t => t.dueDateStatus === 'Overdue').length,\n    dueTodayTasks: processedTasks.filter(t => t.dueDateStatus === 'Due Today').length,\n    dueSoonTasks: processedTasks.filter(t => t.dueDateStatus === 'Due Soon').length,\n    completedTasks: processedTasks.filter(t => t.status === 'Completed').length,\n    inProgressTasks: processedTasks.filter(t => t.status === 'In Progress').length\n  };\n\n  // Get current IST date for report\n  const now = new Date();\n  const istNow = new Date(now.getTime() + (5.5 * 60 * 60 * 1000));\n  const reportDate = istNow.toLocaleDateString('en-US', { \n    weekday: 'long', \n    month: 'long', \n    day: 'numeric', \n    year: 'numeric',\n    timeZone: 'UTC'\n  });\n\n  return {\n    processedTasks,\n    tasksByStatus,\n    tasksByAssignee,\n    summary,\n    reportDate\n  };\n};\n\n// =========================\n// Run in n8n\n// =========================\ntry {\n  const inputData = $input.all();\n  const result = processSprintData(inputData);\n  return [{ json: result }];\n} catch (error) {\n  return [{\n    json: {\n      error: error.message,\n      processedTasks: [],\n      tasksByStatus: {},\n      tasksByAssignee: {},\n      summary: {}\n    }\n  }];\n}"
+      },
+      "id": "2bb8c892-2d01-43cc-a610-9480288985a9",
+      "name": "Process Sprint Data",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        -288,
+        208
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "subject": "=Assignee Productivity Report -{{ $now.format('dd-MM-yyyy') }}",
+        "includeHtml": true,
+        "htmlMessage": "={{ $json.htmlReport }}",
+        "message": "Testing click up logs table.",
+        "toList": [
+          "[Enter Your Mail Here]"
+        ],
+        "additionalFields": {
+          "bccList": [],
+          "ccList": []
+        }
+      },
+      "id": "d083b7b4-4636-414c-862d-de3b726ba9e3",
+      "name": "Send Daily Report Email",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 1,
+      "position": [
+        208,
+        176
+      ],
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "gEIaWCTvGfYjMSb3",
+          "name": "Gmail credentials"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "team": "9016683627",
+        "space": "90162844741",
+        "folder": "90164394824",
+        "list": "901610354799",
+        "filters": {}
+      },
+      "type": "n8n-nodes-base.clickUp",
+      "typeVersion": 1,
+      "position": [
+        -528,
+        96
+      ],
+      "id": "9919df8b-2b6c-4eb1-8a70-fa3b6378a3e3",
+      "name": "Get many tasks",
+      "credentials": {
+        "clickUpApi": {
+          "id": "ojaVHQq5eotJ70xs",
+          "name": "ClickUp account 4"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "// =========================\n// HTML Report Generator for n8n\n// =========================\n\nconst generateProductivityReport = (data) => {\n  const { processedTasks } = data;\n\n  // Helper function to get status pill class and color\n  const getStatusPillInfo = (status) => {\n    if (!status) return { class: 'other', color: '#6f42c1' };\n    const statusLower = status.toLowerCase();\n    if (statusLower.includes('complete') || statusLower.includes('done')) {\n      return { class: 'completed', color: '#28a745' };\n    }\n    if (statusLower.includes('progress')) {\n      return { class: 'inprogress', color: '#007bff' };\n    }\n    if (statusLower.includes('todo') || statusLower.includes('backlog')) {\n      return { class: 'todo', color: '#6c757d' };\n    }\n    return { class: 'other', color: '#6f42c1' };\n  };\n\n  // Helper function to format hours to hh:mm format\n  const formatHoursToHHMM = (decimalHours) => {\n    if (!decimalHours || isNaN(decimalHours)) return '0h';\n    const hours = Math.floor(decimalHours);\n    const minutes = Math.round((decimalHours - hours) * 60);\n    return minutes === 0 ? `${hours}h` : `${hours}h ${minutes}m`;\n  };\n\n  // Helper function to convert hh:mm to decimal hours\n  const convertHHMMToDecimal = (timeString) => {\n    if (!timeString || timeString === '0h') return 0;\n    const parts = timeString.split(/[h\\s]+/);\n    const hours = parseInt(parts[0]) || 0;\n    const minutes = parseInt(parts[1]) || 0;\n    return hours + (minutes / 60);\n  };\n\n  // Recalculate daysDifference and dueDateStatus based on current date\n  const currentDate = new Date('2025-08-12T00:00:00Z');\n  processedTasks.forEach(task => {\n    if (task.dueDateRaw) {\n      const due = new Date(task.dueDateRaw);\n      const diffMs = due - currentDate;\n      const diffDays = Math.ceil(diffMs / 86400000);\n      task.daysDifference = diffDays;\n      if (diffDays < 0) {\n        task.dueDateStatus = 'Overdue';\n      } else if (diffDays === 0) {\n        task.dueDateStatus = 'Due Today';\n      } else {\n        task.dueDateStatus = `Due in ${diffDays} days`;\n      }\n    } else {\n      task.daysDifference = null;\n      task.dueDateStatus = 'No Due Date';\n    }\n  });\n\n  // Group tasks by assignee\n  const tasksByAssignee = {};\n  processedTasks.forEach(task => {\n    const assignee = task.assignee || 'Unassigned';\n    if (!tasksByAssignee[assignee]) {\n      tasksByAssignee[assignee] = [];\n    }\n    tasksByAssignee[assignee].push(task);\n  });\n\n  // Calculate overall summary\n  const totalTasks = processedTasks.length;\n  const totalAssignees = Object.keys(tasksByAssignee).length;\n  const completedTasks = processedTasks.filter(task => task.status && (task.status.toLowerCase().includes('complete') || task.status.toLowerCase().includes('done'))).length;\n  const productivityPercentage = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;\n\n  // Generate individual productivity sections\n  const generateIndividualSections = () => {\n    let sections = '';\n    \n    Object.entries(tasksByAssignee).sort((a, b) => a[0].localeCompare(b[0])).forEach(([assignee, assigneeTasks]) => {\n      // Calculate assignee-specific metrics\n      const assigneeTotalTasks = assigneeTasks.length;\n      const assigneeCompleted = assigneeTasks.filter(task => task.status && (task.status.toLowerCase().includes('complete') || task.status.toLowerCase().includes('done'))).length;\n      const assigneeInProgress = assigneeTasks.filter(task => task.status && task.status.toLowerCase().includes('progress')).length;\n      const assigneeTodo = assigneeTasks.filter(task => task.status && (task.status.toLowerCase().includes('todo') || task.status.toLowerCase().includes('backlog'))).length;\n      const assigneeOverdue = assigneeTasks.filter(task => task.daysDifference !== null && task.daysDifference < 0).length;\n      const assigneeProductivity = assigneeTotalTasks > 0 ? Math.round((assigneeCompleted / assigneeTotalTasks) * 100) : 0;\n      \n      let totalEstimate = 0;\n      let totalSpent = 0;\n      let totalSprintPoints = 0;\n      assigneeTasks.forEach(task => {\n        let estimate = typeof task.timeEstimate === 'string' ? convertHHMMToDecimal(task.timeEstimate) : (task.timeEstimate || 0);\n        let spent = typeof task.timeSpent === 'string' ? convertHHMMToDecimal(task.timeSpent) : (task.timeSpent || 0);\n        totalEstimate += estimate;\n        totalSpent += spent;\n        totalSprintPoints += task.sprintPoints || 0;\n      });\n      const efficiency = totalEstimate > 0 ? Math.round((totalSpent / totalEstimate) * 100) : 0;\n\n      // Performance note\n      let performanceNote = '';\n      let performanceClass = '';\n      if (assigneeProductivity >= 80) {\n        performanceNote = 'High Productivity';\n        performanceClass = 'high-productivity';\n      } else if (assigneeProductivity >= 50) {\n        performanceNote = 'Moderate Productivity';\n        performanceClass = 'moderate-productivity';\n      } else {\n        performanceNote = assigneeOverdue > 0 ? 'Needs Improvement' : 'Low Productivity';\n        performanceClass = 'low-productivity';\n      }\n\n      // Prepare data for pie chart\n      const chartLabels = ['Completed', 'In Progress', 'To Do', 'Overdue'];\n      const chartValues = [assigneeCompleted, assigneeInProgress, assigneeTodo, assigneeOverdue];\n      const chartColors = ['#28a745', '#007bff', '#6c757d', '#e74c3c'];\n\n     \n\n     \n\n      // Generate task table for assignee\n      let tableRows = '';\n      assigneeTasks.forEach(task => {\n        const statusInfo = getStatusPillInfo(task.status);\n        const dueDateClass = task.dueDateStatus === 'Overdue' ? 'overdue-text' : '';\n        const taskUrl = task.url ? `<a href=\"${task.url}\" target=\"_blank\">${task.name || 'Untitled'}</a>` : (task.name || 'Untitled');\n        \n        tableRows += `\n          <tr>\n            <td>${taskUrl}</td>\n            <td>${task.dueDate || '-'}</td>\n            <td class=\"${dueDateClass}\">${task.dueDateStatus || '-'}</td>\n            <td>${task.priority || '-'}</td>\n            <td>${task.sprintPoints || 0}</td>\n            <td><span class=\"status-pill ${statusInfo.class}\" style=\"background-color: ${statusInfo.color}\">${task.status || 'Unknown'}</span></td>\n            <td>${formatHoursToHHMM(task.timeEstimate)}</td>\n            <td>${formatHoursToHHMM(task.timeSpent)}</td>\n          </tr>\n        `;\n      });\n\n      sections += `\n        <div class=\"assignee-section\">\n          <h2>Productivity Report for ${assignee}</h2>\n          <div class=\"summary-info ${performanceClass}\">\n            <p>Total Tasks: ${assigneeTotalTasks}</p>\n            <p>Completed Tasks: ${assigneeCompleted} (${assigneeProductivity}%)</p>\n            <p>In Progress: ${assigneeInProgress}</p>\n            <p>To Do: ${assigneeTodo}</p>\n            <p>Overdue Tasks: ${assigneeOverdue}</p>\n            <p>Total Sprint Points: ${totalSprintPoints}</p>\n            <p>Total Time Estimated: ${formatHoursToHHMM(totalEstimate)}</p>\n            <p>Total Time Spent: ${formatHoursToHHMM(totalSpent)}</p>\n            <p>Efficiency (Spent/Estimate): ${efficiency}%</p>\n            <p>Performance: ${performanceNote}</p>\n          </div>\n         \n          <h3>Task Details</h3>\n          ${assigneeTasks.length === 0 ? '<p>No tasks assigned.</p>' : `\n          <table>\n            <thead>\n              <tr>\n                <th>Task Name</th>\n                <th>Due Date</th>\n                <th>Due Status</th>\n                <th>Priority</th>\n                <th>Sprint Points</th>\n                <th>Status</th>\n                <th>Time Estimate</th>\n                <th>Time Spent</th>\n              </tr>\n            </thead>\n            <tbody>\n              ${tableRows}\n            </tbody>\n          </table>\n          `}\n        </div>\n      `;\n    });\n\n    return sections;\n  };\n\n  // Generate overall productivity chart\n  const chartLabels = Object.keys(tasksByAssignee).sort();\n  const completedData = chartLabels.map(name => tasksByAssignee[name].filter(task => task.status && (task.status.toLowerCase().includes('complete') || task.status.toLowerCase().includes('done'))).length);\n  const overdueData = chartLabels.map(name => tasksByAssignee[name].filter(task => task.daysDifference !== null && task.daysDifference < 0).length);\n\n  const overallChartConfig = {\n    type: 'bar',\n    data: {\n      labels: chartLabels,\n      datasets: [\n        {\n          label: 'Completed Tasks',\n          data: completedData,\n          backgroundColor: '#28a745'\n        },\n        {\n          label: 'Overdue Tasks',\n          data: overdueData,\n          backgroundColor: '#e74c3c'\n        }\n      ]\n    },\n    options: {\n      responsive: true,\n      scales: {\n        y: {\n          beginAtZero: true,\n          title: {\n            display: true,\n            text: 'Number of Tasks'\n          },\n          ticks: {\n            stepSize: 1\n          }\n        },\n        x: {\n          title: {\n            display: true,\n            text: 'Assignee'\n          }\n        }\n      },\n      plugins: {\n        legend: {\n          display: true,\n          position: 'top'\n        },\n        title: {\n          display: true,\n          text: 'Productivity Overview by Assignee',\n          font: { size: 16 }\n        }\n      }\n    }\n  };\n\n  const overallChartUrl = `https://quickchart.io/chart?width=600&height=300&chart=${encodeURIComponent(JSON.stringify(overallChartConfig))}`;\n\n  // Generate complete HTML report\n  const htmlContent = `\n<!DOCTYPE html>\n<html>\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>Team Member Productivity Report</title>\n    <style>\n        body {\n            font-family: \"Segoe UI\", Arial, sans-serif;\n            font-size: 14px;\n            color: #333333;\n            line-height: 1.4;\n            margin: 0;\n            padding: 20px;\n            background-color: #f8f9fa;\n        }\n        \n        .container {\n            max-width: 1200px;\n            margin: 0 auto;\n            background-color: white;\n            padding: 20px;\n            border-radius: 8px;\n            box-shadow: 0 2px 10px rgba(0,0,0,0.1);\n        }\n        \n        h1 {\n            color: #2c3e50;\n            font-size: 24px;\n            margin-bottom: 20px;\n            text-align: center;\n            border-bottom: 2px solid #3498db;\n            padding-bottom: 10px;\n        }\n        \n        h2 {\n            color: #333333;\n            font-size: 18px;\n            margin-top: 40px;\n            margin-bottom: 10px;\n            font-weight: bold;\n            border-bottom: 1px solid #ddd;\n            padding-bottom: 5px;\n        }\n        \n        h3 {\n            font-size: 16px;\n            margin-bottom: 10px;\n        }\n        \n        table {\n            border-collapse: collapse;\n            width: 100%;\n            background: #ffffff;\n            border-radius: 6px;\n            overflow: hidden;\n            margin-bottom: 30px;\n            box-shadow: 0 1px 3px rgba(0,0,0,0.1);\n        }\n        \n        th {\n            background-color: #f4f4f4;\n            font-weight: bold;\n            padding: 12px;\n            text-align: left;\n            border: 1px solid #ddd;\n            font-size: 13px;\n        }\n        \n        td {\n            padding: 14px;\n            border: 1px solid #ddd;\n            vertical-align: middle;\n            max-width: 200px;\n            word-break: break-word;\n        }\n        \n        tr:hover {\n            background-color: #f9f9f9;\n        }\n        \n        .status-pill {\n            display: inline-block;\n            padding: 6px 14px;\n            border-radius: 20px;\n            font-size: 12px;\n            font-weight: bold;\n            line-height: 1.2;\n            white-space: nowrap;\n            color: white !important;\n            text-align: center;\n            vertical-align: middle;\n            text-shadow: 0 1px 1px rgba(0,0,0,0.2);\n        }\n        \n        .status-pill.completed {\n            background-color: #28a745 !important;\n        }\n        \n        .status-pill.inprogress {\n            background-color: #007bff !important;\n        }\n        \n        .status-pill.todo {\n            background-color: #6c757d !important;\n        }\n        \n        .status-pill.other {\n            background-color: #6f42c1 !important;\n        }\n        \n        .overdue-text {\n            color: #b71c1c !important;\n            font-weight: bold;\n        }\n        \n        .summary-info {\n            background-color: #e9ecef;\n            padding: 15px;\n            border-radius: 5px;\n            margin-bottom: 20px;\n        }\n        \n        .summary-info p {\n            margin: 5px 0;\n            font-weight: bold;\n        }\n        \n        .high-productivity {\n            background-color: #d4edda !important;\n        }\n        \n        .moderate-productivity {\n            background-color: #fff3cd !important;\n        }\n        \n        .low-productivity {\n            background-color: #f8d7da !important;\n        }\n        \n        .assignee-section {\n            margin-bottom: 40px;\n            border-bottom: 1px solid #eee;\n            padding-bottom: 20px;\n        }\n        \n        .chart-container {\n            text-align: center;\n            margin-bottom: 20px;\n        }\n        \n        a {\n            color: #007bff;\n            text-decoration: none;\n        }\n        \n        a:hover {\n            text-decoration: underline;\n        }\n        \n        @media (max-width: 768px) {\n            .container {\n                padding: 10px;\n            }\n            \n            table {\n                font-size: 12px;\n            }\n            \n            th, td {\n                padding: 8px;\n            }\n            \n            .chart-container img {\n                width: 100%;\n                height: auto;\n            }\n        }\n    </style>\n</head>\n<body>\n    <div class=\"container\">\n        <h1>Team Member Productivity Report</h1>\n        \n        <div class=\"summary-info\">\n            <p>Report Date: ${new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}</p>\n            <p>Total Assignees: ${totalAssignees}</p>\n            <p>Total Tasks: ${totalTasks}</p>\n\n        </div>\n        \n        <h2>Overall Productivity Overview</h2>\n        <div class=\"chart-container\">\n            <img src=\"${overallChartUrl}\" alt=\"Overall Productivity by Assignee\" style=\"max-width: 100%; height: auto;\">\n        </div>\n        \n        ${generateIndividualSections()}\n    </div>\n</body>\n</html>\n  `;\n\n  return htmlContent;\n};\n\n// =========================\n// n8n Execution\n// =========================\ntry {\n  const inputData = $input.first().json;\n  console.log('Generating HTML report...');\n  console.log('Total tasks:', inputData.processedTasks.length);\n  console.log('Total assignees:', Object.keys(inputData.processedTasks.reduce((acc, task) => {\n    if (task.assignee) acc[task.assignee] = true;\n    return acc;\n  }, {})).length);\n\n  const htmlReport = generateProductivityReport(inputData);\n\n  return [{\n    json: {\n      htmlReport: htmlReport,\n      reportGenerated: true,\n      timestamp: new Date().toISOString()\n    }\n  }];\n} catch (error) {\n  console.error('Error generating HTML report:', error);\n  return [{\n    json: {\n      error: error.message,\n      htmlReport: '<html><body><h1>Error generating report</h1><p>' + error.message + '</p></body></html>',\n      reportGenerated: false\n    }\n  }];\n}"
+      },
+      "id": "5962b39d-617f-49e3-8661-b4ec0b990803",
+      "name": "creating report",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        -80,
+        96
+      ],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "content": "📧 STAKEHOLDER COMMUNICATION HUB\n\nPurpose: Delivers formatted sprint report to team leads, managers, and stakeholders\n\nFunction: Automated email distribution with professional sprint dashboard\n\nCritical: Ensures consistent communication and transparency across project teams\n\nRecipients: Managers and all stackholder",
+        "height": 384,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        240,
+        -224
+      ],
+      "typeVersion": 1,
+      "id": "f40fc0e6-1298-4f9e-bf42-96086ba73269",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "📊 PROFESSIONAL REPORT GENERATOR\n\nPurpose: Formats sprint analytics into polished, stakeholder-ready HTML report\n\nFunction: Creates visual dashboard with charts, progress bars, and executive summary\n\nCritical: Converts technical data into business-friendly presentation format\n\nOutput Components:\n- Sprint progress overview\n- Team velocity metrics\n- Completed vs. pending tasks\n- Risk alerts and recommendations\n- Individual contributor highlights",
+        "height": 464,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -176,
+        -384
+      ],
+      "typeVersion": 1,
+      "id": "ad6805a8-550c-4d0a-865c-82c3782c3adf",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "⚡ SPRINT ANALYTICS PROCESSOR\n\nPurpose: Analyzes raw task data and generates comprehensive sprint insights\n\nFunction: Calculates completion rates, identifies blockers, tracks velocity metrics\n\nCritical: Transforms task data into actionable sprint intelligence and trend analysis\nFeatures: \n- Sprint burndown calculations\n- Task categorization by status/priority\n- Team performance metrics\n- Risk identification and flagging",
+        "height": 432,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -448,
+        384
+      ],
+      "typeVersion": 1,
+      "id": "0e5cf018-960d-4db3-af5e-e76d2072ea58",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "📋 TASK DATA COLLECTOR\n\nPurpose: Retrieves all active sprint tasks and project items from integrated system\n\nFunction: Fetches task details, status updates, assignees, deadlines, and progress metrics\n\nCritical: Primary data source for sprint analysis - ensures complete task visibility\n\nConfiguration: Filter by sprint dates, team members, and project scope",
+        "height": 352,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -656,
+        -272
+      ],
+      "typeVersion": 1,
+      "id": "90dccae7-e274-42c4-bb61-5b0d6e32138b",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "🚀 SPRINT WORKFLOW INITIATOR\n\nPurpose: Manually starts the daily sprint reporting and task analysis workflow.\n\nFunction: Triggers automated task retrieval from project management system.\n\nCritical: Entry point for generating comprehensive sprint progress reports.\n\nUsage: Execute daily for consistent sprint monitoring and team updates.",
+        "height": 368,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1008,
+        -144
+      ],
+      "typeVersion": 1,
+      "id": "9d02af44-49f3-440c-af1f-e0a1a51f141b",
+      "name": "Sticky Note5"
+    }
+  ],
+  "connections": {
+    "When clicking 'Execute workflow'": {
+      "main": [
+        [
+          {
+            "node": "Get many tasks",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Sprint Data": {
+      "main": [
+        [
+          {
+            "node": "creating report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get many tasks": {
+      "main": [
+        [
+          {
+            "node": "Process Sprint Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "creating report": {
+      "main": [
+        [
+          {
+            "node": "Send Daily Report Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "4bb79f9c-e5b9-4479-bc04-6cbc375e0932",
+  "activeVersionId": null,
+  "triggerCount": 0,
+  "shared": [
+    {
+      "updatedAt": "2025-08-11T18:46:56.251Z",
+      "createdAt": "2025-08-11T18:46:56.251Z",
+      "role": "workflow:owner",
+      "workflowId": "AHdpdpvp7wMzaMl4",
+      "projectId": "iXigq15mRQoAAIrt"
+    }
+  ],
+  "activeVersion": null,
+  "tags": []
+}
