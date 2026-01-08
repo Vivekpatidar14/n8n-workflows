@@ -1,297 +1,138 @@
 {
-  "updatedAt": "2025-08-04T11:07:12.000Z",
-  "createdAt": "2025-08-04T11:07:02.393Z",
-  "id": "2qCDxoN2sWA49n9V",
-  "name": "My workflow 4",
+  "updatedAt": "2025-08-06T05:58:16.679Z",
+  "createdAt": "2025-08-06T05:58:16.679Z",
+  "id": "9rpCsZOqTnNl5baz",
+  "name": "My workflow 5",
   "active": false,
-  "isArchived": true,
+  "isArchived": false,
   "nodes": [
     {
       "parameters": {
-        "resource": "fileFolder",
-        "queryString": "={{ $json['Video File Name'] }}",
-        "filter": {},
+        "model": "gpt-4.1",
         "options": {}
       },
-      "type": "n8n-nodes-base.googleDrive",
-      "typeVersion": 3,
+      "id": "a5f0288e-7f6e-4194-a051-073a15f812c9",
+      "name": "Azure OpenAI Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatAzureOpenAi",
       "position": [
-        1152,
-        0
+        2128,
+        400
       ],
-      "id": "31571c93-aed3-4868-b30d-3c04779a547a",
-      "name": "Get Video File Id",
-      "credentials": {
-        "googleDriveOAuth2Api": {
-          "id": "gQtjXVGUgZru29qC",
-          "name": "Google Drive account"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "operation": "download",
-        "fileId": {
-          "__rl": true,
-          "value": "={{ $json.id }}",
-          "mode": "id"
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.googleDrive",
-      "typeVersion": 3,
-      "position": [
-        704,
-        224
-      ],
-      "id": "81f289bf-89dd-461b-ac8e-b884a42c9980",
-      "name": "Download Video Data",
-      "credentials": {
-        "googleDriveOAuth2Api": {
-          "id": "gQtjXVGUgZru29qC",
-          "name": "Google Drive account"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "resource": "video",
-        "operation": "upload",
-        "title": "={{ $('Get row(s) in sheet').item.json.Title }}",
-        "regionCode": "IN",
-        "categoryId": "26",
-        "binaryProperty": "=data",
-        "options": {
-          "defaultLanguage": "en",
-          "description": "={{ $('Get row(s) in sheet').item.json.Description }}",
-          "embeddable": false,
-          "license": "youtube",
-          "notifySubscribers": true,
-          "privacyStatus": "unlisted",
-          "publicStatsViewable": true,
-          "selfDeclaredMadeForKids": false,
-          "tags": "children, dress, princess"
-        }
-      },
-      "type": "n8n-nodes-base.youTube",
       "typeVersion": 1,
-      "position": [
-        928,
-        224
-      ],
-      "id": "4a23721f-4277-4ad0-b9e0-f70ee4d9cc7e",
-      "name": "Upload to YouTube"
+      "credentials": {
+        "azureOpenAiApi": {
+          "id": "C3WzT18XqF8OdVM6",
+          "name": "Azure Open AI account"
+        }
+      }
     },
     {
       "parameters": {
-        "operation": "appendOrUpdate",
-        "documentId": {
-          "__rl": true,
-          "value": "1qjU8VM9fUa8j_kffujpa2v6XUDknf049YOI2MlsS4sc",
-          "mode": "list",
-          "cachedResultName": "YouTube Upload",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1qjU8VM9fUa8j_kffujpa2v6XUDknf049YOI2MlsS4sc/edit?usp=drivesdk"
-        },
-        "sheetName": {
-          "__rl": true,
-          "value": "gid=0",
-          "mode": "list",
-          "cachedResultName": "Sheet1",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1qjU8VM9fUa8j_kffujpa2v6XUDknf049YOI2MlsS4sc/edit#gid=0"
-        },
-        "columns": {
-          "mappingMode": "defineBelow",
-          "value": {
-            "Video File Name": "={{ $('Get row(s) in sheet').item.json['Video File Name'] }}",
-            "Status": "Uploaded"
-          },
-          "matchingColumns": [
-            "Video File Name"
-          ],
-          "schema": [
-            {
-              "id": "Date",
-              "displayName": "Date",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "Video File Name",
-              "displayName": "Video File Name",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true,
-              "removed": false
-            },
-            {
-              "id": "Title",
-              "displayName": "Title",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "Description",
-              "displayName": "Description",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "Status",
-              "displayName": "Status",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            }
-          ],
-          "attemptToConvertTypes": false,
-          "convertFieldsToString": false
-        },
+        "jsonSchemaExample": "{\n  \"csvUrl\": \"https://phantombuster.s3.amazonaws.com/...\",\n  \"jsonUrl\": \"https://phantombuster.s3.amazonaws.com/...\"\n}\n"
+      },
+      "id": "67600714-4650-457d-bec8-857527ab2104",
+      "name": "Structured Output Parser",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "position": [
+        2256,
+        400
+      ],
+      "typeVersion": 1.2
+    },
+    {
+      "parameters": {
+        "amount": 45
+      },
+      "id": "6269576d-7906-461e-9dba-c7dd93a6a988",
+      "name": "Wait",
+      "type": "n8n-nodes-base.wait",
+      "position": [
+        1664,
+        192
+      ],
+      "webhookId": "e9f0b9cc-f051-49fb-95bb-c20b9ef762f9",
+      "typeVersion": 1.1
+    },
+    {
+      "parameters": {
+        "model": "gpt-4.1",
         "options": {}
       },
-      "type": "n8n-nodes-base.googleSheets",
-      "typeVersion": 4.5,
+      "id": "5b9ae1a4-88db-4294-9e52-506a131ac55a",
+      "name": "Azure OpenAI Chat Model1",
+      "type": "@n8n/n8n-nodes-langchain.lmChatAzureOpenAi",
       "position": [
-        1152,
-        224
+        2736,
+        400
       ],
-      "id": "18ef4489-2d36-4324-bc96-b3f2d2c12607",
-      "name": "Update Status",
+      "typeVersion": 1,
       "credentials": {
-        "googleSheetsOAuth2Api": {
-          "id": "s4dP1fNuVZ2gWvs3",
-          "name": "Google Sheets account"
+        "azureOpenAiApi": {
+          "id": "C3WzT18XqF8OdVM6",
+          "name": "Azure Open AI account"
         }
       }
     },
     {
       "parameters": {
-        "resource": "fileFolder",
-        "queryString": "Uploaded",
-        "filter": {},
-        "options": {}
+        "jsonSchemaExample": "{\n  \"Initial_message\": \"Hi Mandy,\\n\\nI came across your work at BDO USA leading data analytics and was really impressed by your experience with large-scale data validation and compliance monitoring across complex industries.\\n\\nAt Sparrow, we’re building a dev-friendly API testing platform that could genuinely complement your efforts around data quality and assurance.\\n\\nWould love to get your take on what we’re building and explore ways we can learn from each other.\\n\\nAre you open to a quick chat this week?\\n\\nRahul\\nCo-Founder & CEO, Sparrow\",\n  \n  \"Follow_up_message\": \"Hi Mandy,\\n\\nJust checking in to see if you had a chance to read my earlier note. I’d genuinely value your thoughts — especially given your work at BDO USA.\\n\\nHappy to work around your schedule if you’re open to a short call!\\n\\nBest,\\nRahul\"\n}\n"
       },
-      "type": "n8n-nodes-base.googleDrive",
-      "typeVersion": 3,
+      "id": "63290f1f-fa4a-483d-849b-9700c7223019",
+      "name": "Structured Output Parser1",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
       "position": [
-        704,
-        448
+        2848,
+        400
       ],
-      "id": "59cb5a5a-7450-435c-8a77-ccf3557430e2",
-      "name": "Get Folder Name",
-      "credentials": {
-        "googleDriveOAuth2Api": {
-          "id": "gQtjXVGUgZru29qC",
-          "name": "Google Drive account"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "operation": "move",
-        "fileId": {
-          "__rl": true,
-          "value": "={{ $('Download Video Data').item.json.id }}",
-          "mode": "id"
-        },
-        "driveId": {
-          "__rl": true,
-          "mode": "list",
-          "value": "My Drive"
-        },
-        "folderId": {
-          "__rl": true,
-          "value": "={{ $json.id }}",
-          "mode": "id"
-        }
-      },
-      "type": "n8n-nodes-base.googleDrive",
-      "typeVersion": 3,
-      "position": [
-        928,
-        448
-      ],
-      "id": "986aac7a-85ae-4a9f-ab20-de65cfca44fb",
-      "name": "Move Video File to Folder",
-      "credentials": {
-        "googleDriveOAuth2Api": {
-          "id": "gQtjXVGUgZru29qC",
-          "name": "Google Drive account"
-        }
-      }
+      "typeVersion": 1.2,
+      "notes": "\\n\\n should break line "
     },
     {
       "parameters": {
         "rule": {
           "interval": [
             {
-              "field": "cronExpression",
-              "expression": "0 9,12,15 * * 1-5"
+              "field": "minutes"
             }
           ]
         }
       },
+      "id": "3989e337-051b-425c-be18-fddf65a6c23b",
+      "name": "Schedule Trigger",
       "type": "n8n-nodes-base.scheduleTrigger",
-      "typeVersion": 1.2,
       "position": [
-        704,
-        0
+        784,
+        192
       ],
-      "id": "68238d94-4880-4124-8198-4221f532b4aa",
-      "name": "M-F 9am,12pm,3pm"
-    },
-    {
-      "parameters": {
-        "content": "## 📹 YouTube Video Upload Automation\n\nThis workflow automates the process of uploading videos to YouTube from Google Drive based on data in a Google Sheet.\n\n**🧭 Flow Overview Trigger:**\n\nRuns Monday to Friday at 9am, 12pm, and 3pm\n\nRead Video Info:\nGoogle Sheets node fetches video metadata (title, description, etc.)\n\nLocate Video in Drive:\nGets the video file ID from Google Drive\n\nDownload Video:\nDownloads the video file from Google Drive using the ID\n\nUpload to YouTube:\nUploads the video with corresponding metadata\n\nUpdate Sheet Status:\nMarks the video as \"Uploaded\" in the sheet to prevent duplicates\n\nOrganize Files:\nSearches for the correct destination folder\nMoves the uploaded video to an \"Archived\" or processed folder",
-        "height": 560,
-        "width": 600
-      },
-      "type": "n8n-nodes-base.stickyNote",
-      "position": [
-        0,
-        0
-      ],
-      "typeVersion": 1,
-      "id": "b6976a33-ca35-4ac7-ac97-74c144811f1e",
-      "name": "Sticky Note"
+      "typeVersion": 1.2
     },
     {
       "parameters": {
         "documentId": {
           "__rl": true,
-          "value": "1qjU8VM9fUa8j_kffujpa2v6XUDknf049YOI2MlsS4sc",
-          "mode": "list",
-          "cachedResultName": "YouTube Upload",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1qjU8VM9fUa8j_kffujpa2v6XUDknf049YOI2MlsS4sc/edit?usp=drivesdk"
+          "mode": "id",
+          "value": "=1kZWj0gUoXz818FWGG8UTV4kJWgHa-rmEbyOHO2auWfY"
         },
         "sheetName": {
           "__rl": true,
-          "value": "gid=0",
           "mode": "list",
-          "cachedResultName": "Sheet1",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1qjU8VM9fUa8j_kffujpa2v6XUDknf049YOI2MlsS4sc/edit#gid=0"
+          "value": 1872017542,
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1kZWj0gUoXz818FWGG8UTV4kJWgHa-rmEbyOHO2auWfY/edit#gid=1872017542",
+          "cachedResultName": "Rahul"
         },
         "filtersUI": {
           "values": [
             {
-              "lookupColumn": "Date",
-              "lookupValue": "={{ DateTime.now().format('yyyy-MM-dd') }}"
+              "lookupColumn": "Send Approval - Rahul",
+              "lookupValue": "Yes"
             },
             {
-              "lookupColumn": "Upload Status",
-              "lookupValue": "Scheduled"
+              "lookupColumn": "Send Approval - Rahul",
+              "lookupValue": "Yes"
+            },
+            {
+              "lookupColumn": "Outreach Status",
+              "lookupValue": "Queued"
             }
           ]
         },
@@ -299,94 +140,606 @@
           "returnFirstMatch": true
         }
       },
+      "id": "aaed896d-afe8-4c84-815c-8bbf4178578a",
+      "name": "Fetch URL from Spreadsheet",
       "type": "n8n-nodes-base.googleSheets",
-      "typeVersion": 4.5,
       "position": [
-        928,
-        0
+        1008,
+        192
       ],
-      "id": "508f0d0c-a032-4a1c-a436-a8aa0227d210",
-      "name": "Get row(s) in sheet",
+      "typeVersion": 4.5,
       "credentials": {
         "googleSheetsOAuth2Api": {
-          "id": "s4dP1fNuVZ2gWvs3",
-          "name": "Google Sheets account"
+          "id": "sOplQNr4zvwQul4A",
+          "name": "jyothi"
         }
       }
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "1VmtCoEaOz1uqiloJAFAOfbhUmGxuMQAudwNiVG7kQ1U",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1VmtCoEaOz1uqiloJAFAOfbhUmGxuMQAudwNiVG7kQ1U/edit?usp=drivesdk",
+          "cachedResultName": "LinkedIn URL"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gid=0",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1VmtCoEaOz1uqiloJAFAOfbhUmGxuMQAudwNiVG7kQ1U/edit#gid=0",
+          "cachedResultName": "Sheet1"
+        },
+        "columns": {
+          "value": {
+            "URL": "={{ $json.URL }}"
+          },
+          "schema": [
+            {
+              "id": "URL",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "URL",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            }
+          ],
+          "mappingMode": "defineBelow",
+          "matchingColumns": [
+            "URL"
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "1cc0e5e5-ed22-4a58-9a80-fe1a2fdf2fb1",
+      "name": "Temp URL Storage",
+      "type": "n8n-nodes-base.googleSheets",
+      "position": [
+        1232,
+        192
+      ],
+      "typeVersion": 4.5,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "sOplQNr4zvwQul4A",
+          "name": "jyothi"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.phantombuster.com/api/v2/agents/launch",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-phantombuster-key",
+              "value": "your_api_key_here"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"id\": \"your_id_here\",\n  \"argument\": {\n    \"profileUrl\":[ \"{{ $json.URL }}\"],\n    \"sessionCookie\": \"linkedin li_at cookie here\",\n  \"spreadsheetUrl\": \"temp url storage spreadsheet link here\",\n  \"columnName\": \"URL\",\n\"numberOfProfilesPerLaunch\": \"1\"\n  }\n}\n",
+        "options": {}
+      },
+      "id": "5b8249bf-0d9a-48c7-aa3c-ff11613b4eae",
+      "name": "POST to Phantombuster API",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        1440,
+        192
+      ],
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "url": "=https://api.phantombuster.com/api/v2/containers/fetch-output?id={{ $json.containerId }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-phantombuster-key",
+              "value": "your_api_key_here"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "742f1926-f65a-4683-b8b6-a0b7eedcf1fb",
+      "name": "GET from Phantombuster API",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        1888,
+        192
+      ],
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.output }}",
+        "hasOutputParser": true,
+        "options": {}
+      },
+      "id": "653c29b1-7138-4c64-ac0a-131f53cd1134",
+      "name": "Extract URL from Output using GPT-4",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "position": [
+        2112,
+        192
+      ],
+      "typeVersion": 1.9
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.output.jsonUrl }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {}
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {}
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "json"
+            }
+          }
+        }
+      },
+      "id": "c5d6ec8d-15a1-49c0-89dc-e51fef8b0f03",
+      "name": "GET LinkedIn Data from URL",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        2480,
+        192
+      ],
+      "retryOnFail": true,
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are an outreach message generator for Sparrow, an API testing platform. Your task is to take structured input  and generate:\n\n1. A personalized outreach message. The goal of the message if to get a meeting with this lead. Potentially an online call.\n2. A follow-up message (in case they don’t reply to the first one)\n\nHere is the information you will need and use to personalise the message:\nCompany Industry: {{ $json.companyIndustry }}\nCompany Name: {{ $json.companyName }}\nFirst Name: {{ $json.firstName }}\nLast Name: {{ $json.lastName }}\nLinkedIn Description: {{ $json.linkedinDescription }}\nLinkedIn HeadLine: {{ $json.linkedinHeadline }}\nLinkedIn Job Date Range: {{ $json.linkedinJobDateRange }}\nRemarks(this decides what the goal os the message should be):{{ $('Rahul\\'s LinkedIn').item.json['Comments - Rahul'] }}\nBy default, if there is no value for remarks, it should be assumed that the goal of the message is to get in touch with them.\nIf the remarks are \"informational\" it means the goal of the message is to spread awareness about sparrow. This includes sending them a link for sparrow's website: https://sparrowapp.dev/?utm_source=organic&utm_medium=linkedin&utm_campaign=SM+Posts (always return this link as text)\nIf remarks says something related to \"VC\" or \"VC Sparrow\". It means the goals of the messsage if to get in touch with them.\n\n\nIf any of the provided information is null, just move onto the next provided information.\n---\n**about your company**\n\n---\n\nOutreach Message Template\n\nUse this structure to create the first message:\n\nHi [Name],\n\nI came across your work with [Company / Project / Area of expertise] and was impressed by your approach to [specific detail about their work].\n\n*A little introduction of your company*\n\nI would love to get in touch and exchange ideas!\n\nYour name,\nYour title \n\n---\n\nFollow-Up Message Template:\n\nHi [Name],\n\nJust checking in to see if you had a chance to read my earlier note.  \nI’d genuinely value your thoughts — especially given your work at [Company / Project].\n\nHappy to work around your schedule if you’re open to a short call!\n\nBest,  \nYour name\n\n---\n\n🛡️ Rules & Guidelines (Do NOT break these):\n\n1.Always personalize the message using the info provided.\n2. NEVER make up facts or flattery — only refer to information provided or easily verified.\n3. DO NOT be overly salesy — this is a friendly, respectful invitation to chat and exchange ideas.\n4. Keep the tone professional, warm, and concise (under 100 words for the first message, and under 70 words for the second message).\n5. Never reuse exact phrasing for multiple recipients unless explicitly requested.\n6. If info is missing (like company or expertise), you may generalize slightly, but keep it relevant to developers, engineers, or API users.\n7. The follow-up should be polite, non-pushy, and helpful — assume they’re busy, not disinterested.\n8. Do not give any descriptions, double quotes, bold text,or any other formating.\n\n---",
+        "hasOutputParser": true
+      },
+      "id": "c54bafbc-20c9-47ea-97b0-d90c40a34c35",
+      "name": "Create Personalised Messages using a Template",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "position": [
+        2704,
+        192
+      ],
+      "typeVersion": 1.6
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "1kZWj0gUoXz818FWGG8UTV4kJWgHa-rmEbyOHO2auWfY",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1kZWj0gUoXz818FWGG8UTV4kJWgHa-rmEbyOHO2auWfY/edit?usp=drivesdk",
+          "cachedResultName": "Rahul's LinkedIn Connection"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "list",
+          "value": 1872017542,
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1kZWj0gUoXz818FWGG8UTV4kJWgHa-rmEbyOHO2auWfY/edit#gid=1872017542",
+          "cachedResultName": "Rahul"
+        },
+        "columns": {
+          "value": {
+            "URL": "={{ $('Rahul\\'s LinkedIn').item.json.URL }}",
+            "Initial Message": "={{ $json.output.Initial_message }}",
+            "Outreach Status": "Updated",
+            "Follow-up Message": "={{ $json.output.Follow_up_message }}"
+          },
+          "schema": [
+            {
+              "id": "First Name",
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "First Name",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Last Name",
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "Last Name",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "URL",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "URL",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Company",
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "Company",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Position",
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "Position",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Connected On",
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "Connected On",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Company's description",
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "Company's description",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Product we can pitch",
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "Product we can pitch",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Reason",
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "Reason",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Case Study",
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "Case Study",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Send Approval - Rahul",
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "Send Approval - Rahul",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Comments - Rahul",
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "Comments - Rahul",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Initial Message",
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "Initial Message",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Follow-up Message",
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "Follow-up Message",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Type of Message",
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "Type of Message",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Outreach Status",
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "Outreach Status",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "CRM Upload Status",
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "CRM Upload Status",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Lead Status",
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "Lead Status",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Date",
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "Date",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            }
+          ],
+          "mappingMode": "defineBelow",
+          "matchingColumns": [
+            "URL"
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "cdc0117a-127d-443f-adc7-90f24df7b9f2",
+      "name": "Update Personalised Messages to Spreadsheet",
+      "type": "n8n-nodes-base.googleSheets",
+      "position": [
+        3072,
+        192
+      ],
+      "retryOnFail": true,
+      "typeVersion": 4.5
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "documentId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "1VmtCoEaOz1uqiloJAFAOfbhUmGxuMQAudwNiVG7kQ1U",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1VmtCoEaOz1uqiloJAFAOfbhUmGxuMQAudwNiVG7kQ1U/edit?usp=drivesdk",
+          "cachedResultName": "LinkedIn URL"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gid=0",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1VmtCoEaOz1uqiloJAFAOfbhUmGxuMQAudwNiVG7kQ1U/edit#gid=0",
+          "cachedResultName": "Sheet1"
+        },
+        "numberToDelete": 10
+      },
+      "id": "cca3f8ed-1681-40f0-a886-af282827acdc",
+      "name": "Delete Temp URL Storage",
+      "type": "n8n-nodes-base.googleSheets",
+      "position": [
+        3296,
+        192
+      ],
+      "typeVersion": 4.5
+    },
+    {
+      "parameters": {
+        "content": "## LinkedIn Profile Scraping & Structured Data Extraction with PhantomBuster & GPT-4\n\nThis n8n workflow automates the end-to-end process of extracting LinkedIn profile data, organizing it, and generating personalized messages—all powered by PhantomBuster and GPT-4. Perfect for recruiters, sales teams, and marketers, it streamlines outreach by combining data collection and message personalization within a single workflow. Key features include:\n\t•\tSeamless Integration: Links PhantomBuster’s scraping technology with Azure OpenAI’s GPT-4 for advanced data parsing and message creation.\n\t•\tAutomated Data Pipeline: Fetches LinkedIn URLs from a spreadsheet, extracts and processes profile data, and stores results efficiently.\n\t•\tPersonalized Messaging: Uses extracted profile data to automatically generate and update tailored messages for each contact.\n\t•\tStructured Output: Organizes raw data into actionable formats, ready for outreach or further automation.\n\t•\tCustomizable & Scalable: Easily adapts to specific campaign needs or scales up for bulk operations.\n\t•\tTime-Saving: Eliminates repetitive manual tasks, allowing users to focus on engagement and strategy.\n\nThis workflow empowers users to efficiently collect LinkedIn data and deliver customized communications for impactful business and research outcomes.",
+        "height": 500,
+        "width": 600
+      },
+      "id": "d1809014-f7f2-43c9-ade6-8b2d9222ad9b",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        0,
+        0
+      ],
+      "typeVersion": 1
     }
   ],
   "connections": {
-    "Get Video File Id": {
+    "Wait": {
       "main": [
         [
           {
-            "node": "Download Video Data",
+            "node": "GET from Phantombuster API",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Download Video Data": {
+    "Schedule Trigger": {
       "main": [
         [
           {
-            "node": "Upload to YouTube",
+            "node": "Fetch URL from Spreadsheet",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Upload to YouTube": {
+    "Temp URL Storage": {
       "main": [
         [
           {
-            "node": "Update Status",
+            "node": "POST to Phantombuster API",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Update Status": {
+    "Azure OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Extract URL from Output using GPT-4",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Azure OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Create Personalised Messages using a Template",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Extract URL from Output using GPT-4",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "POST to Phantombuster API": {
       "main": [
         [
           {
-            "node": "Get Folder Name",
+            "node": "Wait",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Get Folder Name": {
+    "Structured Output Parser1": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Create Personalised Messages using a Template",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch URL from Spreadsheet": {
       "main": [
         [
           {
-            "node": "Move Video File to Folder",
+            "node": "Temp URL Storage",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "M-F 9am,12pm,3pm": {
+    "GET LinkedIn Data from URL": {
       "main": [
         [
           {
-            "node": "Get row(s) in sheet",
+            "node": "Create Personalised Messages using a Template",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Get row(s) in sheet": {
+    "GET from Phantombuster API": {
       "main": [
         [
           {
-            "node": "Get Video File Id",
+            "node": "Extract URL from Output using GPT-4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract URL from Output using GPT-4": {
+      "main": [
+        [
+          {
+            "node": "GET LinkedIn Data from URL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Personalised Messages to Spreadsheet": {
+      "main": [
+        [
+          {
+            "node": "Delete Temp URL Storage",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Personalised Messages using a Template": {
+      "main": [
+        [
+          {
+            "node": "Update Personalised Messages to Spreadsheet",
             "type": "main",
             "index": 0
           }
@@ -398,19 +751,17 @@
     "executionOrder": "v1"
   },
   "staticData": null,
-  "meta": {
-    "templateCredsSetupCompleted": true
-  },
+  "meta": null,
   "pinData": {},
-  "versionId": "c6a3c508-b44c-45c3-b838-04469a71efa0",
+  "versionId": "abc12f83-4750-44a9-b4d1-efa74ed0a8f8",
   "activeVersionId": null,
   "triggerCount": 0,
   "shared": [
     {
-      "updatedAt": "2025-08-04T11:07:02.396Z",
-      "createdAt": "2025-08-04T11:07:02.396Z",
+      "updatedAt": "2025-08-06T05:58:16.682Z",
+      "createdAt": "2025-08-06T05:58:16.682Z",
       "role": "workflow:owner",
-      "workflowId": "2qCDxoN2sWA49n9V",
+      "workflowId": "9rpCsZOqTnNl5baz",
       "projectId": "iXigq15mRQoAAIrt"
     }
   ],
