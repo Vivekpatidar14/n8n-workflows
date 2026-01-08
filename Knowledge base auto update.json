@@ -1,0 +1,362 @@
+{
+  "updatedAt": "2025-09-19T11:25:37.000Z",
+  "createdAt": "2025-09-19T09:41:48.944Z",
+  "id": "2TAjmaAlmWmlpdzh",
+  "name": "Knowledge base auto update",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        144,
+        64
+      ],
+      "id": "4843e4db-5965-4684-8c7e-477dcfd5ae82",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "content": "## Workflow Purpose\n\nThis workflow automatically updates a Google Sheets knowledge base with Zendesk tickets that have the \"howto\" tag.\n\n**Flow Overview:**\n1. Fetches all tickets from Zendesk\n2. Filters for tickets with \"howto\" tag only\n3. Gets detailed user information for each ticket\n4. Updates Google Sheets with ticket details\n\n**Use Case:** Perfect for maintaining a knowledge base of how-to requests from customers.",
+        "height": 304,
+        "width": 526
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -480,
+        -48
+      ],
+      "id": "f30ea011-fa7e-47e1-a4a0-e562a4105d2c",
+      "name": "Workflow Description"
+    },
+    {
+      "parameters": {
+        "content": "## Manual Trigger\n\nClick the 'Execute Workflow' button to run this automation manually.\n\n**When to use:**\n- Testing the workflow\n- One-time data sync\n- Troubleshooting\n\n**Note:** You can also set this up with a schedule trigger to run automatically (daily, weekly, etc.)",
+        "height": 296,
+        "width": 320
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        80,
+        -288
+      ],
+      "id": "798f15a3-e84b-4248-9ace-365b56f8b3b5",
+      "name": "Trigger Instructions"
+    },
+    {
+      "parameters": {
+        "content": "## Zendesk Integration\n\nFetches ALL tickets from your Zendesk instance.\n\n**What it does:**\n- Connects to Zendesk using API credentials\n- Retrieves all available tickets\n- Passes ticket data to next step\n\n**Important:** Make sure your Zendesk credentials are properly configured in the node settings.",
+        "height": 312,
+        "width": 320
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        272,
+        240
+      ],
+      "id": "696b2cc3-0c68-40cd-8e88-b2a0803c4d07",
+      "name": "Zendesk Fetch Details"
+    },
+    {
+      "parameters": {
+        "content": "## Filtering Logic\n\nOnly processes tickets with the \"howto\" tag.\n\n**Filter Condition:**\n- Checks if first tag equals \"howto\"\n- Case sensitive matching\n- Only matching tickets proceed to next step\n\n**Tip:** You can modify this filter to use different tags or multiple conditions as needed.",
+        "height": 296,
+        "width": 320
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        480,
+        -272
+      ],
+      "id": "6cce2c3f-683b-41e5-bece-d5d086d2bfc8",
+      "name": "Filter Explanation"
+    },
+    {
+      "parameters": {
+        "content": "## User Details Enrichment\n\nGets detailed information about the person who created each ticket.\n\n**Retrieved Data:**\n- User name\n- Email address\n- Other user profile information\n\n**Why needed:** The initial ticket data only contains user ID, but we need name and email for the spreadsheet.",
+        "height": 296,
+        "width": 320
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        704,
+        240
+      ],
+      "id": "48b2fcd7-2e78-448d-8713-d7dfd9eb4da7",
+      "name": "User Details Purpose"
+    },
+    {
+      "parameters": {
+        "content": "## Google Sheets Update\n\nSaves or updates ticket information in your knowledge base spreadsheet.\n\n**Data Saved:**\n- Ticket Number\n- Description\n- Status\n- Tag\n- Owner Name\n- Email\n\n**Smart Update:** Uses description as matching column to avoid duplicates - existing tickets get updated instead of creating new rows.",
+        "height": 384,
+        "width": 320
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        912,
+        -368
+      ],
+      "id": "784943a6-7b5a-4813-a5d0-d1c075b27cf3",
+      "name": "Sheets Update Logic"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "cc47baeb-cdfb-4a6b-94ca-ef18c6450d9f",
+              "leftValue": "={{ $json.tags[0] }}",
+              "rightValue": "=howto",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        592,
+        64
+      ],
+      "id": "f3f7ba7c-67e9-4103-917e-279ddb2cef91",
+      "name": "Filter HowTo Tickets Only"
+    },
+    {
+      "parameters": {
+        "resource": "user",
+        "operation": "get",
+        "id": "={{ $json.requester_id }}"
+      },
+      "type": "n8n-nodes-base.zendesk",
+      "typeVersion": 1,
+      "position": [
+        816,
+        64
+      ],
+      "id": "26d98a0e-891a-4a46-9811-86344ac5b909",
+      "name": "Get Requester User Info",
+      "credentials": {
+        "zendeskApi": {
+          "id": "BQ61OjTaFfNPQ1bK",
+          "name": "Zendesk account-anuj"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "1Utpt2Z8krX-29nE3_HAJVmm9yUp9NRcq-_P8JL1UqRk",
+          "mode": "list",
+          "cachedResultName": "Ticket status dummy",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Utpt2Z8krX-29nE3_HAJVmm9yUp9NRcq-_P8JL1UqRk/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Utpt2Z8krX-29nE3_HAJVmm9yUp9NRcq-_P8JL1UqRk/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Description": "={{ $('Filter HowTo Tickets Only').item.json.description }}",
+            "Status": "={{ $('Filter HowTo Tickets Only').item.json.status }}",
+            "Tag": "={{ $('Filter HowTo Tickets Only').item.json.tags[0] || 'No tags' }}",
+            "Ticket No.": "={{ $('Filter HowTo Tickets Only').item.json.id }}",
+            "owner": "={{ $json.name }}",
+            "email": "={{ $json.email }}"
+          },
+          "matchingColumns": [
+            "Description"
+          ],
+          "schema": [
+            {
+              "id": "Ticket No.",
+              "displayName": "Ticket No.",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Description",
+              "displayName": "Description",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "owner",
+              "displayName": "owner",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "email",
+              "displayName": "email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Tag",
+              "displayName": "Tag",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        1040,
+        64
+      ],
+      "id": "0d0c9e54-1207-435d-9298-ea49ea1f8974",
+      "name": "Update Knowledge Base Sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "s4dP1fNuVZ2gWvs3",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "returnAll": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.zendesk",
+      "typeVersion": 1,
+      "position": [
+        368,
+        64
+      ],
+      "id": "da17ca3d-ae79-47ad-9bba-3b14609d3310",
+      "name": "Fetch All Zendesk Tickets",
+      "credentials": {
+        "zendeskApi": {
+          "id": "BQ61OjTaFfNPQ1bK",
+          "name": "Zendesk account-anuj"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Fetch All Zendesk Tickets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter HowTo Tickets Only": {
+      "main": [
+        [
+          {
+            "node": "Get Requester User Info",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Requester User Info": {
+      "main": [
+        [
+          {
+            "node": "Update Knowledge Base Sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch All Zendesk Tickets": {
+      "main": [
+        [
+          {
+            "node": "Filter HowTo Tickets Only",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": {},
+  "versionId": "c4606bbd-1238-4fcc-bed4-b97ea91bf136",
+  "activeVersionId": null,
+  "triggerCount": 0,
+  "shared": [
+    {
+      "updatedAt": "2025-09-19T09:41:48.946Z",
+      "createdAt": "2025-09-19T09:41:48.946Z",
+      "role": "workflow:owner",
+      "workflowId": "2TAjmaAlmWmlpdzh",
+      "projectId": "iXigq15mRQoAAIrt"
+    }
+  ],
+  "activeVersion": null,
+  "tags": []
+}
