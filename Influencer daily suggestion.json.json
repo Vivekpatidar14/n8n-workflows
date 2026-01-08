@@ -1,52 +1,250 @@
 {
-  "updatedAt": "2025-09-11T12:25:06.540Z",
-  "createdAt": "2025-09-11T12:25:06.540Z",
-  "id": "aFyuRbPqAkhm3lZA",
-  "name": "My workflow 16",
+  "updatedAt": "2025-07-30T08:34:01.000Z",
+  "createdAt": "2025-07-30T08:10:58.454Z",
+  "id": "crgwCsIeuuFRCcJl",
+  "name": "AI Email Responder",
   "active": false,
   "isArchived": false,
   "nodes": [
     {
       "parameters": {
-        "events": [
-          "invitee.created"
-        ]
+        "options": {}
       },
-      "type": "n8n-nodes-base.calendlyTrigger",
+      "id": "7de45e31-f82e-4acb-9f9f-43ec0228b989",
+      "name": "IMAP Email Trigger",
+      "type": "n8n-nodes-base.emailReadImap",
       "typeVersion": 1,
       "position": [
-        -304,
-        -112
+        -944,
+        192
       ],
-      "id": "8adc4251-02f3-4d16-8366-7e259193e38b",
-      "name": "Calendly Trigger",
-      "webhookId": "c37c3d63-05ef-413c-b618-5e4624993da0",
       "credentials": {
-        "calendlyApi": {
-          "id": "aKebFLMuo7sCQiPF",
-          "name": "Calendly account"
+        "imap": {
+          "id": "T9KL0OWUvjw8gNHK",
+          "name": "IMAP account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.intent }}",
+              "operation": "equals",
+              "value2": "confirmation"
+            }
+          ]
+        }
+      },
+      "id": "db24444d-9a36-453a-9db2-23cdaf10e2b4",
+      "name": "IF: Confirmation",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        -240,
+        304
+      ]
+    },
+    {
+      "parameters": {
+        "fromEmail": "you@example.com",
+        "toEmail": "={{ $json.from }}",
+        "subject": "✅ Confirmation Received",
+        "text": "Thanks for confirming! We've updated your task status.",
+        "options": {}
+      },
+      "id": "1ce42913-5911-4332-8933-eb27eb1c20b3",
+      "name": "Send Confirmation Reply",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2,
+      "position": [
+        0,
+        400
+      ],
+      "webhookId": "56f199c5-f4e9-45d6-acfd-73fd6f8d3f52"
+    },
+    {
+      "parameters": {
+        "fromEmail": "you@example.com",
+        "toEmail": "={{ $json.from }}",
+        "subject": "❌ Declined Task",
+        "text": "Noted. Your decline has been recorded. Let us know if we can help.",
+        "options": {}
+      },
+      "id": "872de31c-fd6c-4795-bb65-e4e615fbf7b9",
+      "name": "Send Decline Reply",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2,
+      "position": [
+        0,
+        0
+      ],
+      "webhookId": "deb4f7ef-458a-40c4-aafd-984bf90e444f",
+      "credentials": {
+        "smtp": {
+          "id": "viOhy0pjdvfp6R4g",
+          "name": "SMTP account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.intent }}",
+              "operation": "equals",
+              "value2": "decline"
+            }
+          ]
+        }
+      },
+      "id": "1beec842-409c-4a88-b4fd-dc022432ab56",
+      "name": "IF: Decline",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        -240,
+        112
+      ]
+    },
+    {
+      "parameters": {
+        "fromEmail": "you@example.com",
+        "toEmail": "support@example.com",
+        "subject": "❓ Uncertain Response",
+        "text": "We received a message from {{ $json.from }} that we couldn't interpret. Please check:",
+        "options": {}
+      },
+      "id": "46701f37-af5d-47ee-b0d2-afec4e19d21a",
+      "name": "Notify Team",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2,
+      "position": [
+        0,
+        208
+      ],
+      "webhookId": "88f9301e-94ad-4be7-b1bd-3e2d4e2374c8"
+    },
+    {
+      "parameters": {
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.7,
+      "position": [
+        -656,
+        160
+      ],
+      "id": "1275b8a8-cba6-4dbd-95b1-c01b68afc534",
+      "name": "Basic LLM Chain"
+    },
+    {
+      "parameters": {
+        "model": "gpt 4o-mini",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatAzureOpenAi",
+      "typeVersion": 1,
+      "position": [
+        -624,
+        368
+      ],
+      "id": "2fc5af01-1f31-45fd-a0f9-2ddfc391f61d",
+      "name": "Azure OpenAI Chat Model",
+      "credentials": {
+        "azureOpenAiApi": {
+          "id": "C3WzT18XqF8OdVM6",
+          "name": "Azure Open AI account"
         }
       }
     }
   ],
-  "connections": {},
+  "connections": {
+    "IMAP Email Trigger": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF: Confirmation": {
+      "main": [
+        [
+          {
+            "node": "Send Confirmation Reply",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Notify Team",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF: Decline": {
+      "main": [
+        [
+          {
+            "node": "Send Decline Reply",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Azure OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "IF: Decline",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "IF: Confirmation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
   "settings": {
     "executionOrder": "v1"
   },
   "staticData": null,
-  "meta": {
-    "templateCredsSetupCompleted": true
-  },
+  "meta": null,
   "pinData": {},
-  "versionId": "a29ffda5-6893-431f-b2e7-6417a5b18941",
+  "versionId": "d7428ee9-a2a8-4c88-bc20-45512473fb2c",
   "activeVersionId": null,
   "triggerCount": 0,
   "shared": [
     {
-      "updatedAt": "2025-09-11T12:25:06.542Z",
-      "createdAt": "2025-09-11T12:25:06.542Z",
+      "updatedAt": "2025-07-30T08:10:58.456Z",
+      "createdAt": "2025-07-30T08:10:58.456Z",
       "role": "workflow:owner",
-      "workflowId": "aFyuRbPqAkhm3lZA",
+      "workflowId": "crgwCsIeuuFRCcJl",
       "projectId": "iXigq15mRQoAAIrt"
     }
   ],
