@@ -1,0 +1,419 @@
+{
+  "updatedAt": "2025-08-04T11:07:12.000Z",
+  "createdAt": "2025-08-04T11:07:02.393Z",
+  "id": "2qCDxoN2sWA49n9V",
+  "name": "My workflow 4",
+  "active": false,
+  "isArchived": true,
+  "nodes": [
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "queryString": "={{ $json['Video File Name'] }}",
+        "filter": {},
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1152,
+        0
+      ],
+      "id": "31571c93-aed3-4868-b30d-3c04779a547a",
+      "name": "Get Video File Id",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "gQtjXVGUgZru29qC",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        704,
+        224
+      ],
+      "id": "81f289bf-89dd-461b-ac8e-b884a42c9980",
+      "name": "Download Video Data",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "gQtjXVGUgZru29qC",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "video",
+        "operation": "upload",
+        "title": "={{ $('Get row(s) in sheet').item.json.Title }}",
+        "regionCode": "IN",
+        "categoryId": "26",
+        "binaryProperty": "=data",
+        "options": {
+          "defaultLanguage": "en",
+          "description": "={{ $('Get row(s) in sheet').item.json.Description }}",
+          "embeddable": false,
+          "license": "youtube",
+          "notifySubscribers": true,
+          "privacyStatus": "unlisted",
+          "publicStatsViewable": true,
+          "selfDeclaredMadeForKids": false,
+          "tags": "children, dress, princess"
+        }
+      },
+      "type": "n8n-nodes-base.youTube",
+      "typeVersion": 1,
+      "position": [
+        928,
+        224
+      ],
+      "id": "4a23721f-4277-4ad0-b9e0-f70ee4d9cc7e",
+      "name": "Upload to YouTube"
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "1qjU8VM9fUa8j_kffujpa2v6XUDknf049YOI2MlsS4sc",
+          "mode": "list",
+          "cachedResultName": "YouTube Upload",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1qjU8VM9fUa8j_kffujpa2v6XUDknf049YOI2MlsS4sc/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1qjU8VM9fUa8j_kffujpa2v6XUDknf049YOI2MlsS4sc/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Video File Name": "={{ $('Get row(s) in sheet').item.json['Video File Name'] }}",
+            "Status": "Uploaded"
+          },
+          "matchingColumns": [
+            "Video File Name"
+          ],
+          "schema": [
+            {
+              "id": "Date",
+              "displayName": "Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Video File Name",
+              "displayName": "Video File Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Title",
+              "displayName": "Title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Description",
+              "displayName": "Description",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        1152,
+        224
+      ],
+      "id": "18ef4489-2d36-4324-bc96-b3f2d2c12607",
+      "name": "Update Status",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "s4dP1fNuVZ2gWvs3",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "queryString": "Uploaded",
+        "filter": {},
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        704,
+        448
+      ],
+      "id": "59cb5a5a-7450-435c-8a77-ccf3557430e2",
+      "name": "Get Folder Name",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "gQtjXVGUgZru29qC",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "move",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $('Download Video Data').item.json.id }}",
+          "mode": "id"
+        },
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        }
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        928,
+        448
+      ],
+      "id": "986aac7a-85ae-4a9f-ab20-de65cfca44fb",
+      "name": "Move Video File to Folder",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "gQtjXVGUgZru29qC",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 9,12,15 * * 1-5"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        704,
+        0
+      ],
+      "id": "68238d94-4880-4124-8198-4221f532b4aa",
+      "name": "M-F 9am,12pm,3pm"
+    },
+    {
+      "parameters": {
+        "content": "## 📹 YouTube Video Upload Automation\n\nThis workflow automates the process of uploading videos to YouTube from Google Drive based on data in a Google Sheet.\n\n**🧭 Flow Overview Trigger:**\n\nRuns Monday to Friday at 9am, 12pm, and 3pm\n\nRead Video Info:\nGoogle Sheets node fetches video metadata (title, description, etc.)\n\nLocate Video in Drive:\nGets the video file ID from Google Drive\n\nDownload Video:\nDownloads the video file from Google Drive using the ID\n\nUpload to YouTube:\nUploads the video with corresponding metadata\n\nUpdate Sheet Status:\nMarks the video as \"Uploaded\" in the sheet to prevent duplicates\n\nOrganize Files:\nSearches for the correct destination folder\nMoves the uploaded video to an \"Archived\" or processed folder",
+        "height": 560,
+        "width": 600
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        0,
+        0
+      ],
+      "typeVersion": 1,
+      "id": "b6976a33-ca35-4ac7-ac97-74c144811f1e",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1qjU8VM9fUa8j_kffujpa2v6XUDknf049YOI2MlsS4sc",
+          "mode": "list",
+          "cachedResultName": "YouTube Upload",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1qjU8VM9fUa8j_kffujpa2v6XUDknf049YOI2MlsS4sc/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1qjU8VM9fUa8j_kffujpa2v6XUDknf049YOI2MlsS4sc/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "Date",
+              "lookupValue": "={{ DateTime.now().format('yyyy-MM-dd') }}"
+            },
+            {
+              "lookupColumn": "Upload Status",
+              "lookupValue": "Scheduled"
+            }
+          ]
+        },
+        "options": {
+          "returnFirstMatch": true
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        928,
+        0
+      ],
+      "id": "508f0d0c-a032-4a1c-a436-a8aa0227d210",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "s4dP1fNuVZ2gWvs3",
+          "name": "Google Sheets account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Get Video File Id": {
+      "main": [
+        [
+          {
+            "node": "Download Video Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download Video Data": {
+      "main": [
+        [
+          {
+            "node": "Upload to YouTube",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload to YouTube": {
+      "main": [
+        [
+          {
+            "node": "Update Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Status": {
+      "main": [
+        [
+          {
+            "node": "Get Folder Name",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Folder Name": {
+      "main": [
+        [
+          {
+            "node": "Move Video File to Folder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "M-F 9am,12pm,3pm": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Get Video File Id",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "c6a3c508-b44c-45c3-b838-04469a71efa0",
+  "activeVersionId": null,
+  "triggerCount": 0,
+  "shared": [
+    {
+      "updatedAt": "2025-08-04T11:07:02.396Z",
+      "createdAt": "2025-08-04T11:07:02.396Z",
+      "role": "workflow:owner",
+      "workflowId": "2qCDxoN2sWA49n9V",
+      "projectId": "iXigq15mRQoAAIrt"
+    }
+  ],
+  "activeVersion": null,
+  "tags": []
+}
