@@ -1,0 +1,1050 @@
+{
+  "updatedAt": "2025-12-28T09:15:54.531Z",
+  "createdAt": "2025-12-16T12:57:39.659Z",
+  "id": "6uwsxNaVXbQPI6uC",
+  "name": "AI-Powered Market Intelligence Workflow Using Base44",
+  "active": true,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "position": [
+        480,
+        656
+      ],
+      "id": "2aa795d5-411c-4d87-acff-6a2cac7b0345",
+      "name": "Error Handler Trigger"
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "C09GNB90TED",
+          "mode": "list",
+          "cachedResultName": "general-information"
+        },
+        "text": "=❌ *Error in API Error Catalog Workflow* *Node:* {{ $json.node.name }} *Message:* {{ $json.error.message }} *Time:* {{ $json.timestamp }}",
+        "otherOptions": {}
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.3,
+      "position": [
+        848,
+        656
+      ],
+      "id": "368e3c43-bb87-44b1-b63a-5c74080d7025",
+      "name": "Slack: Send Error Alert",
+      "webhookId": "d5eff2c3-ff6e-4116-bdda-59455acd861b",
+      "credentials": {
+        "slackApi": {
+          "id": "rNqvWj9TfChPVRYY",
+          "name": "Slack account vivek"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## 🚨 Error Handling \n\n \nCatches any workflow failure and posts an alert to Slack.  \nIncludes node name, error message, and timestamp for quick debugging.\n",
+        "height": 336,
+        "width": 672,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        384,
+        496
+      ],
+      "typeVersion": 1,
+      "id": "e66824ff-3386-409f-ad9e-d95fd85e1e2e",
+      "name": "Sticky Note8"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "4bc9facf-9b16-4e2a-b614-1e37f4cb57f2",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        384,
+        -80
+      ],
+      "id": "6643ea14-dfd3-478e-a68d-b9277415dc50",
+      "name": "Receive Market Research Request",
+      "webhookId": "4bc9facf-9b16-4e2a-b614-1e37f4cb57f2"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "01fc9f66-54e7-4b7a-b856-e1de9a504829",
+              "name": "body.search_query",
+              "value": "={{ $json.body.search_query }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        624,
+        -80
+      ],
+      "id": "c972b016-618a-4bb7-a4ad-b2ea70725087",
+      "name": "Extract Search Query from Request Payload"
+    },
+    {
+      "parameters": {
+        "q": "={{ $json.body.search_query }}",
+        "additionalFields": {
+          "uule": "India",
+          "num": "10"
+        },
+        "requestOptions": {}
+      },
+      "type": "n8n-nodes-serpapi.serpApi",
+      "typeVersion": 1,
+      "position": [
+        896,
+        -80
+      ],
+      "id": "6f860d76-bb7e-468c-b878-c4bfbd7dcf86",
+      "name": "Execute Google SERP Search (India)",
+      "credentials": {
+        "serpApi": {
+          "id": "55JofBBduBmi1DWi",
+          "name": "saurabh SerpApi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are given a cleaned and structured Google SERP market dataset.\n\nAnalyze the dataset holistically to extract insights about the\nChristmas / holiday gift bundles market.\n\nDATA:\n{{ JSON.stringify($json.analysis_input) }}\n\nYour task:\n1. Identify dominant product themes\n2. Extract core buyer intent signals\n3. Identify high-opportunity product categories\n4. Summarize pricing and positioning patterns\n5. Provide clear strategic recommendations for brands or sellers\n\nReturn ONE consolidated market analysis.\nReturn ONLY JSON.\n",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=You are a senior market intelligence and e-commerce strategy analyst.\n\nYou specialize in:\n- Identifying demand patterns from search behavior\n- Detecting dominant product positioning\n- Translating market signals into actionable business recommendations\n\nRules:\n- Analyze the dataset as a whole, not item-by-item\n- Ignore brand-specific marketing fluff\n- Focus on demand, positioning, pricing signals, and buyer intent\n- Be concise, decisive, and structured\n- Do NOT repeat raw input data\n- Do NOT explain your reasoning\n\nYou must return ONLY valid JSON that matches the required output schema.\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        1456,
+        -80
+      ],
+      "id": "4a74df77-6dbd-426d-bca1-a6a59d42f9f8",
+      "name": "Analyze Holiday Gift Bundle Market Signals"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o",
+          "mode": "list",
+          "cachedResultName": "gpt-4o"
+        },
+        "responsesApiEnabled": false,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        1456,
+        176
+      ],
+      "id": "a6d04cfd-7105-46b6-accd-9a6aec179ddd",
+      "name": "LLM Engine for Market Intelligence Analysis",
+      "credentials": {
+        "openAiApi": {
+          "id": "5Kzt6hGSZ1JHZqWN",
+          "name": "OpenAi account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"analysis_type\": \"Holiday Gift Bundles Market Analysis\",\n  \"market_context\": {\n    \"region\": \"string\",\n    \"season\": \"string\",\n    \"search_demand_strength\": \"high | medium | low\"\n  },\n  \"dominant_product_themes\": [\n    \"string\"\n  ],\n  \"buyer_intent_signals\": [\n    \"string\"\n  ],\n  \"price_positioning_insights\": {\n    \"dominant_price_band\": \"string\",\n    \"premium_presence\": \"boolean\",\n    \"commoditized_presence\": \"boolean\"\n  },\n  \"high_opportunity_categories\": [\n    \"string\"\n  ],\n  \"strategic_recommendations\": [\n    \"string\"\n  ],\n  \"confidence_score\": {\n    \"level\": \"high | medium | low\",\n    \"reason\": \"string\"\n  }\n}\n"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        1648,
+        176
+      ],
+      "id": "ce13c637-d751-4310-bf05-c26a9190b225",
+      "name": "Parse Market Analysis Output JSON"
+    },
+    {
+      "parameters": {
+        "jsCode": "const input = $json;\n\nreturn [{\n  analysis_input: {\n    query: input.search_parameters?.q || null,\n    region: input.search_parameters?.uule || null,\n\n    organic_insights: (input.organic_results || []).map(r => ({\n      title: r.title || \"\",\n      snippet: r.snippet || \"\",\n      source: r.source || \"\"\n    })),\n\n    people_also_ask: (input.related_questions || []).map(q => q.question),\n\n    related_searches: (input.related_searches || []).map(r => r.query),\n\n    meta: {\n      total_results: input.search_information?.total_results || 0,\n      time_taken: input.search_information?.time_taken_displayed || null\n    }\n  }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1200,
+        -80
+      ],
+      "id": "983e1fba-873c-46a8-af13-e982daec0789",
+      "name": "Normalize SERP Results into Analysis Dataset"
+    },
+    {
+      "parameters": {
+        "jsCode": "return [\n  {\n    ...items[0].json.output\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1968,
+        -80
+      ],
+      "id": "2338c6b7-c86d-431b-9d13-220e1a0e6b84",
+      "name": "Flatten Market Analysis Output for Messaging"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are given the following structured Christmas e-commerce market analysis data in JSON format.\n\nDATA:\n{{ JSON.stringify($json, null, 2) }}\n\nYour task:\nCreate a Slack-ready market update that includes:\n\n1. 📊 Market Snapshot (1–2 lines)\n2. 🚀 Key Opportunities (bulleted)\n3. ✅ Recommended Next Steps (actionable bullets)\n\nFormatting rules:\n- Use emojis\n- Use short bullet points\n- Keep it clean and readable in Slack\n- Do NOT include JSON\n- Do NOT include headings outside Slack formatting\n\nReturn ONLY the Slack message text.\n",
+        "options": {
+          "systemMessage": "=You are a senior e-commerce strategy consultant.\n\nYour job:\n- Analyze structured market intelligence data\n- Convert it into concise, actionable insights\n- Format the response specifically for Slack messages\n\nRules:\n- Use ONLY the data provided in the user message\n- Do NOT add external assumptions\n- Do NOT explain your reasoning\n- Be concise, tactical, and business-focused\n- Use Slack-friendly formatting (emojis, short sections, bullet points)\n- Output ONLY the Slack message text\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        2272,
+        -80
+      ],
+      "id": "94e6d0e6-cf8f-404e-8d15-b966a50f5638",
+      "name": "Generate Slack-Ready Market Insights Summary (AI)"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o",
+          "mode": "list",
+          "cachedResultName": "gpt-4o"
+        },
+        "responsesApiEnabled": false,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        2272,
+        192
+      ],
+      "id": "20e3ec91-1400-417c-8061-d6d04bb162b2",
+      "name": "LLM Engine for Slack Insight Formatting",
+      "credentials": {
+        "openAiApi": {
+          "id": "5Kzt6hGSZ1JHZqWN",
+          "name": "OpenAi account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "C09GNB90TED",
+          "mode": "list",
+          "cachedResultName": "general-information"
+        },
+        "text": "={{ $json.output }}",
+        "otherOptions": {}
+      },
+      "id": "8b2132c4-cbc7-4790-ae1a-1bc6f4f4aada",
+      "name": "Send Market Intelligence Summary to Slack Channel",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.1,
+      "position": [
+        2720,
+        -80
+      ],
+      "webhookId": "c15b6935-ed1d-4d93-9e8d-27d1b67d29f0",
+      "credentials": {
+        "slackApi": {
+          "id": "rNqvWj9TfChPVRYY",
+          "name": "Slack account vivek"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## 📊 AI-Powered Market Intelligence Workflow Using Base44\nThis workflow automates end-to-end market research using live Google SERP data\nand AI-driven strategic analysis.\n\nIt receives a market research query via webhook → performs a Google SERP search\n(India-focused) → normalizes raw search results into a clean analysis dataset →\nuses GPT-4o to extract market signals, buyer intent, pricing patterns, and\nopportunities → converts the analysis into a Slack-ready insight summary →\nand posts actionable intelligence directly to a Slack channel.\n\nThe workflow ensures:\n• Real-time demand-driven market research\n• Clean SERP data normalization\n• AI-based strategic market interpretation (not raw summaries)\n• Executive-friendly Slack insights (snapshot, opportunities, next steps)\n• Zero manual research or formatting effort\n\nThis enables founders, marketers, and operators to make fast, data-backed\ndecisions from live search behavior.\n",
+        "height": 416,
+        "width": 736
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -448,
+        -880
+      ],
+      "typeVersion": 1,
+      "id": "4e8e02d3-7397-403c-b525-50e61e7d6900",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## 📥 Market Research Request Intake\nHandles incoming research requests and prepares the query.\n\n• Receive Market Research Request  \n  Accepts a POST webhook containing the market search query.\n\n• Extract Search Query from Request Payload  \n  Cleans and isolates the search_query field for downstream processing.\n",
+        "height": 624,
+        "width": 480,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        320,
+        -400
+      ],
+      "typeVersion": 1,
+      "id": "6649520f-6ba9-4291-af78-f29a05b2d0e8",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "## 🌐 Google SERP Data Collection (India)\nFetches real-time search data from Google.\n\n• Execute Google SERP Search (India)  \n  Runs a Google search using SerpAPI with India as the target region,\n  returning organic results, related questions, and related searches.\n",
+        "height": 512,
+        "width": 512,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        832,
+        -352
+      ],
+      "typeVersion": 1,
+      "id": "17417487-c628-49d1-8ff0-3134218af7ca",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "## 🧠 AI Market Signal & Opportunity Analysis\nPerforms holistic market analysis using GPT-4o.\n\n• Analyze Holiday Gift Bundle Market Signals  \n  AI analyzes SERP demand patterns to identify:\n  - Dominant product themes\n  - Buyer intent signals\n  - Price positioning trends\n  - High-opportunity categories\n  - Strategic recommendations\n\n• Parse Market Analysis Output JSON  \n  Ensures AI output strictly follows the defined market analysis schema.\n",
+        "height": 848,
+        "width": 464,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1376,
+        -448
+      ],
+      "typeVersion": 1,
+      "id": "fe0781ac-995e-4c59-a29f-f4e8aa368f9d",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "## 🔄 Prepare Market Analysis for Distribution\nOptimizes AI output for downstream communication.\n\n• Flatten Market Analysis Output for Messaging  \n  Removes nesting and prepares a clean object for Slack summarization.\n",
+        "height": 656,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1904,
+        -384
+      ],
+      "typeVersion": 1,
+      "id": "ad9f36a2-0047-4d36-99f0-db8a7c9b98ad",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "## 💬 Slack Market Intelligence Summary\nConverts structured analysis into an executive-friendly Slack message.\n\n• Generate Slack-Ready Market Insights Summary  \n  AI creates:\n  - 📊 Market snapshot\n  - 🚀 Key opportunities\n  - ✅ Recommended next steps\n  Using concise bullets and emojis.\n\n• LLM Engine for Slack Insight Formatting  \n  Supplies GPT-4o to ensure crisp, Slack-optimized messaging.\n",
+        "height": 848,
+        "width": 400,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2192,
+        -464
+      ],
+      "typeVersion": 1,
+      "id": "b2c30eba-7a48-4d78-891d-a0f9923d1a08",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "content": "## 📣 Market Intelligence Delivery\nPublishes insights to the team.\n\n• Send Market Intelligence Summary to Slack Channel  \n  Posts the final Slack-formatted market intelligence update\n  directly to the configured Slack channel.\n",
+        "height": 480,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2656,
+        -368
+      ],
+      "typeVersion": 1,
+      "id": "b37e697c-96e9-46ab-b9ab-5346e660105f",
+      "name": "Sticky Note6"
+    }
+  ],
+  "connections": {
+    "Error Handler Trigger": {
+      "main": [
+        [
+          {
+            "node": "Slack: Send Error Alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Receive Market Research Request": {
+      "main": [
+        [
+          {
+            "node": "Extract Search Query from Request Payload",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Search Query from Request Payload": {
+      "main": [
+        [
+          {
+            "node": "Execute Google SERP Search (India)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Google SERP Search (India)": {
+      "main": [
+        [
+          {
+            "node": "Normalize SERP Results into Analysis Dataset",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyze Holiday Gift Bundle Market Signals": {
+      "main": [
+        [
+          {
+            "node": "Flatten Market Analysis Output for Messaging",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "LLM Engine for Market Intelligence Analysis": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Analyze Holiday Gift Bundle Market Signals",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Market Analysis Output JSON": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Analyze Holiday Gift Bundle Market Signals",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize SERP Results into Analysis Dataset": {
+      "main": [
+        [
+          {
+            "node": "Analyze Holiday Gift Bundle Market Signals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Flatten Market Analysis Output for Messaging": {
+      "main": [
+        [
+          {
+            "node": "Generate Slack-Ready Market Insights Summary (AI)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Slack-Ready Market Insights Summary (AI)": {
+      "main": [
+        [
+          {
+            "node": "Send Market Intelligence Summary to Slack Channel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "LLM Engine for Slack Insight Formatting": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Generate Slack-Ready Market Insights Summary (AI)",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "e29b1cb3-3cb0-4ca7-b10c-6302f4607863",
+  "activeVersionId": "e29b1cb3-3cb0-4ca7-b10c-6302f4607863",
+  "triggerCount": 1,
+  "shared": [
+    {
+      "updatedAt": "2025-12-16T12:57:39.662Z",
+      "createdAt": "2025-12-16T12:57:39.662Z",
+      "role": "workflow:owner",
+      "workflowId": "6uwsxNaVXbQPI6uC",
+      "projectId": "iXigq15mRQoAAIrt"
+    }
+  ],
+  "activeVersion": {
+    "updatedAt": "2025-12-17T10:37:04.134Z",
+    "createdAt": "2025-12-17T10:37:04.134Z",
+    "versionId": "e29b1cb3-3cb0-4ca7-b10c-6302f4607863",
+    "workflowId": "6uwsxNaVXbQPI6uC",
+    "nodes": [
+      {
+        "parameters": {},
+        "type": "n8n-nodes-base.errorTrigger",
+        "typeVersion": 1,
+        "position": [
+          480,
+          656
+        ],
+        "id": "2aa795d5-411c-4d87-acff-6a2cac7b0345",
+        "name": "Error Handler Trigger"
+      },
+      {
+        "parameters": {
+          "select": "channel",
+          "channelId": {
+            "__rl": true,
+            "value": "C09GNB90TED",
+            "mode": "list",
+            "cachedResultName": "general-information"
+          },
+          "text": "=❌ *Error in API Error Catalog Workflow* *Node:* {{ $json.node.name }} *Message:* {{ $json.error.message }} *Time:* {{ $json.timestamp }}",
+          "otherOptions": {}
+        },
+        "type": "n8n-nodes-base.slack",
+        "typeVersion": 2.3,
+        "position": [
+          848,
+          656
+        ],
+        "id": "368e3c43-bb87-44b1-b63a-5c74080d7025",
+        "name": "Slack: Send Error Alert",
+        "webhookId": "d5eff2c3-ff6e-4116-bdda-59455acd861b",
+        "credentials": {
+          "slackApi": {
+            "id": "rNqvWj9TfChPVRYY",
+            "name": "Slack account vivek"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "content": "## 🚨 Error Handling \n\n \nCatches any workflow failure and posts an alert to Slack.  \nIncludes node name, error message, and timestamp for quick debugging.\n",
+          "height": 336,
+          "width": 672,
+          "color": 7
+        },
+        "type": "n8n-nodes-base.stickyNote",
+        "position": [
+          384,
+          496
+        ],
+        "typeVersion": 1,
+        "id": "e66824ff-3386-409f-ad9e-d95fd85e1e2e",
+        "name": "Sticky Note8"
+      },
+      {
+        "parameters": {
+          "httpMethod": "POST",
+          "path": "4bc9facf-9b16-4e2a-b614-1e37f4cb57f2",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.webhook",
+        "typeVersion": 2.1,
+        "position": [
+          384,
+          -80
+        ],
+        "id": "6643ea14-dfd3-478e-a68d-b9277415dc50",
+        "name": "Receive Market Research Request",
+        "webhookId": "4bc9facf-9b16-4e2a-b614-1e37f4cb57f2"
+      },
+      {
+        "parameters": {
+          "assignments": {
+            "assignments": [
+              {
+                "id": "01fc9f66-54e7-4b7a-b856-e1de9a504829",
+                "name": "body.search_query",
+                "value": "={{ $json.body.search_query }}",
+                "type": "string"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 3.4,
+        "position": [
+          624,
+          -80
+        ],
+        "id": "c972b016-618a-4bb7-a4ad-b2ea70725087",
+        "name": "Extract Search Query from Request Payload"
+      },
+      {
+        "parameters": {
+          "q": "={{ $json.body.search_query }}",
+          "additionalFields": {
+            "uule": "India",
+            "num": "10"
+          },
+          "requestOptions": {}
+        },
+        "type": "n8n-nodes-serpapi.serpApi",
+        "typeVersion": 1,
+        "position": [
+          896,
+          -80
+        ],
+        "id": "6f860d76-bb7e-468c-b878-c4bfbd7dcf86",
+        "name": "Execute Google SERP Search (India)",
+        "credentials": {
+          "serpApi": {
+            "id": "55JofBBduBmi1DWi",
+            "name": "saurabh SerpApi account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "promptType": "define",
+          "text": "=You are given a cleaned and structured Google SERP market dataset.\n\nAnalyze the dataset holistically to extract insights about the\nChristmas / holiday gift bundles market.\n\nDATA:\n{{ JSON.stringify($json.analysis_input) }}\n\nYour task:\n1. Identify dominant product themes\n2. Extract core buyer intent signals\n3. Identify high-opportunity product categories\n4. Summarize pricing and positioning patterns\n5. Provide clear strategic recommendations for brands or sellers\n\nReturn ONE consolidated market analysis.\nReturn ONLY JSON.\n",
+          "hasOutputParser": true,
+          "options": {
+            "systemMessage": "=You are a senior market intelligence and e-commerce strategy analyst.\n\nYou specialize in:\n- Identifying demand patterns from search behavior\n- Detecting dominant product positioning\n- Translating market signals into actionable business recommendations\n\nRules:\n- Analyze the dataset as a whole, not item-by-item\n- Ignore brand-specific marketing fluff\n- Focus on demand, positioning, pricing signals, and buyer intent\n- Be concise, decisive, and structured\n- Do NOT repeat raw input data\n- Do NOT explain your reasoning\n\nYou must return ONLY valid JSON that matches the required output schema.\n"
+          }
+        },
+        "type": "@n8n/n8n-nodes-langchain.agent",
+        "typeVersion": 2,
+        "position": [
+          1456,
+          -80
+        ],
+        "id": "4a74df77-6dbd-426d-bca1-a6a59d42f9f8",
+        "name": "Analyze Holiday Gift Bundle Market Signals"
+      },
+      {
+        "parameters": {
+          "model": {
+            "__rl": true,
+            "value": "gpt-4o",
+            "mode": "list",
+            "cachedResultName": "gpt-4o"
+          },
+          "responsesApiEnabled": false,
+          "options": {}
+        },
+        "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "typeVersion": 1.3,
+        "position": [
+          1456,
+          176
+        ],
+        "id": "a6d04cfd-7105-46b6-accd-9a6aec179ddd",
+        "name": "LLM Engine for Market Intelligence Analysis",
+        "credentials": {
+          "openAiApi": {
+            "id": "5Kzt6hGSZ1JHZqWN",
+            "name": "OpenAi account 2"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "jsonSchemaExample": "{\n  \"analysis_type\": \"Holiday Gift Bundles Market Analysis\",\n  \"market_context\": {\n    \"region\": \"string\",\n    \"season\": \"string\",\n    \"search_demand_strength\": \"high | medium | low\"\n  },\n  \"dominant_product_themes\": [\n    \"string\"\n  ],\n  \"buyer_intent_signals\": [\n    \"string\"\n  ],\n  \"price_positioning_insights\": {\n    \"dominant_price_band\": \"string\",\n    \"premium_presence\": \"boolean\",\n    \"commoditized_presence\": \"boolean\"\n  },\n  \"high_opportunity_categories\": [\n    \"string\"\n  ],\n  \"strategic_recommendations\": [\n    \"string\"\n  ],\n  \"confidence_score\": {\n    \"level\": \"high | medium | low\",\n    \"reason\": \"string\"\n  }\n}\n"
+        },
+        "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+        "typeVersion": 1.3,
+        "position": [
+          1648,
+          176
+        ],
+        "id": "ce13c637-d751-4310-bf05-c26a9190b225",
+        "name": "Parse Market Analysis Output JSON"
+      },
+      {
+        "parameters": {
+          "jsCode": "const input = $json;\n\nreturn [{\n  analysis_input: {\n    query: input.search_parameters?.q || null,\n    region: input.search_parameters?.uule || null,\n\n    organic_insights: (input.organic_results || []).map(r => ({\n      title: r.title || \"\",\n      snippet: r.snippet || \"\",\n      source: r.source || \"\"\n    })),\n\n    people_also_ask: (input.related_questions || []).map(q => q.question),\n\n    related_searches: (input.related_searches || []).map(r => r.query),\n\n    meta: {\n      total_results: input.search_information?.total_results || 0,\n      time_taken: input.search_information?.time_taken_displayed || null\n    }\n  }\n}];\n"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          1200,
+          -80
+        ],
+        "id": "983e1fba-873c-46a8-af13-e982daec0789",
+        "name": "Normalize SERP Results into Analysis Dataset"
+      },
+      {
+        "parameters": {
+          "jsCode": "return [\n  {\n    ...items[0].json.output\n  }\n];\n"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          1968,
+          -80
+        ],
+        "id": "2338c6b7-c86d-431b-9d13-220e1a0e6b84",
+        "name": "Flatten Market Analysis Output for Messaging"
+      },
+      {
+        "parameters": {
+          "promptType": "define",
+          "text": "=You are given the following structured Christmas e-commerce market analysis data in JSON format.\n\nDATA:\n{{ JSON.stringify($json, null, 2) }}\n\nYour task:\nCreate a Slack-ready market update that includes:\n\n1. 📊 Market Snapshot (1–2 lines)\n2. 🚀 Key Opportunities (bulleted)\n3. ✅ Recommended Next Steps (actionable bullets)\n\nFormatting rules:\n- Use emojis\n- Use short bullet points\n- Keep it clean and readable in Slack\n- Do NOT include JSON\n- Do NOT include headings outside Slack formatting\n\nReturn ONLY the Slack message text.\n",
+          "options": {
+            "systemMessage": "=You are a senior e-commerce strategy consultant.\n\nYour job:\n- Analyze structured market intelligence data\n- Convert it into concise, actionable insights\n- Format the response specifically for Slack messages\n\nRules:\n- Use ONLY the data provided in the user message\n- Do NOT add external assumptions\n- Do NOT explain your reasoning\n- Be concise, tactical, and business-focused\n- Use Slack-friendly formatting (emojis, short sections, bullet points)\n- Output ONLY the Slack message text\n"
+          }
+        },
+        "type": "@n8n/n8n-nodes-langchain.agent",
+        "typeVersion": 2,
+        "position": [
+          2272,
+          -80
+        ],
+        "id": "94e6d0e6-cf8f-404e-8d15-b966a50f5638",
+        "name": "Generate Slack-Ready Market Insights Summary (AI)"
+      },
+      {
+        "parameters": {
+          "model": {
+            "__rl": true,
+            "value": "gpt-4o",
+            "mode": "list",
+            "cachedResultName": "gpt-4o"
+          },
+          "responsesApiEnabled": false,
+          "options": {}
+        },
+        "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "typeVersion": 1.3,
+        "position": [
+          2272,
+          192
+        ],
+        "id": "20e3ec91-1400-417c-8061-d6d04bb162b2",
+        "name": "LLM Engine for Slack Insight Formatting",
+        "credentials": {
+          "openAiApi": {
+            "id": "5Kzt6hGSZ1JHZqWN",
+            "name": "OpenAi account 2"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "select": "channel",
+          "channelId": {
+            "__rl": true,
+            "value": "C09GNB90TED",
+            "mode": "list",
+            "cachedResultName": "general-information"
+          },
+          "text": "={{ $json.output }}",
+          "otherOptions": {}
+        },
+        "id": "8b2132c4-cbc7-4790-ae1a-1bc6f4f4aada",
+        "name": "Send Market Intelligence Summary to Slack Channel",
+        "type": "n8n-nodes-base.slack",
+        "typeVersion": 2.1,
+        "position": [
+          2720,
+          -80
+        ],
+        "webhookId": "c15b6935-ed1d-4d93-9e8d-27d1b67d29f0",
+        "credentials": {
+          "slackApi": {
+            "id": "rNqvWj9TfChPVRYY",
+            "name": "Slack account vivek"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "content": "## 📊 AI-Powered Market Intelligence Workflow Using Base44\nThis workflow automates end-to-end market research using live Google SERP data\nand AI-driven strategic analysis.\n\nIt receives a market research query via webhook → performs a Google SERP search\n(India-focused) → normalizes raw search results into a clean analysis dataset →\nuses GPT-4o to extract market signals, buyer intent, pricing patterns, and\nopportunities → converts the analysis into a Slack-ready insight summary →\nand posts actionable intelligence directly to a Slack channel.\n\nThe workflow ensures:\n• Real-time demand-driven market research\n• Clean SERP data normalization\n• AI-based strategic market interpretation (not raw summaries)\n• Executive-friendly Slack insights (snapshot, opportunities, next steps)\n• Zero manual research or formatting effort\n\nThis enables founders, marketers, and operators to make fast, data-backed\ndecisions from live search behavior.\n",
+          "height": 416,
+          "width": 736
+        },
+        "type": "n8n-nodes-base.stickyNote",
+        "position": [
+          -448,
+          -880
+        ],
+        "typeVersion": 1,
+        "id": "4e8e02d3-7397-403c-b525-50e61e7d6900",
+        "name": "Sticky Note"
+      },
+      {
+        "parameters": {
+          "content": "## 📥 Market Research Request Intake\nHandles incoming research requests and prepares the query.\n\n• Receive Market Research Request  \n  Accepts a POST webhook containing the market search query.\n\n• Extract Search Query from Request Payload  \n  Cleans and isolates the search_query field for downstream processing.\n",
+          "height": 624,
+          "width": 480,
+          "color": 7
+        },
+        "type": "n8n-nodes-base.stickyNote",
+        "position": [
+          320,
+          -400
+        ],
+        "typeVersion": 1,
+        "id": "6649520f-6ba9-4291-af78-f29a05b2d0e8",
+        "name": "Sticky Note1"
+      },
+      {
+        "parameters": {
+          "content": "## 🌐 Google SERP Data Collection (India)\nFetches real-time search data from Google.\n\n• Execute Google SERP Search (India)  \n  Runs a Google search using SerpAPI with India as the target region,\n  returning organic results, related questions, and related searches.\n",
+          "height": 512,
+          "width": 512,
+          "color": 7
+        },
+        "type": "n8n-nodes-base.stickyNote",
+        "position": [
+          832,
+          -352
+        ],
+        "typeVersion": 1,
+        "id": "17417487-c628-49d1-8ff0-3134218af7ca",
+        "name": "Sticky Note2"
+      },
+      {
+        "parameters": {
+          "content": "## 🧠 AI Market Signal & Opportunity Analysis\nPerforms holistic market analysis using GPT-4o.\n\n• Analyze Holiday Gift Bundle Market Signals  \n  AI analyzes SERP demand patterns to identify:\n  - Dominant product themes\n  - Buyer intent signals\n  - Price positioning trends\n  - High-opportunity categories\n  - Strategic recommendations\n\n• Parse Market Analysis Output JSON  \n  Ensures AI output strictly follows the defined market analysis schema.\n",
+          "height": 848,
+          "width": 464,
+          "color": 7
+        },
+        "type": "n8n-nodes-base.stickyNote",
+        "position": [
+          1376,
+          -448
+        ],
+        "typeVersion": 1,
+        "id": "fe0781ac-995e-4c59-a29f-f4e8aa368f9d",
+        "name": "Sticky Note3"
+      },
+      {
+        "parameters": {
+          "content": "## 🔄 Prepare Market Analysis for Distribution\nOptimizes AI output for downstream communication.\n\n• Flatten Market Analysis Output for Messaging  \n  Removes nesting and prepares a clean object for Slack summarization.\n",
+          "height": 656,
+          "color": 7
+        },
+        "type": "n8n-nodes-base.stickyNote",
+        "position": [
+          1904,
+          -384
+        ],
+        "typeVersion": 1,
+        "id": "ad9f36a2-0047-4d36-99f0-db8a7c9b98ad",
+        "name": "Sticky Note4"
+      },
+      {
+        "parameters": {
+          "content": "## 💬 Slack Market Intelligence Summary\nConverts structured analysis into an executive-friendly Slack message.\n\n• Generate Slack-Ready Market Insights Summary  \n  AI creates:\n  - 📊 Market snapshot\n  - 🚀 Key opportunities\n  - ✅ Recommended next steps\n  Using concise bullets and emojis.\n\n• LLM Engine for Slack Insight Formatting  \n  Supplies GPT-4o to ensure crisp, Slack-optimized messaging.\n",
+          "height": 848,
+          "width": 400,
+          "color": 7
+        },
+        "type": "n8n-nodes-base.stickyNote",
+        "position": [
+          2192,
+          -464
+        ],
+        "typeVersion": 1,
+        "id": "b2c30eba-7a48-4d78-891d-a0f9923d1a08",
+        "name": "Sticky Note5"
+      },
+      {
+        "parameters": {
+          "content": "## 📣 Market Intelligence Delivery\nPublishes insights to the team.\n\n• Send Market Intelligence Summary to Slack Channel  \n  Posts the final Slack-formatted market intelligence update\n  directly to the configured Slack channel.\n",
+          "height": 480,
+          "color": 7
+        },
+        "type": "n8n-nodes-base.stickyNote",
+        "position": [
+          2656,
+          -368
+        ],
+        "typeVersion": 1,
+        "id": "b37e697c-96e9-46ab-b9ab-5346e660105f",
+        "name": "Sticky Note6"
+      }
+    ],
+    "connections": {
+      "Error Handler Trigger": {
+        "main": [
+          [
+            {
+              "node": "Slack: Send Error Alert",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Receive Market Research Request": {
+        "main": [
+          [
+            {
+              "node": "Extract Search Query from Request Payload",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Extract Search Query from Request Payload": {
+        "main": [
+          [
+            {
+              "node": "Execute Google SERP Search (India)",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Execute Google SERP Search (India)": {
+        "main": [
+          [
+            {
+              "node": "Normalize SERP Results into Analysis Dataset",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Analyze Holiday Gift Bundle Market Signals": {
+        "main": [
+          [
+            {
+              "node": "Flatten Market Analysis Output for Messaging",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "LLM Engine for Market Intelligence Analysis": {
+        "ai_languageModel": [
+          [
+            {
+              "node": "Analyze Holiday Gift Bundle Market Signals",
+              "type": "ai_languageModel",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Parse Market Analysis Output JSON": {
+        "ai_outputParser": [
+          [
+            {
+              "node": "Analyze Holiday Gift Bundle Market Signals",
+              "type": "ai_outputParser",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Normalize SERP Results into Analysis Dataset": {
+        "main": [
+          [
+            {
+              "node": "Analyze Holiday Gift Bundle Market Signals",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Flatten Market Analysis Output for Messaging": {
+        "main": [
+          [
+            {
+              "node": "Generate Slack-Ready Market Insights Summary (AI)",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Generate Slack-Ready Market Insights Summary (AI)": {
+        "main": [
+          [
+            {
+              "node": "Send Market Intelligence Summary to Slack Channel",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "LLM Engine for Slack Insight Formatting": {
+        "ai_languageModel": [
+          [
+            {
+              "node": "Generate Slack-Ready Market Insights Summary (AI)",
+              "type": "ai_languageModel",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "authors": "IT Support",
+    "name": null,
+    "description": null
+  },
+  "tags": []
+}
