@@ -1,0 +1,470 @@
+{
+  "updatedAt": "2025-09-12T06:35:21.000Z",
+  "createdAt": "2025-08-29T01:53:01.485Z",
+  "id": "8dq33VzLgnlj7kkc",
+  "name": "Analyze YouTube Channels & Generate Reports with GPT-4o-mini and Gmail",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "fromEmail": "email@gmail.com",
+        "toEmail": "reciever@gmail.com",
+        "subject": "Channel assesment",
+        "html": "={{ $json.html }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        2112,
+        128
+      ],
+      "id": "12b5b00a-6001-45bf-859e-5c2b257dcab0",
+      "name": "Sending report via email",
+      "webhookId": "75c1ce39-8ca3-4dc8-9342-186dabbdc32c",
+      "credentials": {
+        "smtp": {
+          "id": "viOhy0pjdvfp6R4g",
+          "name": "SMTP account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Input expected:\n// items[0].json.output  -> the analysis text (string, markdown-ish)\n// Optional Channel ID fields on the same item:\n//  - items[0].json[\"CHANEEL ID\"] (your sheet column – note the exact spelling)\n//  - items[0].json[\"CHANNEL_ID\"]\n//  - items[0].json[\"channelId\"]\n\nfunction escapeHtml(s) {\n  return s\n    .replace(/&/g, \"&amp;\")\n    .replace(/</g, \"&lt;\")\n    .replace(/>/g, \"&gt;\");\n}\n\n// Markdown-ish to HTML with table support\nfunction mdToHtml(md) {\n  md = md.replace(/\\r\\n/g, \"\\n\"); // normalize newlines\n  md = md.replace(/\\*\\*(.+?)\\*\\*/g, \"<strong>$1</strong>\"); // **bold**\n\n  const lines = md.split(\"\\n\");\n  let html = \"\";\n  let inList = false;\n  let inTable = false;\n  let tableBuffer = [];\n\n  const closeList = () => {\n    if (inList) {\n      html += \"</ul>\";\n      inList = false;\n    }\n  };\n\n  const flushTable = () => {\n    if (!inTable) return;\n    inTable = false;\n\n    if (tableBuffer.length >= 2) {\n      const headers = tableBuffer[0]\n        .split(\"|\")\n        .map(s => s.trim())\n        .filter(Boolean);\n\n      const rows = tableBuffer.slice(2).map(r =>\n        r.split(\"|\").map(s => s.trim()).filter(Boolean)\n      );\n\n      html += `\n      <table style=\"border-collapse:collapse; width:100%; margin:16px 0; font-size:14px; font-family:Arial,Helvetica,sans-serif;\">\n        <thead>\n          <tr>\n            ${headers\n              .map(\n                h =>\n                  `<th style=\"border:1px solid #d1d5db; background:#f9fafb; padding:8px; text-align:left;\">${escapeHtml(\n                    h\n                  )}</th>`\n              )\n              .join(\"\")}\n          </tr>\n        </thead>\n        <tbody>\n          ${rows\n            .map(\n              row =>\n                `<tr>${row\n                  .map(\n                    cell =>\n                      `<td style=\"border:1px solid #e5e7eb; padding:8px;\">${escapeHtml(\n                        cell\n                      )}</td>`\n                  )\n                  .join(\"\")}</tr>`\n            )\n            .join(\"\")}\n        </tbody>\n      </table>`;\n    }\n\n    tableBuffer = [];\n  };\n\n  for (let rawLine of lines) {\n    const line = rawLine.trimEnd();\n\n    if (line.startsWith(\"|\") && line.endsWith(\"|\")) {\n      // Markdown table row\n      tableBuffer.push(line);\n      inTable = true;\n      continue;\n    } else {\n      flushTable();\n    }\n\n    if (!line.trim()) {\n      closeList();\n      html += '<div style=\"height:12px;line-height:12px;\"></div>';\n      continue;\n    }\n\n    // Headings like \"### SWOT Analysis\"\n    const headingMatch = line.match(/^#{1,6}\\s+(.*)$/);\n    if (headingMatch) {\n      closeList();\n      html += `<h2 style=\"margin:16px 0 8px;font-size:18px;line-height:1.4;\">${escapeHtml(\n        headingMatch[1]\n      )}</h2>`;\n      continue;\n    }\n\n    // Bullets\n    const bulletMatch = line.match(/^\\-\\s+(.*)$/);\n    if (bulletMatch) {\n      if (!inList) {\n        html += '<ul style=\"margin:0 0 8px 20px;padding:0;\">';\n        inList = true;\n      }\n      html += `<li style=\"margin:0 0 6px 0;\">${escapeHtml(\n        bulletMatch[1]\n      )}</li>`;\n      continue;\n    }\n\n    closeList();\n    html += `<p style=\"margin:0 0 10px 0;\">${escapeHtml(line)}</p>`;\n  }\n\n  closeList();\n  flushTable();\n  return html;\n}\n\nconst out = [];\n\nfor (const item of items) {\n  const analysis = (item.json.output || \"\").toString();\n\n  // Try to pull Channel ID\n  const channelId =\n    item.json[\"CHANEEL ID\"] ??\n    item.json[\"CHANNEL_ID\"] ??\n    item.json[\"channelId\"] ??\n    \"\";\n\n  const bodyHtml = mdToHtml(analysis);\n\n  const emailHtml = `\n<!doctype html>\n<html>\n  <head>\n    <meta charset=\"utf-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <title>YouTube Channel Analysis</title>\n    <style>\n      @media screen and (max-width:600px) {\n        .container { width:100% !important; }\n        .content { padding:20px !important; }\n        h1 { font-size:22px !important; }\n      }\n    </style>\n  </head>\n  <body style=\"margin:0; padding:0; background:#f6f7fb;\">\n    <table role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\" style=\"background:#f6f7fb;\">\n      <tr>\n        <td align=\"center\" style=\"padding:24px;\">\n          <table class=\"container\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"600\" style=\"background:#ffffff; border-radius:16px; box-shadow:0 6px 24px rgba(18,38,63,0.08);\">\n            <tr>\n              <td style=\"background:linear-gradient(135deg,#111827,#374151); padding:28px;\">\n                <h1 style=\"margin:0; color:#ffffff; font-size:24px; font-weight:700;\">YouTube Channel Analysis</h1>\n                <p style=\"margin:8px 0 0 0; color:#e5e7eb; font-size:13px;\">Competitive insights & recommendations</p>\n              </td>\n            </tr>\n            <tr>\n              <td class=\"content\" style=\"padding:28px; color:#111827; font-family:Arial,Helvetica,sans-serif;\">\n                ${bodyHtml}\n                <div style=\"height:18px;line-height:18px;\"></div>\n                <table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\" style=\"background:#f9fafb; border:1px solid #e5e7eb; border-radius:12px;\">\n                  <tr>\n                    <td style=\"padding:14px 16px; font-size:12px; color:#374151;\">\n                      <strong>Reference</strong><br>\n                      Channel ID: \n                      <a href=\"https://youtube.com/channel/${escapeHtml(\n                        String(channelId || \"N/A\")\n                      )}\" \n                         style=\"color:#2563eb; text-decoration:none;\" target=\"_blank\">\n                        ${escapeHtml(String(channelId || \"N/A\"))}\n                      </a>\n                    </td>\n                  </tr>\n                </table>\n              </td>\n            </tr>\n            <tr>\n              <td style=\"padding:18px; background:#ffffff; border-top:1px solid #f0f2f5; text-align:center;\">\n                <p style=\"margin:0; color:#6b7280; font-size:12px;\">\n                  Prepared automatically · ${new Date().toISOString().slice(0,10)}\n                </p>\n              </td>\n            </tr>\n          </table>\n        </td>\n      </tr>\n    </table>\n  </body>\n</html>`.trim();\n\n  out.push({ json: { html: emailHtml } });\n}\n\nreturn out;\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1824,
+        128
+      ],
+      "id": "968f662d-cee2-471a-bdac-82b61d2f4a78",
+      "name": "Creating Email"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Here is the structured JSON data of a YouTube channel.  \nAnalyze it according to the system instructions and provide a SWOT-style analysis.\n\nChannel Data:\n{{ $json.channel_parsed_output }}",
+        "options": {
+          "systemMessage": "=You are a YouTube Channel Performance Analyst.\nYou will be given structured JSON data containing YouTube channel details such as:\n\nSubscribers, views, video count, engagement ratios\n\nBranding details (banner, logo, verification)\n\nContent themes and audience insights\n\nYour Task:\n\nExtract key metrics from the JSON and display them in a clean, professional Markdown table with the following columns:\n\n| Metric | Value | Insight |\n\nAfter the table, provide a SWOT analysis in this exact format:\n\nOverall Assessment → A short summary of the channel’s current status.\n\nStrengths → Positive aspects to highlight.\n\nWeaknesses → Gaps or missing elements.\n\nOpportunities → Actionable steps for growth.\n\nThreats → Risks that might impact growth.\n\nRules:\n\nAlways summarize numbers meaningfully (e.g., \"high views relative to subscribers\") instead of just repeating raw figures.\n\nKeep the language actionable, clear, and concise — suitable for a content creator or strategist.\n\nAlways present the Key Metrics table first, then the SWOT analysis.\n\nIf some data is missing in JSON, skip gracefully instead of guessing."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.1,
+      "position": [
+        1376,
+        128
+      ],
+      "id": "c7059c42-2d43-4557-80ca-acaf8c53fd28",
+      "name": "Creating Analysis"
+    },
+    {
+      "parameters": {
+        "jsCode": "const input = items[0].json;\n\nreturn [\n  {\n    json: {\n      channel_parsed_output: JSON.stringify(input, null, 2)\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1152,
+        128
+      ],
+      "id": "4d02cf88-8091-46a9-9de4-d08990f0fcef",
+      "name": "Formatting Data"
+    },
+    {
+      "parameters": {
+        "content": "## Send email (Email Send)\n\nType: SMTP Email Sender\nPurpose: Delivers the formatted analysis report via email\nConfiguration:\n\nFrom: anuj.techdome@gmail.com\nTo: aditya.techdome@gmail.com\nSubject: \"Channel assessment\"",
+        "height": 304
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2016,
+        368
+      ],
+      "typeVersion": 1,
+      "id": "9ba90e49-e76b-4a5c-8b33-2fabe4a3e554",
+      "name": "Sticky Note9"
+    },
+    {
+      "parameters": {
+        "content": "## Email drafter (Code Node)\n\nType: JavaScript Code\nPurpose: Converts markdown analysis to professional HTML email format\nKey Features:\n\nResponsive email template design\nProfessional styling with gradients and shadows\nConverts markdown tables to HTML tables\nIncludes channel reference links\n\n\nOutput: HTML-formatted email content",
+        "height": 368,
+        "width": 304
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1776,
+        -304
+      ],
+      "typeVersion": 1,
+      "id": "60b2a151-9d69-4a16-b31c-e85a6df529da",
+      "name": "Sticky Note8"
+    },
+    {
+      "parameters": {
+        "content": "## Azure OpenAI Chat Model\n\nType: Language Model Connection\nPurpose: Powers the AI Agent with GPT-4o-mini model\nConfiguration: Connected to Azure OpenAI service",
+        "height": 224
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1328,
+        480
+      ],
+      "typeVersion": 1,
+      "id": "772c89ac-7ca4-4fe2-8ab2-16648d974816",
+      "name": "Sticky Note7"
+    },
+    {
+      "parameters": {
+        "content": "## AI Agent (LangChain Agent)\n\nType: AI Agent with Azure OpenAI\nPurpose: Performs intelligent analysis of channel data\nSystem Instructions:\n\nExtract key metrics into markdown table format\nGenerate SWOT analysis (Strengths, Weaknesses, Opportunities, Threats)\nProvide actionable insights for content creators\n\n\nOutput: Structured analysis report in markdown format",
+        "height": 384,
+        "width": 320
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1392,
+        -304
+      ],
+      "typeVersion": 1,
+      "id": "23565517-1526-4c9c-8a88-00183d0b7616",
+      "name": "Sticky Note6"
+    },
+    {
+      "parameters": {
+        "content": "## Code1 (Code Node)\n\nType: JavaScript Code\nPurpose: Simple JSON formatter that prepares data for the AI agent\nFunction: Converts processed data to JSON string format\nOutput: Formatted JSON for AI consumption",
+        "height": 256
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1072,
+        -176
+      ],
+      "typeVersion": 1,
+      "id": "f26bd60a-cc9b-4297-9636-d56ebb1ed3c2",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "content": "## Comments segregation (Code Node)\n\nType: JavaScript Code\nPurpose: Parses and structures the raw YouTube API response into organized metrics\nKey Functions:\n\nCalculates engagement ratios (views per video, views per subscriber)\nExtracts branding elements (avatar, banner, verification status)\nIdentifies content themes from keywords\nPrepares structured data for AI analysis\n\n\nOutput: Clean, structured channel data",
+        "height": 384,
+        "width": 320
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        848,
+        336
+      ],
+      "typeVersion": 1,
+      "id": "3e8c9dc0-9740-408b-9313-45d251a9cd9b",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "## Content extraction (HTTP Request)\n\nType: HTTP Request to YouTube API\nPurpose: Fetches detailed channel information using YouTube138 RapidAPI\nConfiguration:\n\nURL: https://youtube138.p.rapidapi.com/channel/details/?id={{CHANNEL_ID}}\nHeaders: RapidAPI authentication\n\n\nOutput: Raw JSON data with channel statistics, branding, and metadata",
+        "height": 432
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        624,
+        -336
+      ],
+      "typeVersion": 1,
+      "id": "35b1c8c3-d5e2-4915-8d7b-4837d80db850",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "## Loop Over Items (Split in Batches)\n\nType: Split in Batches\nPurpose: Processes each channel ID individually to handle multiple channels\nOutput: Individual items for batch processing",
+        "height": 224
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        384,
+        336
+      ],
+      "typeVersion": 1,
+      "id": "39281538-83a8-4686-bee1-380ace24dba0",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "## Get row(s) in sheet (Google Sheets)\n\nType: Google Sheets Reader\nPurpose: Reads channel IDs from a Google Sheet named \"YOUTUBE POST SHEET\"\nConfiguration:\n\nDocument ID: 1B4NS7J6WHvCywsu-d47XZEPTw7ahZaymoIm4jxUN_oo\nSheet: Sheet1\n\n\nOutput: Channel ID data from spreadsheet rows",
+        "height": 384
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        160,
+        -288
+      ],
+      "typeVersion": 1,
+      "id": "7c69eb73-fb88-412c-baa8-8ec143fd36e9",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "## When clicking 'Execute workflow' (Manual Trigger)\n\nType: Manual Trigger\nPurpose: Starting point for the workflow - executes when user manually triggers it\nOutput: Initiates the workflow execution",
+        "height": 256
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -160,
+        -160
+      ],
+      "typeVersion": 1,
+      "id": "dff02713-98de-40c4-bf82-8e6c3e5293c5",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        448,
+        128
+      ],
+      "id": "1535cbe4-0963-43ab-a5c4-28103ce562f3",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Input: channel details JSON from youtube138 API\n// Output: parsed metrics for AI analysis\n\nconst results = items.map(item => {\n  const data = item.json;\n\n  const stats = data.stats || {};\n\n  // Engagement ratios\n  const viewsPerVideo = stats.videos > 0 ? Math.round(stats.views / stats.videos) : 0;\n  const viewsPerSubscriber = stats.subscribers > 0 ? Math.round(stats.views / stats.subscribers) : 0;\n\n  return {\n    json: {\n      channelId: data.channelId,\n      title: data.title,\n      username: data.username,\n      description: data.description,\n      country: data.country || null,\n      joinedDate: data.joinedDateText || data.joinedDate,\n\n      branding: {\n        avatar: data.avatar?.[0]?.url || null,\n        banner: data.banner?.desktop?.[0]?.url || null,\n        badges: data.badges || [],\n        hasBusinessEmail: data.hasBusinessEmail || false,\n        isVerified: data.isVerified || false,\n        isFamilySafe: data.isFamilySafe || false,\n        links: (data.links || []).map(l => l.targetUrl),\n      },\n\n      content: {\n        keywords: data.keywords || [],\n        videos: stats.videos || 0,\n        themes: data.keywords?.slice(0, 5) || [], // take first 5 keywords as theme indicators\n      },\n\n      audience: {\n        subscribers: stats.subscribers || 0,\n        subscribersText: stats.subscribersText || null,\n        views: stats.views || 0,\n        viewsPerVideo,\n        viewsPerSubscriber,\n      },\n\n      analysisCriteria: {\n        strengths: [\n          stats.views > 1000000 ? \"High total views\" : null,\n          viewsPerSubscriber > 100 ? \"High engagement ratio\" : null,\n          data.hasBusinessEmail ? \"Monetization ready\" : null,\n        ].filter(Boolean),\n        weaknesses: [\n          (data.banner?.desktop?.length || 0) === 0 ? \"No banner branding\" : null,\n          !data.isVerified ? \"Not verified\" : null,\n          (stats.videos || 0) < 50 ? \"Low content volume\" : null,\n        ].filter(Boolean),\n      },\n    }\n  };\n});\n\nreturn results;\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        944,
+        128
+      ],
+      "id": "fb553ab6-9166-4d87-95a8-98d9faf6560a",
+      "name": "Comments segergation"
+    },
+    {
+      "parameters": {
+        "model": "gpt-4o-mini",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatAzureOpenAi",
+      "typeVersion": 1,
+      "position": [
+        1376,
+        320
+      ],
+      "id": "a89c606e-c276-4787-877a-f5a51bfa7697",
+      "name": "Azure OpenAI Chat Model",
+      "credentials": {
+        "azureOpenAiApi": {
+          "id": "C3WzT18XqF8OdVM6",
+          "name": "Azure Open AI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "=https://youtube138.p.rapidapi.com/channel/details/?id={{ $json[\"CHANEEL ID\"] }}\n",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-RapidAPI-Key",
+              "value": "<YOUR API KEY>"
+            },
+            {
+              "name": "X-RapidAPI-Host",
+              "value": "youtube138.p.rapidapi.com"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        704,
+        128
+      ],
+      "id": "31ef09fc-9291-4eac-a01f-94566b30a606",
+      "name": "Content extraction"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1B4NS7J6WHvCywsu-d47XZEPTw7ahZaymoIm4jxUN_oo",
+          "mode": "list",
+          "cachedResultName": "YOUTUBE POST SHEET",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1B4NS7J6WHvCywsu-d47XZEPTw7ahZaymoIm4jxUN_oo/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1B4NS7J6WHvCywsu-d47XZEPTw7ahZaymoIm4jxUN_oo/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        224,
+        128
+      ],
+      "id": "bab393a2-1232-4c0e-9f15-3074b3ab9d19",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "s4dP1fNuVZ2gWvs3",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        128
+      ],
+      "id": "14a1b5d5-146f-4b5e-9d2b-e01ee486de04",
+      "name": "When clicking ‘Execute workflow’"
+    }
+  ],
+  "connections": {
+    "Creating Email": {
+      "main": [
+        [
+          {
+            "node": "Sending report via email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Creating Analysis": {
+      "main": [
+        [
+          {
+            "node": "Creating Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Formatting Data": {
+      "main": [
+        [
+          {
+            "node": "Creating Analysis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sending report via email": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Content extraction",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Comments segergation": {
+      "main": [
+        [
+          {
+            "node": "Formatting Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Azure OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Creating Analysis",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Content extraction": {
+      "main": [
+        [
+          {
+            "node": "Comments segergation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": {},
+  "versionId": "aa83bea8-c562-4020-a1ee-11c748354a8e",
+  "activeVersionId": null,
+  "triggerCount": 0,
+  "shared": [
+    {
+      "updatedAt": "2025-08-29T01:53:01.488Z",
+      "createdAt": "2025-08-29T01:53:01.488Z",
+      "role": "workflow:owner",
+      "workflowId": "8dq33VzLgnlj7kkc",
+      "projectId": "iXigq15mRQoAAIrt"
+    }
+  ],
+  "activeVersion": null,
+  "tags": []
+}
