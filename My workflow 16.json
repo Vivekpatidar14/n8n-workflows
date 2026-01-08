@@ -1,0 +1,55 @@
+{
+  "updatedAt": "2025-09-11T12:25:06.540Z",
+  "createdAt": "2025-09-11T12:25:06.540Z",
+  "id": "aFyuRbPqAkhm3lZA",
+  "name": "My workflow 16",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "events": [
+          "invitee.created"
+        ]
+      },
+      "type": "n8n-nodes-base.calendlyTrigger",
+      "typeVersion": 1,
+      "position": [
+        -304,
+        -112
+      ],
+      "id": "8adc4251-02f3-4d16-8366-7e259193e38b",
+      "name": "Calendly Trigger",
+      "webhookId": "c37c3d63-05ef-413c-b618-5e4624993da0",
+      "credentials": {
+        "calendlyApi": {
+          "id": "aKebFLMuo7sCQiPF",
+          "name": "Calendly account"
+        }
+      }
+    }
+  ],
+  "connections": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "a29ffda5-6893-431f-b2e7-6417a5b18941",
+  "activeVersionId": null,
+  "triggerCount": 0,
+  "shared": [
+    {
+      "updatedAt": "2025-09-11T12:25:06.542Z",
+      "createdAt": "2025-09-11T12:25:06.542Z",
+      "role": "workflow:owner",
+      "workflowId": "aFyuRbPqAkhm3lZA",
+      "projectId": "iXigq15mRQoAAIrt"
+    }
+  ],
+  "activeVersion": null,
+  "tags": []
+}
