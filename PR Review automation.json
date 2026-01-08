@@ -1,0 +1,477 @@
+{
+  "updatedAt": "2025-10-30T07:55:00.000Z",
+  "createdAt": "2025-10-29T13:48:51.182Z",
+  "id": "4I9Mtqy1qQ6FzzvO",
+  "name": "PR Review automation",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "ghl-report",
+        "responseMode": "=onReceived",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "00ba9fe4-934b-43c4-953d-5f73a1b7cc43",
+      "name": "Webhook",
+      "webhookId": "c722a549-dd5b-4603-81d1-174b9c1e527d"
+    },
+    {
+      "parameters": {
+        "options": {
+          "includeInputFields": true,
+          "timezone": "IST"
+        }
+      },
+      "type": "n8n-nodes-base.dateTime",
+      "typeVersion": 2,
+      "position": [
+        208,
+        0
+      ],
+      "id": "a6db11bb-a475-42a1-9ea2-f553dc870a7d",
+      "name": "Date & Time"
+    },
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "1lY6WlTPsYwlvVsrL6WG3hViTE2MPa4ohIHzROetcXik",
+          "mode": "list",
+          "cachedResultName": "PR Review Dashboard",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1lY6WlTPsYwlvVsrL6WG3hViTE2MPa4ohIHzROetcXik/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Wizlo",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1lY6WlTPsYwlvVsrL6WG3hViTE2MPa4ohIHzROetcXik/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Current Task Description": "={{ $('Webhook').item.json.body['Task Status Discription'] }}",
+            "Active Task ID": "={{ $('Date & Time').item.json.body.first_name }}",
+            "Email of Engineer": "={{ $('Date & Time').item.json.body.email }}"
+          },
+          "matchingColumns": [
+            "Email of Engineer"
+          ],
+          "schema": [
+            {
+              "id": "Reviewer Name",
+              "displayName": "Reviewer Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Engineer Name",
+              "displayName": "Engineer Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Email of Engineer",
+              "displayName": "Email of Engineer",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Active Task ID",
+              "displayName": "Active Task ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Current Task Description",
+              "displayName": "Current Task Description",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Submitted At (IST)",
+              "displayName": "Submitted At (IST)",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "C1 (No GitHub Conversations open)",
+              "displayName": "C1 (No GitHub Conversations open)",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "C2 (Runs Locally)",
+              "displayName": "C2 (Runs Locally)",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Criteria 3 (Acceptance Met)",
+              "displayName": "Criteria 3 (Acceptance Met)",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Reviewer Notes",
+              "displayName": "Reviewer Notes",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {
+          "useAppend": true
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        832,
+        -96
+      ],
+      "id": "5abf4f35-8fb9-41f1-a260-feb45a399f4f",
+      "name": "Append or update row in sheet",
+      "credentials": {
+        "googleApi": {
+          "id": "bo5o2EJvHQnohNQF",
+          "name": "Google Sheets account 5"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "153d0ccc-869d-4083-9e85-6982c78164c3",
+              "leftValue": "={{$json.deptNorm}}",
+              "rightValue": "wizlo",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        624,
+        0
+      ],
+      "id": "0efe9ccf-9131-47d3-afd2-b466936cd52c",
+      "name": "Route Dept"
+    },
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "1lY6WlTPsYwlvVsrL6WG3hViTE2MPa4ohIHzROetcXik",
+          "mode": "list",
+          "cachedResultName": "PR Review Dashboard",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1lY6WlTPsYwlvVsrL6WG3hViTE2MPa4ohIHzROetcXik/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 590837538,
+          "mode": "list",
+          "cachedResultName": "JIA",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1lY6WlTPsYwlvVsrL6WG3hViTE2MPa4ohIHzROetcXik/edit#gid=590837538"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [
+            "Email of Engineer"
+          ],
+          "schema": [
+            {
+              "id": "Reviewer Name",
+              "displayName": "Reviewer Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Engineer Name",
+              "displayName": "Engineer Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email of Engineer",
+              "displayName": "Email of Engineer",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Active Task ID",
+              "displayName": "Active Task ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Current Task Description",
+              "displayName": "Current Task Description",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Submitted At (IST)",
+              "displayName": "Submitted At (IST)",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "C1 (No GitHub Conversations open)",
+              "displayName": "C1 (No GitHub Conversations open)",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "C2 (Runs Locally)",
+              "displayName": "C2 (Runs Locally)",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Criteria 3 (Acceptance Met)",
+              "displayName": "Criteria 3 (Acceptance Met)",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Reviewer Notes",
+              "displayName": "Reviewer Notes",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        832,
+        64
+      ],
+      "id": "26576ac3-4693-44d3-a2db-56ff00142ca4",
+      "name": "Append or update row in sheet1",
+      "credentials": {
+        "googleApi": {
+          "id": "bo5o2EJvHQnohNQF",
+          "name": "Google Sheets account 5"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "7a805241-bf1b-4934-a46a-d33306acebc8",
+              "name": "deptNorm",
+              "value": "={{   (()=>{     const b = $json.body ?? {};     let raw =       (Array.isArray(b.Department) ? b.Department[0] : undefined) ??       b[\"Department[0]\"] ??       b.Department ??       \"\";      if (raw && typeof raw === \"object\") {       raw = raw.value ?? raw.label ?? raw.name ?? JSON.stringify(raw);     }      return raw.toString().trim().toLowerCase();   })() }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        416,
+        0
+      ],
+      "id": "65fa02ea-48b3-478a-878e-925e0f1be091",
+      "name": "Normalize Dept"
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Date & Time",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Date & Time": {
+      "main": [
+        [
+          {
+            "node": "Normalize Dept",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Route Dept": {
+      "main": [
+        [
+          {
+            "node": "Append or update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Append or update row in sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize Dept": {
+      "main": [
+        [
+          {
+            "node": "Route Dept",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "d16a13ab-d2bc-47d2-96da-462e2979fba6",
+  "activeVersionId": null,
+  "triggerCount": 0,
+  "shared": [
+    {
+      "updatedAt": "2025-10-29T13:48:51.184Z",
+      "createdAt": "2025-10-29T13:48:51.184Z",
+      "role": "workflow:owner",
+      "workflowId": "4I9Mtqy1qQ6FzzvO",
+      "projectId": "iXigq15mRQoAAIrt"
+    }
+  ],
+  "activeVersion": null,
+  "tags": []
+}
