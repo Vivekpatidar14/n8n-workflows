@@ -1,0 +1,793 @@
+{
+  "name": "Generate social media posts with AI images from Lovable  to Airtable",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## 🤖 AI-Powered Article to Social Media Automation\n\n### How it works\nThis workflow transforms long-form articles into ready-to-publish social media content across LinkedIn, Instagram, and X. It receives article data via webhook, uses GPT-4o to extract insights and generate platform-specific posts, creates AI-generated images for each post, and logs everything to Airtable for approval tracking.\n\n### Setup steps\n1. Connect OpenAI credentials (GPT-4o model required)\n2. Link your Airtable base and table for content logging\n3. Configure Slack webhook for team notifications\n4. Set up Cloudinary for image hosting\n5. Test with sample article data via the webhook endpoint\n\nEach run produces 5 unique social posts with images, CTAs, and suggested posting schedules.",
+        "height": 512,
+        "width": 460
+      },
+      "id": "926eaafa-41df-4409-84cd-eeac614df8c7",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -1392,
+        -416
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## 📥 Article Intake & Preparation\nReceives article data via POST webhook and extracts title, URL, content, and author for AI processing.",
+        "height": 404,
+        "width": 532,
+        "color": 2
+      },
+      "id": "9cf7bd37-556c-4215-9c7c-74150f29749f",
+      "name": "Sticky Note1",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -1392,
+        144
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## 🧠 AI Content Analysis & Generation\nGPT-4o analyzes the article, identifies target audience and tone, extracts key insights, and generates 5 platform-optimized social posts with image prompts and CTAs.",
+        "height": 588,
+        "width": 592,
+        "color": 2
+      },
+      "id": "d3f8df45-1cca-4cba-b7ed-750517e38f5f",
+      "name": "Sticky Note2",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -848,
+        128
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## 🎨 Image & Post Assembly\nGenerates AI images via OpenAI DALL-E, uploads to Cloudinary for hosting, and structures final post data with all metadata.",
+        "height": 612,
+        "width": 700,
+        "color": 2
+      },
+      "id": "be28997b-a5f4-4fd3-8931-8e9b720198f0",
+      "name": "Sticky Note3",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -208,
+        112
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## 📊 Logging & Notifications\nStores all posts in Airtable with pending status for review, aggregates results, and sends Slack notification with article summary.",
+        "height": 564,
+        "width": 896,
+        "color": 2
+      },
+      "id": "b672780f-84de-4c58-b509-a07d79718348",
+      "name": "Sticky Note4",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        512,
+        144
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## 🔐 Required Credentials\n- **OpenAI API**: GPT-4o for analysis and DALL-E for images\n- **Airtable Token**: Content logging database\n- **Slack API**: Team notifications\n- **Cloudinary**: Basic auth for image uploads\n\nUse environment variables or n8n credential management—never hardcode keys.",
+        "height": 240,
+        "width": 360,
+        "color": 3
+      },
+      "id": "d857d152-feec-4701-a69b-4adeed83cb29",
+      "name": "Sticky Note5",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1440,
+        528
+      ]
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "position": [
+        -1184,
+        1360
+      ],
+      "id": "476ce02c-e0f1-467f-82a1-a2f16dedda2d",
+      "name": "Error Handler Trigger"
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "C09GNB90TED",
+          "mode": "list",
+          "cachedResultName": "general-information"
+        },
+        "text": "=❌ *Error in API Error Catalog Workflow* *Node:* {{ $json.node.name }} *Message:* {{ $json.error.message }} *Time:* {{ $json.timestamp }}",
+        "otherOptions": {}
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.3,
+      "position": [
+        -832,
+        1360
+      ],
+      "id": "ab34497a-83ef-4df2-8158-bf3edd528dbf",
+      "name": "Slack: Send Error Alert",
+      "webhookId": "d5eff2c3-ff6e-4116-bdda-59455acd861b",
+      "credentials": {
+        "slackApi": {
+          "id": "rNqvWj9TfChPVRYY",
+          "name": "Slack account vivek"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## 🚨 Error Handling \n\n \nCatches any workflow failure and posts an alert to Slack.  \nIncludes node name, error message, and timestamp for quick debugging.\n",
+        "height": 336,
+        "width": 672,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1264,
+        1168
+      ],
+      "typeVersion": 1,
+      "id": "227ce8d9-2df7-4b8a-be6c-b6262396da75",
+      "name": "Sticky Note7"
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "title",
+              "value": "={{ $json.body.title }}"
+            },
+            {
+              "name": "url",
+              "value": "={{ $json.body.url }}"
+            },
+            {
+              "name": "content",
+              "value": "={{ $json.body.content }}"
+            },
+            {
+              "name": "author",
+              "value": "={{ $json.body.author }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "de72e0e2-05ab-41e5-baa0-e9fc79805c60",
+      "name": "Set Article Fields",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 2,
+      "position": [
+        -1040,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "image",
+        "prompt": "=\nYour task is to generate one social media posts ONLY from the provided article insights and summary.\n\n\nTitle:{{ $('AI Agent').item.json.output.article_summary.title }}\nURL:{{ $('AI Agent').item.json.output.article_summary.url }}\nAuthor:{{ $('AI Agent').item.json.output.article_summary.author }}\nTarget Audience:\n{{ $('AI Agent').item.json.output.article_summary.target_audience }}\n\nTone of Voice:\n{{ $('AI Agent').item.json.output.article_summary.tone_of_voice }}\n",
+        "model": "dall-e-3",
+        "options": {
+          "n": 1
+        },
+        "requestOptions": {}
+      },
+      "id": "688670fe-1c70-4aa3-a921-fe7c9f1bef89",
+      "name": "AI Social Post Generator",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1,
+      "position": [
+        -128,
+        320
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "5Kzt6hGSZ1JHZqWN",
+          "name": "OpenAi account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "Platform",
+              "value": "={{ $('Split Out').item.json.platform }}"
+            },
+            {
+              "name": "post text",
+              "value": "={{ $('Split Out').item.json.post_text }}"
+            },
+            {
+              "name": "cta",
+              "value": "={{ $('Split Out').item.json.cta }}"
+            },
+            {
+              "name": "suggested_delay_minutes",
+              "value": "={{ $('Split Out').item.json.suggested_delay_minutes }}"
+            },
+            {
+              "name": "Url",
+              "value": "={{ $json.secure_url }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "ca7af4a7-f9c9-4ffd-a796-453bede7ca10",
+      "name": "Set Post Fields",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 2,
+      "position": [
+        320,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "C09GNB90TED",
+          "mode": "list",
+          "cachedResultName": "general-information"
+        },
+        "text": "=📝 New Article Processed\n\n*Title:* {{ $('AI Agent').item.json.output.article_summary.title }}\n*URL:* {{ $('AI Agent').item.json.output.article_summary.url }}\n*Author:* {{ $('AI Agent').item.json.output.article_summary.author }} \n\n✅ 5 social posts created and ready for approval",
+        "otherOptions": {}
+      },
+      "id": "a5fc0211-cb71-470c-8fa2-d2e6d2eee939",
+      "name": "Notify Slack Channel",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.1,
+      "position": [
+        992,
+        320
+      ],
+      "webhookId": "c15b6935-ed1d-4d93-9e8d-27d1b67d29f0",
+      "credentials": {
+        "slackApi": {
+          "id": "rNqvWj9TfChPVRYY",
+          "name": "Slack account vivek"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"summary\": {\n    \"title\": \"={{ $('AI Agent').item.json.output.article_summary.title }}\",\n    \"author\": \"={{ $('AI Agent').item.json.output.article_summary.author }}\",\n    \"target_audience\": \"={{ $('AI Agent').item.json.output.article_summary.target_audience }}\",\n    \"tone_of_voice\": \"={{ $('AI Agent').item.json.output.article_summary.tone_of_voice }}\",\n    \"key_insights\": \"={{ $('AI Agent').item.json.output.article_summary.insights }}\"\n  }\n}\n",
+        "options": {}
+      },
+      "id": "27b80eec-2165-4ea5-b4f1-070912b75dfb",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        1216,
+        336
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "article-intake",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "42807659-d39b-4214-98d2-dc8b6d55dcaa",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        -1264,
+        320
+      ],
+      "webhookId": "article-intake"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Input Article Data\n\nTitle: {{ $json.title }}\nURL: {{ $json.url }}\nAuthor: {{ $json.author }}\n\nContent:\n{{ $json.content }}\n\nTasks:\n1. Extract 4–6 key insights from the article.\n2. Identify the most relevant target audience.\n3. Determine the appropriate tone of voice.\n4. Generate EXACTLY 5 social media posts based on the article.\n\nSocial post requirements:\n- Platforms: LinkedIn, Instagram, X\n- Each post must be self-contained\n- No emojis overload (max 1–2 if used)\n- Include a short CTA when appropriate\n- Suggest a posting delay in minutes (incremental)\n\nReturn the response strictly in the predefined JSON structure.\n",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=You are a senior content strategist and social media automation expert.\n\nYour job is to:\n1. Analyze the provided article.\n2. Extract clear, actionable insights for social media.\n3. Generate exactly 5 high-quality, ready-to-publish social media posts.\n\nFollow these rules strictly:\n- Read the entire article content.\n- Maintain factual accuracy.\n- Keep posts concise and engaging.\n- Adapt tone for professional but approachable audiences.\n- Distribute posts across LinkedIn, Instagram, and X.\n- Do not include hashtags unless they add value.\n- Do not invent data or claims.\n- Output ONLY valid JSON that exactly matches the required schema.\n- No explanations, no markdown, no extra text.\n\nThis output will be directly parsed by an automated workflow, so structure and correctness are critical.\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        -768,
+        320
+      ],
+      "id": "f770ec0f-af7d-474f-907d-42a92bb0c5e5",
+      "name": "AI Agent",
+      "retryOnFail": true
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"article_summary\": {\n    \"title\": \"string\",\n    \"url\": \"string\",\n    \"author\": \"string\",\n    \"target_audience\": \"string\",\n    \"tone_of_voice\": \"string\",\n    \"insights\": [\n      \"string\",\n      \"string\",\n      \"string\"\n    ]\n  },\n  \"posts\": [\n    {\n      \"platform\": \"LinkedIn | Instagram | X\",\n      \"post_text\": \"string\",\n      \"image_prompt\": \"string\",\n      \"cta\": \"string\",\n      \"suggested_delay_minutes\": 0\n    }\n  ]\n}\n"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        -560,
+        544
+      ],
+      "id": "f2befd14-c419-4f82-8bdb-f07e36a66fe1",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o",
+          "mode": "list",
+          "cachedResultName": "gpt-4o"
+        },
+        "responsesApiEnabled": false,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        -816,
+        544
+      ],
+      "id": "7a7dcc8a-9154-4935-81f2-40be90745c53",
+      "name": "OpenAI Chat Model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "5Kzt6hGSZ1JHZqWN",
+          "name": "OpenAi account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "\"description writer\""
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -688,
+        544
+      ],
+      "id": "1dbe9976-fdc5-406e-be02-4fd4b68d7528",
+      "name": "Simple Memory1"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "output.posts",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        -352,
+        320
+      ],
+      "id": "acc0a8cc-dca9-4eba-b6dc-bb2e1f70b204",
+      "name": "Split Out"
+    },
+    {
+      "parameters": {
+        "operation": "upsert",
+        "base": {
+          "__rl": true,
+          "value": "appxjEpOgye5YQG1J",
+          "mode": "list",
+          "cachedResultName": "Lead Manager",
+          "cachedResultUrl": "https://airtable.com/appxjEpOgye5YQG1J"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblPUaRHmGLauWW0X",
+          "mode": "list",
+          "cachedResultName": "Social Media Content",
+          "cachedResultUrl": "https://airtable.com/appxjEpOgye5YQG1J/tblPUaRHmGLauWW0X"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Suggested daily minutes": "={{ $json.suggested_delay_minutes }}",
+            "id": "={{ $json[\"post text\"] }}",
+            "Name": "={{ $json.Platform }}",
+            "Status": "pending",
+            "Platform": "={{ $json.Platform }}",
+            "Text": "={{ $json[\"post text\"] }}",
+            "Cta": "={{ $json.cta }}",
+            "Secure URl": "={{ $json.secure_url }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": false
+            },
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "pending",
+                  "value": "pending"
+                },
+                {
+                  "name": "Todo",
+                  "value": "Todo"
+                },
+                {
+                  "name": "In progress",
+                  "value": "In progress"
+                },
+                {
+                  "name": "Done",
+                  "value": "Done"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Platform",
+              "displayName": "Platform",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Text",
+              "displayName": "Text",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Cta",
+              "displayName": "Cta",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Suggested daily minutes",
+              "displayName": "Suggested daily minutes",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Secure URl",
+              "displayName": "Secure URl",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        544,
+        320
+      ],
+      "id": "904adc27-f95b-4e8f-8fe4-909b28959c9b",
+      "name": "Create or update a record",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "nWc9JHR6t25WPWVV",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        768,
+        320
+      ],
+      "id": "52cc9494-238f-4f41-89c4-b4ee70eeeb44",
+      "name": "Aggregate"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.cloudinary.com/v1_1/dpuvigpmt/image/upload",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "parameterType": "formBinaryData",
+              "name": "file",
+              "inputDataFieldName": "data"
+            },
+            {
+              "name": "upload_preset",
+              "value": "upload"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        96,
+        320
+      ],
+      "id": "687a3967-fcef-49f6-9af0-2aebc2ab49ec",
+      "name": "upload frames to cloudinary",
+      "retryOnFail": true,
+      "maxTries": 5,
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "8gJ6BAU8aOXUSpTQ",
+          "name": "Cloudinary Vivek"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## 🎥 Workflow Demo Video\n\nWatch a short walkthrough explaining:\n• What this automation does  \n• How the data flows  \n• How to set up credentials  \n• Common mistakes to avoid  \n\n@[youtube](bBW65w3odTk)\n",
+        "height": 544,
+        "width": 608,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        800,
+        -464
+      ],
+      "typeVersion": 1,
+      "id": "0033daa2-6bfc-4d88-aec6-fe4344c33d49",
+      "name": "Sticky Note6"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Error Handler Trigger": {
+      "main": [
+        [
+          {
+            "node": "Slack: Send Error Alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Article Fields": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Social Post Generator": {
+      "main": [
+        [
+          {
+            "node": "upload frames to cloudinary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Post Fields": {
+      "main": [
+        [
+          {
+            "node": "Create or update a record",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notify Slack Channel": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Set Article Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory1": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out": {
+      "main": [
+        [
+          {
+            "node": "AI Social Post Generator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create or update a record": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate": {
+      "main": [
+        [
+          {
+            "node": "Notify Slack Channel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "upload frames to cloudinary": {
+      "main": [
+        [
+          {
+            "node": "Set Post Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "29702aac-e39a-427f-bfe3-6c167c845fc2",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "8443f10082278c46aa5cf3acf8ff0f70061a2c58bce76efac814b16290845177"
+  },
+  "id": "ltrAyD2sttMLQVb9",
+  "tags": []
+}
