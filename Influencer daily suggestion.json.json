@@ -1,245 +1,52 @@
 {
-  "updatedAt": "2025-09-03T11:25:55.000Z",
-  "createdAt": "2025-09-03T07:53:49.414Z",
-  "id": "6BKyXK8Swkr6oUhz",
-  "name": "Duplication_logs-update workflow",
+  "updatedAt": "2025-09-11T12:25:06.540Z",
+  "createdAt": "2025-09-11T12:25:06.540Z",
+  "id": "aFyuRbPqAkhm3lZA",
+  "name": "My workflow 16",
   "active": false,
   "isArchived": false,
   "nodes": [
     {
       "parameters": {
-        "documentId": {
-          "__rl": true,
-          "value": "1aJJoJqPP_2vAjmK25kLIvgC6WhhTd0hxyAJL8I_DEcM",
-          "mode": "list",
-          "cachedResultName": "Duplication database",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1aJJoJqPP_2vAjmK25kLIvgC6WhhTd0hxyAJL8I_DEcM/edit?usp=drivesdk"
-        },
-        "sheetName": {
-          "__rl": true,
-          "value": "gid=0",
-          "mode": "list",
-          "cachedResultName": "Sheet1",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1aJJoJqPP_2vAjmK25kLIvgC6WhhTd0hxyAJL8I_DEcM/edit#gid=0"
-        },
-        "options": {}
+        "events": [
+          "invitee.created"
+        ]
       },
-      "name": "Google Sheets - Get Data",
-      "type": "n8n-nodes-base.googleSheets",
-      "typeVersion": 3,
-      "position": [
-        -112,
-        -64
-      ],
-      "id": "b17145e0-b784-4bc0-a35b-c4849b84cee5",
-      "credentials": {
-        "googleSheetsOAuth2Api": {
-          "id": "s4dP1fNuVZ2gWvs3",
-          "name": "Google Sheets account"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "functionCode": "const seen = new Map();\nconst duplicates = [];\n\nfor (const item of items) {\n  const email = item.json.email || null;\n  const phone = item.json.phone || null;\n  const key = `${email}-${phone}`;\n\n  if (seen.has(key)) {\n    duplicates.push({\n      duplicate_id: key,\n      email,\n      phone,\n      original: seen.get(key),\n      duplicate: item.json\n    });\n  } else {\n    seen.set(key, item.json);\n  }\n}\n\nreturn duplicates.map(d => ({ json: d }));"
-      },
-      "name": "Deduplication Logic",
-      "type": "n8n-nodes-base.function",
-      "typeVersion": 1,
-      "position": [
-        112,
-        -64
-      ],
-      "id": "34864ac2-3fc5-45ad-9c79-b0599a1cabbc"
-    },
-    {
-      "parameters": {
-        "fileContent": "={{ $json.duplicate_id }}",
-        "name": "={{ $json.original.name }} duplicate Logs detail",
-        "options": {}
-      },
-      "name": "Google Drive - Save Log",
-      "type": "n8n-nodes-base.googleDrive",
-      "typeVersion": 2,
-      "position": [
-        336,
-        -64
-      ],
-      "id": "ca230d88-de50-4897-8a7c-4155b321c9ea",
-      "credentials": {
-        "googleDriveOAuth2Api": {
-          "id": "gQtjXVGUgZru29qC",
-          "name": "Google Drive account"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "fromEmail": "data-team@company.com",
-        "toEmail": "aditya.techdome@gmail.com",
-        "subject": "Daily Deduplication Log",
-        "text": "=The deduplication sweep has completed.\nId : {{ $json.id }}\nname: {{ $json.name }}\nLogs saved to Google Drive.",
-        "options": {}
-      },
-      "name": "Send Email Notification",
-      "type": "n8n-nodes-base.emailSend",
-      "typeVersion": 1,
-      "position": [
-        560,
-        -64
-      ],
-      "id": "ccf30431-c062-4564-b293-a7aef00ddc11",
-      "credentials": {
-        "smtp": {
-          "id": "viOhy0pjdvfp6R4g",
-          "name": "SMTP account"
-        }
-      }
-    },
-    {
-      "parameters": {},
-      "type": "n8n-nodes-base.manualTrigger",
+      "type": "n8n-nodes-base.calendlyTrigger",
       "typeVersion": 1,
       "position": [
         -304,
-        -64
+        -112
       ],
-      "id": "d958e1cf-a9e8-4e30-b81f-f82e65b5eed1",
-      "name": "When clicking ‘Execute workflow’"
-    },
-    {
-      "parameters": {
-        "content": "## Node 1: When clicking 'Execute workflow'\n**Type**: Manual Trigger Node\n**Purpose**: Workflow Initiator\n**Description**: This node allows manual initiation of the deduplication process. It serves as the starting point for the workflow and is typically used for on-demand execution or can be scheduled to run at specific intervals. The node provides control over when the duplicate detection analysis should occur.",
-        "height": 352
-      },
-      "type": "n8n-nodes-base.stickyNote",
-      "position": [
-        -464,
-        -432
-      ],
-      "typeVersion": 1,
-      "id": "75ee1629-5634-4898-be3f-da6ecb069dd3",
-      "name": "Sticky Note"
-    },
-    {
-      "parameters": {
-        "content": "## Node 2: Google Sheets - Get Data\n**Type**: Data Retrieval Node\n**Purpose**: Database Reader\n**Description**: This node connects to a spreadsheet containing customer records and retrieves all data for duplicate analysis. It pulls the complete dataset including customer information such as names, email addresses, phone numbers, and other identifying information that will be used in the deduplication logic.",
-        "height": 336
-      },
-      "type": "n8n-nodes-base.stickyNote",
-      "position": [
-        -192,
-        112
-      ],
-      "typeVersion": 1,
-      "id": "5b5897d1-9c2c-4343-a709-76e5290afdd1",
-      "name": "Sticky Note1"
-    },
-    {
-      "parameters": {
-        "content": "## Node 3: Deduplication Logic\n**Type**: Custom Function Node\n**Purpose**: Duplicate Detection Engine\n**Description**: This node implements custom JavaScript logic to identify duplicate entries in the dataset. It creates a mapping system that compares records based on key identifiers (primarily email and phone combinations), identifies which records are duplicates of others, and generates detailed information about each duplicate pair found. The node creates a structured output containing duplicate IDs, original records, and duplicate records for further processing.",
-        "height": 384,
-        "width": 288
-      },
-      "type": "n8n-nodes-base.stickyNote",
-      "position": [
-        -48,
-        -464
-      ],
-      "typeVersion": 1,
-      "id": "8edcc016-d8b7-4392-8d40-32ed4de89519",
-      "name": "Sticky Note2"
-    },
-    {
-      "parameters": {
-        "content": "## Node 4: Google Drive - Save Log\n**Type**: File Storage Node\n**Purpose**: Log File Creator\n**Description**: This node creates detailed log files containing the duplicate detection results. It generates files with information about found duplicates and saves them to cloud storage for future reference and audit purposes. The node creates organized file names based on the duplicate information to ensure easy identification and retrieval of logs.",
-        "height": 352
-      },
-      "type": "n8n-nodes-base.stickyNote",
-      "position": [
-        256,
-        96
-      ],
-      "typeVersion": 1,
-      "id": "ddf5b12d-e0d5-45ca-931f-02ae2a295354",
-      "name": "Sticky Note3"
-    },
-    {
-      "parameters": {
-        "content": "## Node 5: Send Email Notification\n**Type**: Communication Node\n**Purpose**: Process Notification System\n**Description**: This node sends automated email notifications to designated team members about the completion of the deduplication process. It provides summary information about the operation, including basic details about the logs created and where they can be accessed. The node ensures that relevant stakeholders are informed when the duplicate detection process has been completed.",
-        "height": 416
-      },
-      "type": "n8n-nodes-base.stickyNote",
-      "position": [
-        432,
-        -496
-      ],
-      "typeVersion": 1,
-      "id": "c071d418-8849-4943-866f-fc80ef3f423f",
-      "name": "Sticky Note4"
+      "id": "8adc4251-02f3-4d16-8366-7e259193e38b",
+      "name": "Calendly Trigger",
+      "webhookId": "c37c3d63-05ef-413c-b618-5e4624993da0",
+      "credentials": {
+        "calendlyApi": {
+          "id": "aKebFLMuo7sCQiPF",
+          "name": "Calendly account"
+        }
+      }
     }
   ],
-  "connections": {
-    "Google Sheets - Get Data": {
-      "main": [
-        [
-          {
-            "node": "Deduplication Logic",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Deduplication Logic": {
-      "main": [
-        [
-          {
-            "node": "Google Drive - Save Log",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Google Drive - Save Log": {
-      "main": [
-        [
-          {
-            "node": "Send Email Notification",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "When clicking ‘Execute workflow’": {
-      "main": [
-        [
-          {
-            "node": "Google Sheets - Get Data",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    }
-  },
+  "connections": {},
   "settings": {
     "executionOrder": "v1"
   },
   "staticData": null,
-  "meta": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
   "pinData": {},
-  "versionId": "cda5c896-00db-4973-ac1e-ea6a3e7c7a9f",
+  "versionId": "a29ffda5-6893-431f-b2e7-6417a5b18941",
   "activeVersionId": null,
   "triggerCount": 0,
   "shared": [
     {
-      "updatedAt": "2025-09-03T07:53:49.418Z",
-      "createdAt": "2025-09-03T07:53:49.418Z",
+      "updatedAt": "2025-09-11T12:25:06.542Z",
+      "createdAt": "2025-09-11T12:25:06.542Z",
       "role": "workflow:owner",
-      "workflowId": "6BKyXK8Swkr6oUhz",
+      "workflowId": "aFyuRbPqAkhm3lZA",
       "projectId": "iXigq15mRQoAAIrt"
     }
   ],
