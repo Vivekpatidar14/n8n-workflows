@@ -1,126 +1,206 @@
 {
-  "updatedAt": "2025-09-12T02:03:10.000Z",
-  "createdAt": "2025-09-05T05:23:02.661Z",
-  "id": "9KRdh9YURctQ9kIo",
-  "name": "Automated Lead Intelligence: Enrich Sheets Data with Clearbit & Sync to CRMs",
+  "updatedAt": "2025-12-12T13:08:05.000Z",
+  "createdAt": "2025-09-12T00:03:54.624Z",
+  "id": "9XevkVCNXgZ53qKq",
+  "name": "Upload Dress Images to Cloudinary & Log to Sheet with Azure OpenAI (GPT-4o)",
   "active": false,
   "isArchived": false,
   "nodes": [
     {
       "parameters": {
-        "functionCode": "// Extract domain from email address\nconst items = $input.all();\n\nreturn items.map(item => {\n  const email = item.json['Email'] || '';\n  let domain = '';\n  \n  if (email && email.includes('@')) {\n    domain = email.split('@')[1].toLowerCase();\n  }\n  \n  return {\n    json: {\n      ...item.json,\n      'Domain': domain\n    }\n  };\n});"
-      },
-      "id": "b5f6b0d6-369f-4c5f-b118-94a29839f8a9",
-      "name": "Extract Domain from Email",
-      "type": "n8n-nodes-base.function",
-      "typeVersion": 1,
-      "position": [
-        -704,
-        -80
-      ]
-    },
-    {
-      "parameters": {
-        "url": "=https://logo.clearbit.com/{{ $json['Domain'] }}",
-        "options": {
-          "redirect": {
-            "redirect": {
-              "maxRedirects": 5
-            }
-          },
-          "response": {
-            "response": {
-              "fullResponse": true
-            }
+        "resource": "fileFolder",
+        "returnAll": true,
+        "filter": {
+          "folderId": {
+            "__rl": true,
+            "value": "1pQFxucNZqbVx2PsV_-jF7v3qkKg0lVbr",
+            "mode": "list",
+            "cachedResultName": "New Dresses - Dec 2025",
+            "cachedResultUrl": "https://drive.google.com/drive/folders/1pQFxucNZqbVx2PsV_-jF7v3qkKg0lVbr"
           }
-        }
+        },
+        "options": {}
       },
-      "id": "069a4d85-19c3-46b9-b759-4c8e5d9974c8",
-      "name": "Get Company Logo",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.1,
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
       "position": [
-        -432,
-        -192
-      ]
-    },
-    {
-      "parameters": {
-        "url": "=https://autocomplete.clearbit.com/v1/companies/suggest?query={{ $json['Domain'] }}",
-        "options": {
-          "response": {
-            "response": {
-              "neverError": true
-            }
-          }
-        }
-      },
-      "id": "a729bd15-33db-441c-bc2f-a82c074587d3",
-      "name": "Clearbit Company Enrichment",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.1,
-      "position": [
-        -432,
-        0
-      ]
-    },
-    {
-      "parameters": {
-        "functionCode": "// Production Merge Enrichment Function\nconst triggerData = $('Extract Domain from Email').first().json;\nconst logoData = $('Get Company Logo').first().json;\nconst clearbitData = $('Clearbit Company Enrichment').first().json;\n\n// Extract logo URL (priority: direct logo API > clearbit logo > fallback)\nlet logoUrl = '';\nif (logoData && logoData.url) {\n  logoUrl = logoData.url;\n} else if (clearbitData && clearbitData.logo) {\n  logoUrl = clearbitData.logo;\n} else {\n  logoUrl = `https://logo.clearbit.com/${triggerData.Domain}`;\n}\n\n// Use enriched company name from Clearbit if available\nlet enrichedCompanyName = triggerData['Company Name'] || '';\nif (clearbitData && clearbitData.name) {\n  enrichedCompanyName = clearbitData.name;\n}\n\n// Determine industry from enriched company name\nlet enrichedIndustry = 'General Business';\nconst companyNameLower = enrichedCompanyName.toLowerCase();\nif (companyNameLower.includes('tech') || companyNameLower.includes('web services') || companyNameLower.includes('software')) {\n  enrichedIndustry = 'Technology';\n} else if (companyNameLower.includes('engineer') || companyNameLower.includes('engineering')) {\n  enrichedIndustry = 'Engineering Services';\n} else if (companyNameLower.includes('philosophy')) {\n  enrichedIndustry = 'Consulting Services';\n}\n\n// Generate brand colors based on industry\nlet brandColors = '#000000';\nswitch(enrichedIndustry) {\n  case 'Technology':\n    brandColors = '#0066CC';\n    break;\n  case 'Engineering Services':\n    brandColors = '#FF6B35';\n    break;\n  case 'Consulting Services':\n    brandColors = '#8A2BE2';\n    break;\n  default:\n    brandColors = '#' + Math.floor(Math.random()*16777215).toString(16).padStart(6, '0');\n}\n\nreturn [{\n  json: {\n    'Lead Name': triggerData['Contact Person'] || '',\n    'Email': triggerData['Email'] || '',\n    'Company': enrichedCompanyName,\n    'Enriched Industry': enrichedIndustry,\n    'Logo URL': logoUrl,\n    'Brand Colors': brandColors,\n    'Assigned Rep': triggerData['Assigness'] || '',\n    'Notes': `Lead enriched on ${new Date().toISOString().split('T')[0]}. Enhanced company: ${enrichedCompanyName}. Domain: ${clearbitData?.domain || triggerData.Domain}. Industry: ${enrichedIndustry}.`,\n    'Original Status': triggerData['Status'] || '',\n    'Meeting Date': triggerData['Meeting Date'] || '',\n    'Domain Verified': clearbitData?.domain || triggerData.Domain,\n    'Enrichment Source': 'Clearbit API'\n  }\n}];"
-      },
-      "id": "6c4ef611-64ba-4913-a103-422ebd5d4aa7",
-      "name": "Merge Enrichment Data",
-      "type": "n8n-nodes-base.function",
-      "typeVersion": 1,
-      "position": [
-        64,
-        -80
+        -2112,
+        1280
       ],
-      "retryOnFail": false,
-      "alwaysOutputData": false
+      "id": "2a16a7a4-2385-4186-95a6-93273953fd87",
+      "name": "Search files and folders",
+      "retryOnFail": true,
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "E7nEqUL27GUx1xHa",
+          "name": "Techdome Account"
+        }
+      }
     },
     {
       "parameters": {
-        "operation": "appendOrUpdate",
+        "resource": "fileFolder",
+        "returnAll": true,
+        "filter": {
+          "folderId": {
+            "__rl": true,
+            "value": "={{ $json.id }}",
+            "mode": "id"
+          }
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -1664,
+        1168
+      ],
+      "id": "2ef1614c-3c49-43f2-bb69-6abd748dec96",
+      "name": "Search files and folders1",
+      "executeOnce": false,
+      "retryOnFail": true,
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "E7nEqUL27GUx1xHa",
+          "name": "Techdome Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.cloudinary.com/v1_1/dpuvigpmt/image/upload",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "parameterType": "formBinaryData",
+              "name": "file",
+              "inputDataFieldName": "data"
+            },
+            {
+              "name": "upload_preset",
+              "value": "upload"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -992,
+        1168
+      ],
+      "id": "725719e1-f2d5-4dca-894e-57c2bb39081d",
+      "name": "upload frames to cloudinary",
+      "retryOnFail": true,
+      "maxTries": 5,
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "JU8RVqLrd8GnIY3j",
+          "name": "Unnamed credential"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "options": {
+          "fileName": "file"
+        }
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -1232,
+        1168
+      ],
+      "id": "5c44d9bf-6ac8-4f30-814b-d5f7e202d13f",
+      "name": "Download file",
+      "retryOnFail": true,
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "E7nEqUL27GUx1xHa",
+          "name": "Techdome Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
         "documentId": {
           "__rl": true,
-          "value": "1t48jAkJ0XxK2xVMUWvL71vP5feN_ZDC21W6Pu7nK_Ng",
+          "value": "1IU2I88x_UTm2cyW3AhCEAucrY_f8pBPhk8hIouq36EA",
           "mode": "list",
-          "cachedResultName": "Lead Profile Enrichment",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1t48jAkJ0XxK2xVMUWvL71vP5feN_ZDC21W6Pu7nK_Ng/edit?usp=drivesdk"
+          "cachedResultName": "Zoho New Product List",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1IU2I88x_UTm2cyW3AhCEAucrY_f8pBPhk8hIouq36EA/edit?usp=drivesdk"
         },
         "sheetName": {
           "__rl": true,
           "value": "gid=0",
           "mode": "list",
           "cachedResultName": "Sheet1",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1t48jAkJ0XxK2xVMUWvL71vP5feN_ZDC21W6Pu7nK_Ng/edit#gid=0"
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1IU2I88x_UTm2cyW3AhCEAucrY_f8pBPhk8hIouq36EA/edit#gid=0"
         },
         "columns": {
           "mappingMode": "defineBelow",
           "value": {
-            "id": "={{ $json.id }}",
-            "name": "={{ $json.name }}",
-            "url": "={{ $json.url }}",
-            "property_name": "={{ $json.property_name }}"
+            "Product Name": "={{ $('Loop Over Items').item.json.name }}",
+            "Product Handle": "={{ $json.output['Product Handle'] }}",
+            "Store Description": "={{ $json.output['Store Description'] }}",
+            "Long Description": "={{ $json.output['Long Description'] }}",
+            "AttributeType1": "={{ $json.output.AttributeType1 }}",
+            "AttributeName1": "={{ $json.output.AttributeName1 }}",
+            "Brand": "={{ $json.output.Brand }}",
+            "Opening Stock": "={{ $json.output['Opening Stock'] }}",
+            "SEO Keyword": "={{ $json.output['SEO Keyword'] }}",
+            "Tags": "={{ $json.output.Tags }}",
+            "SEO Description": "={{ $json.output['SEO Description'] }}",
+            "Show In Store": "={{ $json.output['Show In Store'] }}",
+            "On Sale": "={{ $json.output['On Sale'] }}",
+            "Qualifies For Returns": "={{ $json.output['Is Returnable Item'] }}",
+            "Minimum Order Quantity": "1",
+            "Maximum Order Quantity": "=5",
+            "Label Price": "8999.00",
+            "Selling Price": "4499.00",
+            "AttributeOption1": "0-3 Months",
+            "Item Type": "Inventory",
+            "Product Image": "={{ $('upload frames to cloudinary').item.json.secure_url }}"
           },
-          "matchingColumns": [
-            "id"
-          ],
+          "matchingColumns": [],
           "schema": [
             {
-              "id": "id",
-              "displayName": "id",
+              "id": "Product Name",
+              "displayName": "Product Name",
               "required": false,
-              "defaultMatch": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Product Image",
+              "displayName": "Product Image",
+              "required": false,
+              "defaultMatch": false,
               "display": true,
               "type": "string",
               "canBeUsedToMatch": true,
               "removed": false
             },
             {
-              "id": "name",
-              "displayName": "name",
+              "id": "Product Handle",
+              "displayName": "Product Handle",
               "required": false,
               "defaultMatch": false,
               "display": true,
@@ -128,8 +208,8 @@
               "canBeUsedToMatch": true
             },
             {
-              "id": "url",
-              "displayName": "url",
+              "id": "Store Description",
+              "displayName": "Store Description",
               "required": false,
               "defaultMatch": false,
               "display": true,
@@ -137,8 +217,455 @@
               "canBeUsedToMatch": true
             },
             {
-              "id": "property_name",
-              "displayName": "property_name",
+              "id": "Long Description",
+              "displayName": "Long Description",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Brand",
+              "displayName": "Brand",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "AttributeName1",
+              "displayName": "AttributeName1",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "AttributeType1",
+              "displayName": "AttributeType1",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "AttributeOption1",
+              "displayName": "AttributeOption1",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Selling Price",
+              "displayName": "Selling Price",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Label Price",
+              "displayName": "Label Price",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Opening Stock",
+              "displayName": "Opening Stock",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Item Type",
+              "displayName": "Item Type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Minimum Order Quantity",
+              "displayName": "Minimum Order Quantity",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Maximum Order Quantity",
+              "displayName": "Maximum Order Quantity",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Tags",
+              "displayName": "Tags",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "SEO Keyword",
+              "displayName": "SEO Keyword",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": " ",
+              "displayName": " ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "SEO Description",
+              "displayName": "SEO Description",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Show In Store",
+              "displayName": "Show In Store",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "On Sale",
+              "displayName": "On Sale",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Qualifies For Returns",
+              "displayName": "Qualifies For Returns",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        32,
+        1280
+      ],
+      "id": "525721b3-5a59-4e9e-8305-454f20b5df29",
+      "name": "Append row in sheet",
+      "retryOnFail": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "kpPEOLCGn963qpoh",
+          "name": "automations@techdome.ai"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Input: {{ $json.description }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=You are an AI agent tasked with extracting structured product information from a given product image description for children’s partywear (such as dresses, rompers, and gowns). Use the input description and generate a detailed product data entry that matches the following format and fields. Assume that certain attributes are constant across all products, while others are variable and must be derived from the image description or input. Output the information in a structured table or JSON format.\n\nConstant Fields (use these values unless the description specifies otherwise):\n • Brand: Fairy Frills\n • On Sale: YES\n • Is Returnable Item: FALSE\n • Show In Store: YES\n • AttributeName1: Size\n • AttributeType1: Text\n • Minimum Order Quantity: 1\n • Maximum Order Quantity: 5\n • Stock On Hand: 1000\n • Opening Stock: 1000\n • Status: Active\n • Taxable: TRUE\n • Dimension Unit: cm\n • Weight Unit: kg\n\nVariable Fields (derive these from the input description or as appropriate):\n • Product Name: [Extracted from main title or key description]\n Store Description: Must be concise, engaging, and include at least one SEO keyword. Limit to 1-2 sentences.\n • Long Description: Must be detailed, evocative, and SEO optimized. Highlight design, key features, materials, use occasions, and unique selling points. Minimum 80 words.\n • SEO Keyword: Include 5-8 comma-separated keywords, focusing on color, style, age group, occasion, and the Fairy Frills brand.\n • Tags: Include 6-10 comma-separated tags relevant to style, theme, occasion, and product type.\n • Product Handle: Must be unique, lowercase, URL-friendly, and based on the Product Name (use hyphens, no spaces or special characters).\n • Product Handle: [A URL-friendly version of the product name]\n • Primary Colour: From the image description\n • Secondary Colour: From the image description\n • Cloth Fabric: From the image description\n\n\nInstructions:\n • For each image description provided, extract or infer all variable fields.\n • Write the Store Description as a concise and appealing summary.\n • Write the Long Description as a rich, detailed, and marketing-oriented paragraph.\n • Generate SEO Keywords and Tags based on the dress’s color, style, theme, and occasion.\n • Use the provided format and fill in all constant fields unless the image description clearly indicates otherwise.\n • If multiple size or color variants are visible, list each as a separate variant entry.\n • If any information is missing from the description, leave the field blank.\n • Do not invent or hallucinate details not supported by the description. Leave any missing fields blank.\n • All descriptions and keywords must be original, SEO-friendly, and tailored for e-commerce.\n • Do not repeat content across products; each entry must be unique.\n • Never use placeholder text like “lorem ipsum” or generic phrases.\n • If multiple variants (size, color) are described, create a separate entry for each variant.\n • Do not include any information not present in the description or specified constants.\n • All output must be in the exact JSON structure provided below. Do not add or remove fields.\n • No field should contain null values; if unknown, leave as an empty string “”.\n • All text must be grammatically correct, free of spelling errors, and formatted for professional e-commerce presentation.\n\n\n\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        -320,
+        1168
+      ],
+      "id": "835afee7-3c0a-41ef-8df3-5c2122d272b8",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"Product Name\": \"Enchanted Blush One-Shoulder Tutu Dress\",\n  \"Store Description\": \"A beautiful blush pink one-shoulder party dress with layered tulle skirt and oversized bow, perfect for birthdays and special occasions.\",\n  \"Long Description\": \"Let your little one shine in the Blush Pink Dream Tutu Party Dress, an elegant and stylish outfit that’s perfect for making memories. This dress features a shimmering blush pink bodice with a chic one-shoulder design, adding a modern twist to the classic tutu style. The layered tulle skirt gives it a fairy-tale feel, with soft, flowing layers that are ideal for twirling. An oversized pink bow at the waist adds a touch of charm, completing the look with grace. Perfect for birthdays, weddings, or any festive event, this dress promises comfort and elegance for any special occasion.\",\n  \"Brand\": \"Fairy Frills\",\n  \"On Sale\": \"YES\",\n  \"Is Returnable Item\": \"FALSE\",\n  \"SEO Keyword\": \"blush pink tutu dress, one-shoulder party dress for girls, layered tulle birthday dress, elegant toddler dress, Fairy Frills collection\",\n  \"SEO Title\" : \"Beautiful Yellow Puff Dress for Baby Girls - Perfect for Birthdays and Special Occasions\",\n  \"SEO Description\": \"Shop this adorable yellow puff dress for baby girls, designed for comfort and style. Ideal for birthdays, family gatherings, and special events. Featuring soft fabric, a fluffy design, and a sweet bow, it's the perfect choice for your little one's wardrobe.\",\n  \"Show In Store\": \"YES\",\n  \"AttributeName1\": \"Size\",\n  \"AttributeType1\": \"Text\",\n  \"Tags\": \"toddler birthday dress, Fairy Frills, pink tutu dress, party dress, layered tulle dress, one-shoulder dress, elegant dress\",\n  \"Opening Stock\": \"1000\",\n  \"Stock On Hand\": \"1000\",\n  \"Status\": \"Active\",\n  \"Taxable\": \"TRUE\",\n  \"Product Handle\": \"enchanted-blush-one-shoulder\",\n  \"Primary Colour\": \"Green\",\n  \"Secondary Colour\": \"Yellow hints\",\n  \"Cloth Fabric\": \"Cotton\"\n}\n"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        -192,
+        1392
+      ],
+      "id": "f57a8ef1-9e65-47ed-a709-20f8350aeee9",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "mode": "url",
+          "value": "https://docs.google.com/spreadsheets/d/18DNpaXvHFZieM7cv1JiGJxwPNQuGFA1EqIMfvvJcGVs/edit?usp=drivesdk",
+          "__regex": "https:\\/\\/(?:drive|docs)\\.google\\.com(?:\\/.*|)\\/d\\/([0-9a-zA-Z\\-_]+)(?:\\/.*|)"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/18DNpaXvHFZieM7cv1JiGJxwPNQuGFA1EqIMfvvJcGVs/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Image- has to be Pernia's Pop up shop's Photoshoot": "={{ $json.output['Product Name'] }}",
+            "Keywords": "={{ $json.output['SEO Keyword'] }}",
+            "Short description : 1 line description of the product.": "={{ $json.output['Store Description'] }}",
+            "Long description : 2-3 lines brief description of the product. Include details in terms of fabric/ material, colour etc, which need to be highlighted.": "={{ $json.output['Long Description'] }}",
+            "No. of pieces in a set": "1",
+            "Secondary color:": "={{ $json.output['Primary Colour'] }}",
+            "Available in Other Colours: (Reference Neelam Shade Card)": "={{ $json.output['Secondary Colour'] }}",
+            "Delivery Time: Mention in Days": "8",
+            "Closure used (front, back e.g. zip, button etc)": "Back",
+            "Fabric Composition : please list all. If blend, please list %": "={{ $json.output['Cloth Fabric'] }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "S. No.",
+              "displayName": "S. No.",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Image- has to be Pernia's Pop up shop's Photoshoot",
+              "displayName": "Image- has to be Pernia's Pop up shop's Photoshoot",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Image",
+              "displayName": "Image",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Designer Unique code - code by which you can identify the product",
+              "displayName": "Designer Unique code - code by which you can identify the product",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Gender\n",
+              "displayName": "Gender\n",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Product Category : E.g Dress, Kurta Pajama,Anarkali,Shirt,Trousers etc.)\n\nFor Better Search, please select from our list",
+              "displayName": "Product Category : E.g Dress, Kurta Pajama,Anarkali,Shirt,Trousers etc.)\n\nFor Better Search, please select from our list",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Keywords",
+              "displayName": "Keywords",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Short description : 1 line description of the product.",
+              "displayName": "Short description : 1 line description of the product.",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Long description : 2-3 lines brief description of the product. Include details in terms of fabric/ material, colour etc, which need to be highlighted.",
+              "displayName": "Long description : 2-3 lines brief description of the product. Include details in terms of fabric/ material, colour etc, which need to be highlighted.",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Size : Mention the quanity available/reproducible against each size.\nIncase it is reproducible indefinitely, please put 1000",
+              "displayName": "Size : Mention the quanity available/reproducible against each size.\nIncase it is reproducible indefinitely, please put 1000",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "No. of pieces in a set",
+              "displayName": "No. of pieces in a set",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "primary color: main colour of the product\n",
+              "displayName": "primary color: main colour of the product\n",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Secondary color:",
+              "displayName": "Secondary color:",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Available in Other Colours: (Reference Neelam Shade Card)",
+              "displayName": "Available in Other Colours: (Reference Neelam Shade Card)",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Delivery Time: Mention in Days",
+              "displayName": "Delivery Time: Mention in Days",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Fabric Composition : please list all. If blend, please list %",
+              "displayName": "Fabric Composition : please list all. If blend, please list %",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Lining Material\n",
+              "displayName": "Lining Material\n",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Collection\n(Season-Year)",
+              "displayName": "Collection\n(Season-Year)",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Closure used (front, back e.g. zip, button etc)",
+              "displayName": "Closure used (front, back e.g. zip, button etc)",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Emboridery & Embellishments\n",
+              "displayName": "Emboridery & Embellishments\n",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Prints/Pattterns\n",
+              "displayName": "Prints/Pattterns\n",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Occassion\n",
+              "displayName": "Occassion\n",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Retail Price(MRP inclusive of GST)",
+              "displayName": "Retail Price(MRP inclusive of GST)",
               "required": false,
               "defaultMatch": false,
               "display": true,
@@ -151,475 +678,754 @@
         },
         "options": {}
       },
-      "id": "86cac053-0ae2-406f-ba48-ce2f92d90460",
-      "name": "Append to Enriched Leads Sheet",
       "type": "n8n-nodes-base.googleSheets",
-      "typeVersion": 4,
+      "typeVersion": 4.6,
       "position": [
-        592,
-        -240
+        240,
+        768
       ],
+      "id": "a0f3edb5-277d-4045-8a52-190a232288fe",
+      "name": "Append row in sheet2",
       "credentials": {
         "googleSheetsOAuth2Api": {
-          "id": "ptC5XVqswYJ3rH2d",
-          "name": "Google Sheets account 3"
+          "id": "sOplQNr4zvwQul4A",
+          "name": "jyothi"
         }
       }
-    },
-    {
-      "parameters": {
-        "team": "9014872066",
-        "space": "90143686913",
-        "folderless": true,
-        "list": "901411343468",
-        "name": "={{ $json['Lead Name'] }}",
-        "additionalFields": {
-          "assignees": [
-            224432632
-          ],
-          "content": "={{ $json.Notes }}",
-          "dueDate": "={{ $json['Meeting Date'] }}"
-        }
-      },
-      "type": "n8n-nodes-base.clickUp",
-      "typeVersion": 1,
-      "position": [
-        352,
-        32
-      ],
-      "id": "d9652af1-de37-4084-b206-a06b2434e023",
-      "name": "Create a task",
-      "credentials": {
-        "clickUpApi": {
-          "id": "kahuAqa6VKsSxhn1",
-          "name": "ClickUp account 3"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "conditions": {
-          "options": {
-            "caseSensitive": true,
-            "leftValue": "",
-            "typeValidation": "strict",
-            "version": 1
-          },
-          "conditions": [
-            {
-              "id": "booking-status-check",
-              "leftValue": "={{ $json['Booking Status'] }}",
-              "rightValue": "BOOKED",
-              "operator": {
-                "type": "string",
-                "operation": "equals"
-              }
-            },
-            {
-              "id": "hours-elapsed-check",
-              "leftValue": "={{ Math.floor((new Date() - new Date($json.initialReplyDate)) / (1000 * 60 * 60)) }}",
-              "rightValue": 24,
-              "operator": {
-                "type": "number",
-                "operation": "gte"
-              }
-            }
-          ],
-          "combinator": "or"
-        },
-        "options": {}
-      },
-      "id": "19015249-6fcb-497e-8326-2635dbd72067",
-      "name": "Check If Unbooked",
-      "type": "n8n-nodes-base.if",
-      "typeVersion": 2,
-      "position": [
-        -976,
-        -80
-      ]
     },
     {
       "parameters": {},
       "type": "n8n-nodes-base.manualTrigger",
       "typeVersion": 1,
       "position": [
-        -1440,
-        -80
+        -2336,
+        1280
       ],
-      "id": "bace46f7-0b1d-457b-9756-fb160f46a8d0",
+      "id": "6b28ca78-d7b3-4595-9457-c704c28b412b",
       "name": "When clicking ‘Execute workflow’"
     },
     {
       "parameters": {
-        "resource": "databasePage",
-        "databaseId": {
-          "__rl": true,
-          "value": "265802b9-1fa0-806f-a52a-e6d71d9ff2e0",
-          "mode": "list",
-          "cachedResultName": "test db",
-          "cachedResultUrl": "https://www.notion.so/265802b91fa0806fa52ae6d71d9ff2e0"
-        },
-        "title": "={{ $json.Company }}",
-        "blockUi": {
-          "blockValues": [
+        "content": "## Search files and folders\nThis node allows you to search for specific files and folders within a designated storage location or system.",
+        "height": 176
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -2064,
+        -32
+      ],
+      "typeVersion": 1,
+      "id": "9c136050-cef3-4636-99ac-ecefbf991763",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## Loop Over Items\nThis node processes each item in a list individually, enabling actions like uploads or downloads to be performed in sequence.",
+        "height": 176
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1872,
+        -464
+      ],
+      "typeVersion": 1,
+      "id": "1a685527-23dd-4b04-ba8a-0bc661dfe400",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "## Search files and folders\nThis node allows you to search for specific files and folders within a designated storage location or system.",
+        "height": 176
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1632,
+        -64
+      ],
+      "typeVersion": 1,
+      "id": "308bff41-a761-4237-b887-d2f2591aea28",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "## Download file\nThis node downloads a file from a specified source or URL to be used in your workflow.",
+        "height": 176
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1424,
+        -464
+      ],
+      "typeVersion": 1,
+      "id": "b935e853-e308-4336-b896-e2b13e9677f6",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "## Upload frames to Cloudinary\nThis node uploads image files (frames) to Cloudinary, a cloud-based media management platform, using a POST request.",
+        "height": 176
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1216,
+        -48
+      ],
+      "typeVersion": 1,
+      "id": "203f0cd4-93c9-4ea1-8239-0014fd4687d7",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "## Azure OpenAI Chat Model\nConnects to Azure OpenAI to process messages using a selected AI model, generating intelligent responses or actions.",
+        "height": 176,
+        "width": 256
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1008,
+        -480
+      ],
+      "typeVersion": 1,
+      "id": "5048f09a-e3ba-4eb4-8771-fa99fbed2cb4",
+      "name": "Sticky Note8"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
             {
-              "textContent": "={{ $json['Lead Name'] }}"
-            },
-            {
-              "textContent": "={{ $json.Email }}"
-            },
-            {
-              "textContent": "={{ $json['Enriched Industry'] }}"
-            },
-            {
-              "textContent": "={{ $json['Logo URL'] }}"
-            },
-            {
-              "textContent": "={{ $json['Brand Colors'] }}"
-            },
-            {
-              "textContent": "={{ $json['Assigned Rep'] }}"
-            },
-            {
-              "textContent": "={{ $json.Notes }}"
-            },
-            {
-              "textContent": "={{ $json['Meeting Date'] }}"
+              "id": "eaa30746-7c59-4729-b00e-418dc4c5f770",
+              "name": "description",
+              "value": "={{ $json.content }}",
+              "type": "string"
             }
           ]
         },
         "options": {}
       },
-      "type": "n8n-nodes-base.notion",
-      "typeVersion": 2.2,
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
       "position": [
-        336,
-        -240
+        -544,
+        1168
       ],
-      "id": "37248473-7f25-49f5-be69-87f71f8f89aa",
-      "name": "Create a database page",
-      "credentials": {
-        "notionApi": {
-          "id": "iDjtgSTYG9ECVBtT",
-          "name": "Notion account 2"
-        }
-      }
+      "id": "4392c8a1-600e-4f8d-9a23-f7571fff99b4",
+      "name": "Setting description"
     },
     {
       "parameters": {
-        "content": "When clicking ‘Execute workflow’ (Manual Trigger)\n\nStarts the workflow manually when you run it in n8n."
+        "content": "## Azure OpenAI Chat Model\nThis node sends text prompts to an Azure-hosted OpenAI chat model, enabling AI-powered conversations or content generation.",
+        "height": 192,
+        "width": 256
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        -1520,
-        -288
+        -368,
+        -112
       ],
       "typeVersion": 1,
-      "id": "6a52ff0b-fbbf-4c71-8a15-1cc469216c1b",
-      "name": "Sticky Note1"
-    },
-    {
-      "parameters": {
-        "content": "Get row(s) in sheet1 (Google Sheets)\n\nPulls lead data from your sample leads sheet (sample_leads_50).",
-        "color": 2
-      },
-      "type": "n8n-nodes-base.stickyNote",
-      "position": [
-        -1248,
-        112
-      ],
-      "typeVersion": 1,
-      "id": "c0c3334c-a316-4d62-a9df-d8a497fb5a55",
-      "name": "Sticky Note2"
-    },
-    {
-      "parameters": {
-        "content": "Check If Unbooked (IF Node)\n\nChecks two conditions:\n\nIf booking status = BOOKED.\n\nOR if more than 24 hours passed since initial reply.\n\nIf either is true → continues to enrichment.",
-        "height": 224,
-        "color": 3
-      },
-      "type": "n8n-nodes-base.stickyNote",
-      "position": [
-        -1040,
-        -336
-      ],
-      "typeVersion": 1,
-      "id": "89b26487-67da-4723-9912-4b5f5e52850b",
-      "name": "Sticky Note3"
-    },
-    {
-      "parameters": {
-        "content": "Extract Domain from Email (Function Node)\n\nExtracts the domain name from the lead’s email address.\n\n",
-        "height": 128,
-        "color": 4
-      },
-      "type": "n8n-nodes-base.stickyNote",
-      "position": [
-        -768,
-        112
-      ],
-      "typeVersion": 1,
-      "id": "a36e6320-2834-4fe9-83df-c5083a1453a7",
-      "name": "Sticky Note4"
-    },
-    {
-      "parameters": {
-        "content": "Get Company Logo (HTTP Request to Clearbit Logo API)\n\nFetches the company’s logo from Clearbit using the domain.",
-        "color": 5
-      },
-      "type": "n8n-nodes-base.stickyNote",
-      "position": [
-        -512,
-        -432
-      ],
-      "typeVersion": 1,
-      "id": "27b872b7-6892-4c6c-bf88-a03f972ca96a",
-      "name": "Sticky Note5"
-    },
-    {
-      "parameters": {
-        "content": "Clearbit Company Enrichment (HTTP Request)\n\nQueries Clearbit’s company suggest API using the domain.\n\nReturns company name, logo, and other metadata.",
-        "height": 176,
-        "color": 6
-      },
-      "type": "n8n-nodes-base.stickyNote",
-      "position": [
-        -480,
-        176
-      ],
-      "typeVersion": 1,
-      "id": "33b11579-8056-47f2-a6b7-c8b0b96395ba",
-      "name": "Sticky Note6"
-    },
-    {
-      "parameters": {
-        "content": "Merge (Merge Node,)\n\nWas meant to combine logo + enrichment data.\n",
-        "height": 112,
-        "color": 7
-      },
-      "type": "n8n-nodes-base.stickyNote",
-      "position": [
-        -224,
-        -240
-      ],
-      "typeVersion": 1,
-      "id": "0f8134d0-9797-4e2d-bb31-9f698b1748e0",
-      "name": "Sticky Note7"
-    },
-    {
-      "parameters": {
-        "content": "Merge Enrichment Data (Function Node)\n\nCentral enrichment logic:\n\nMerges lead info + Clearbit data.\n\nPicks logo URL (priority: logo API > Clearbit > fallback).\n\nDetermines industry (Technology, Engineering, Consulting, or default).\n\nAssigns brand colors based on industry.\n\nGenerates Notes (audit trail).\n\nFinal enriched JSON includes Lead Name, Email, Company, Industry, Logo, Brand Colors, Assigned Rep, Notes, Status, Meeting Date, Verified Domain.",
-        "height": 496
-      },
-      "type": "n8n-nodes-base.stickyNote",
-      "position": [
-        0,
-        80
-      ],
-      "typeVersion": 1,
-      "id": "739019a3-ef09-44d4-8d58-3aa1ed8ba4a1",
-      "name": "Sticky Note8"
-    },
-    {
-      "parameters": {
-        "content": "Create a database page (Notion)\n\nCreates a Notion page in your database (test db).\n\nStores enriched lead details (name, email, company, industry, logo, colors, notes, etc.).",
-        "height": 208,
-        "color": 4
-      },
-      "type": "n8n-nodes-base.stickyNote",
-      "position": [
-        304,
-        -464
-      ],
-      "typeVersion": 1,
-      "id": "8cc172f4-530f-4355-9480-9a01365f6c2d",
+      "id": "e7763711-8ee1-4f77-b03c-4111f219fc2b",
       "name": "Sticky Note9"
     },
     {
       "parameters": {
-        "content": "Create a task (ClickUp)\n\nCreates a ClickUp task for the lead.\n\nAssigns it to a rep.\n\nAdds notes and due date (from meeting date).",
+        "content": "## Append row in sheet\nThis node adds a new row of data to a connected spreadsheet, helping you record or update information automatically.",
         "height": 192,
-        "color": 3
+        "width": 256
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        336,
-        208
+        -64,
+        -496
       ],
       "typeVersion": 1,
-      "id": "09544996-9c73-4695-8214-9e213a4cf299",
+      "id": "d8cda113-6bf5-4a89-bbc8-cdf79f2fad28",
       "name": "Sticky Note10"
     },
     {
       "parameters": {
-        "content": "Append to Enriched Leads Sheet (Google Sheets)\n\nAppends the enriched lead data into a separate Google Sheet (Lead Profile Enrichment).\n\nActs as a backup or master log.",
-        "height": 176,
-        "color": 5
+        "content": "## Merge\nThis node combines data from multiple sources or nodes into a single output, streamlining workflow data management.",
+        "height": 192,
+        "width": 256
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        832,
-        -272
+        176,
+        -144
       ],
       "typeVersion": 1,
-      "id": "999336a9-ae3a-480c-8b48-568d2782f894",
-      "name": "Sticky Note12"
-    },
-    {
-      "parameters": {
-        "documentId": {
-          "__rl": true,
-          "value": "17rcNd_ZpUQLm0uWEVbD-NY6GyFUkrD4BglvawlyBygM",
-          "mode": "list",
-          "cachedResultName": "sample_leads_50",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/17rcNd_ZpUQLm0uWEVbD-NY6GyFUkrD4BglvawlyBygM/edit?usp=drivesdk"
-        },
-        "sheetName": {
-          "__rl": true,
-          "value": 540316831,
-          "mode": "list",
-          "cachedResultName": "sample_leads_50",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/17rcNd_ZpUQLm0uWEVbD-NY6GyFUkrD4BglvawlyBygM/edit#gid=540316831"
-        },
-        "options": {}
-      },
-      "id": "8557aea3-35f2-4664-85c8-fac0248c1173",
-      "name": "Getting leads data",
-      "type": "n8n-nodes-base.googleSheets",
-      "typeVersion": 4,
-      "position": [
-        -1200,
-        -80
-      ],
-      "credentials": {
-        "googleSheetsOAuth2Api": {
-          "id": "s4dP1fNuVZ2gWvs3",
-          "name": "Google Sheets account"
-        }
-      }
+      "id": "80856104-e323-4963-9ffd-b6a5a23e2595",
+      "name": "Sticky Note11"
     },
     {
       "parameters": {},
       "type": "n8n-nodes-base.merge",
       "typeVersion": 3.2,
       "position": [
-        -192,
-        -80
+        336,
+        1376
       ],
-      "id": "5a802822-cdde-401f-82a3-522e3ca98a76",
-      "name": "Combining data"
+      "id": "4bdc8120-b3a7-4865-b3a6-02f29193ffc9",
+      "name": "Merge outputs for Logic"
+    },
+    {
+      "parameters": {
+        "content": "## Flattening descriptions\nThis node flattens output from the previous node",
+        "height": 192,
+        "width": 256
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -544,
+        -496
+      ],
+      "typeVersion": 1,
+      "id": "7f4e1076-0f21-47c5-b9a6-f89906427cb2",
+      "name": "Sticky Note12"
+    },
+    {
+      "parameters": {
+        "content": "## Setting descriptions\nThis node is used to set the output from the previous output for better tracking ",
+        "height": 192,
+        "width": 256
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -768,
+        -64
+      ],
+      "typeVersion": 1,
+      "id": "72b7ca2a-42ef-4f94-af46-4fbd6542ae61",
+      "name": "Sticky Note13"
+    },
+    {
+      "parameters": {
+        "resource": "image",
+        "operation": "analyze",
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o",
+          "mode": "list",
+          "cachedResultName": "GPT-4O"
+        },
+        "text": "=Analyze the following image and craft a highly distinctive, vivid, and original description that captures its unique details, atmosphere, and mood. Ensure the description is unlike any other and avoids generic or repetitive language. The brand is Fairy Frills, which specializes in elite princess and fairy dresses for children. Focus on what sets this image apart visually and emotionally, providing a description that stands out and could not apply to any other image. Please do not reference the image in a typical or formulaic way; instead, highlight its one-of-a-kind features and essence. It is very important that you mention the primary colour of the dress, secondary colour of the dress, and the cloth fabric of the dress",
+        "imageUrls": "={{ $json.secure_url }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        -768,
+        1168
+      ],
+      "id": "8987c6e1-e090-40f5-a2e7-4cf897c058d6",
+      "name": "Analyze image",
+      "credentials": {
+        "openAiApi": {
+          "id": "5Kzt6hGSZ1JHZqWN",
+          "name": "OpenAi account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "11SXMuRxMxqm6xue8_lr3Omv3T7uVDdrPMFzj2izcnrQ",
+          "mode": "list",
+          "cachedResultName": "ff descriptions",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/11SXMuRxMxqm6xue8_lr3Omv3T7uVDdrPMFzj2izcnrQ/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/11SXMuRxMxqm6xue8_lr3Omv3T7uVDdrPMFzj2izcnrQ/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Product Name": "={{ $json.output['Product Name'] }}",
+            "Product Handle": "={{ $json.output['Product Handle'] }}",
+            "Store Description": "={{ $json.output['Store Description'] }}",
+            "Long Description": "={{ $json.output['Long Description'] }}",
+            "Brand": "={{ $json.output.Brand }}",
+            "AttributeName1": "={{ $json.output.AttributeName1 }}",
+            "AttributeType1": "={{ $json.output.AttributeType1 }}",
+            "Opening Stock": "={{ $json.output['Opening Stock'] }}",
+            "Item Type": "Inventory",
+            "Minimum Order Quantity": "1",
+            "Maximum Order Quantity": "5",
+            "Tags": "={{ $json.output.Tags }}",
+            "SEO Keyword": "={{ $json.output['SEO Keyword'] }}",
+            "SEO Title": "={{ $json.output['SEO Title'] }}",
+            "SEO Description": "={{ $json.output['SEO Description'] }}",
+            "On Sale": "={{ $json.output['On Sale'] }}",
+            "Show In Store": "YES",
+            "Qualifies For Returns ": "={{ $json.output['Is Returnable Item'] }}"
+          },
+          "matchingColumns": [
+            "Descriptions from OpenAI"
+          ],
+          "schema": [
+            {
+              "id": "Product Name",
+              "displayName": "Product Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Product Handle",
+              "displayName": "Product Handle",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Store Description",
+              "displayName": "Store Description",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Long Description",
+              "displayName": "Long Description",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Brand",
+              "displayName": "Brand",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "AttributeName1",
+              "displayName": "AttributeName1",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "AttributeType1",
+              "displayName": "AttributeType1",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "AttributeOption1",
+              "displayName": "AttributeOption1",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Opening Stock",
+              "displayName": "Opening Stock",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Item Type",
+              "displayName": "Item Type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Minimum Order Quantity",
+              "displayName": "Minimum Order Quantity",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Maximum Order Quantity",
+              "displayName": "Maximum Order Quantity",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Price",
+              "displayName": "Price",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Tags",
+              "displayName": "Tags",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "SEO Keyword",
+              "displayName": "SEO Keyword",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "SEO Title",
+              "displayName": "SEO Title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "SEO Description",
+              "displayName": "SEO Description",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Show In Store",
+              "displayName": "Show In Store",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "On Sale",
+              "displayName": "On Sale",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Qualifies For Returns ",
+              "displayName": "Qualifies For Returns ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        480,
+        1008
+      ],
+      "id": "6720b751-3dc0-46d5-8ae7-3a6ee9ac5e1d",
+      "name": "Append row in sheet1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "sOplQNr4zvwQul4A",
+          "name": "jyothi"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o",
+          "mode": "list",
+          "cachedResultName": "gpt-4o"
+        },
+        "responsesApiEnabled": false,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        -400,
+        1376
+      ],
+      "id": "60a2e8d7-f413-4958-9c57-85b4d493b53e",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "5Kzt6hGSZ1JHZqWN",
+          "name": "OpenAi account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        -1888,
+        1280
+      ],
+      "id": "567bda21-bec7-4372-9b1d-15877fc7b24a",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {
+        "amount": 2
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        -1440,
+        1168
+      ],
+      "id": "6166e25a-5d75-4968-88f6-0e9692d24f16",
+      "name": "Wait",
+      "webhookId": "35409eaf-f9c8-416c-90f3-bcb32304a4e8"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "\"description writer\""
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -288,
+        1392
+      ],
+      "id": "b994bf87-3783-4a16-9b90-239810647385",
+      "name": "Simple Memory"
     }
   ],
   "connections": {
-    "Extract Domain from Email": {
+    "Search files and folders": {
       "main": [
         [
           {
-            "node": "Get Company Logo",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "Clearbit Company Enrichment",
+            "node": "Loop Over Items",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Get Company Logo": {
+    "Search files and folders1": {
       "main": [
         [
           {
-            "node": "Combining data",
+            "node": "Wait",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Clearbit Company Enrichment": {
+    "upload frames to cloudinary": {
       "main": [
         [
           {
-            "node": "Combining data",
-            "type": "main",
-            "index": 1
-          }
-        ]
-      ]
-    },
-    "Merge Enrichment Data": {
-      "main": [
-        [
-          {
-            "node": "Create a database page",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "Create a task",
+            "node": "Analyze image",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Append to Enriched Leads Sheet": {
+    "Download file": {
+      "main": [
+        [
+          {
+            "node": "upload frames to cloudinary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Merge outputs for Logic",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet2": {
       "main": [
         []
-      ]
-    },
-    "Check If Unbooked": {
-      "main": [
-        [
-          {
-            "node": "Extract Domain from Email",
-            "type": "main",
-            "index": 0
-          }
-        ]
       ]
     },
     "When clicking ‘Execute workflow’": {
       "main": [
         [
           {
-            "node": "Getting leads data",
+            "node": "Search files and folders",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Create a database page": {
+    "Setting description": {
       "main": [
         [
           {
-            "node": "Append to Enriched Leads Sheet",
+            "node": "AI Agent",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Getting leads data": {
+    "Merge outputs for Logic": {
       "main": [
         [
           {
-            "node": "Check If Unbooked",
+            "node": "Loop Over Items",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Combining data": {
+    "Analyze image": {
       "main": [
         [
           {
-            "node": "Merge Enrichment Data",
+            "node": "Setting description",
             "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Search files and folders1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Download file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
             "index": 0
           }
         ]
@@ -627,38 +1433,36 @@
     }
   },
   "settings": {
-    "executionOrder": "v1"
+    "executionOrder": "v1",
+    "saveDataSuccessExecution": "all",
+    "saveManualExecutions": false,
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
   },
   "staticData": null,
   "meta": {
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "d1a4a810-4ac2-4cfe-982f-16d1f3e9ace0",
+  "versionId": "84d4c948-eb67-4d40-bbe5-ac243885267d",
   "activeVersionId": null,
   "triggerCount": 0,
   "shared": [
     {
-      "updatedAt": "2025-09-05T05:23:02.664Z",
-      "createdAt": "2025-09-05T05:23:02.664Z",
+      "updatedAt": "2025-09-12T00:03:54.627Z",
+      "createdAt": "2025-09-12T00:03:54.627Z",
       "role": "workflow:owner",
-      "workflowId": "9KRdh9YURctQ9kIo",
+      "workflowId": "9XevkVCNXgZ53qKq",
       "projectId": "iXigq15mRQoAAIrt"
     }
   ],
   "activeVersion": null,
   "tags": [
     {
-      "updatedAt": "2025-09-05T05:36:01.501Z",
-      "createdAt": "2025-09-05T05:36:01.501Z",
-      "id": "VT2auW6qa9EXhGrO",
-      "name": "sales"
-    },
-    {
-      "updatedAt": "2025-09-05T05:36:01.542Z",
-      "createdAt": "2025-09-05T05:36:01.542Z",
-      "id": "3LcAgx74tbyro0Qm",
-      "name": "lead-enrichment"
+      "updatedAt": "2025-09-12T00:04:07.350Z",
+      "createdAt": "2025-09-12T00:04:07.350Z",
+      "id": "cshJUy1dOLdeUENB",
+      "name": "Fairy Frills"
     }
   ]
 }
