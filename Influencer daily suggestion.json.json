@@ -1,325 +1,149 @@
 {
-  "updatedAt": "2026-01-08T07:12:07.256Z",
-  "createdAt": "2025-08-20T12:29:06.939Z",
-  "id": "bY9HGgxOJvIhlfQ1",
-  "name": "Upwork  company specific JOB Proposal",
-  "active": true,
+  "updatedAt": "2025-12-23T17:40:16.555Z",
+  "createdAt": "2025-10-29T08:58:09.967Z",
+  "id": "BrAg7iFY7zDtl2GG",
+  "name": "FAQ Freshness SLA Monitor (Notion → Google Sheets → Slack)",
+  "active": false,
   "isArchived": false,
   "nodes": [
     {
       "parameters": {
-        "rule": {
-          "interval": [
-            {
-              "field": "cronExpression",
-              "expression": "0 0 8,10,12,15,17 * * *"
-            }
-          ]
-        }
-      },
-      "type": "n8n-nodes-base.scheduleTrigger",
-      "typeVersion": 1.2,
-      "position": [
-        -1664,
-        224
-      ],
-      "id": "b58d0685-413a-4b48-8a90-748b2233dfdb",
-      "name": "Schedule Trigger1"
-    },
-    {
-      "parameters": {
-        "documentId": {
+        "resource": "databasePage",
+        "operation": "getAll",
+        "databaseId": {
           "__rl": true,
-          "value": "1mERLGgeClTHy7wvZWQNPmPsCrLadKTCCrNl_FbWX6nQ",
+          "value": "29ad8188-083a-80c5-ae84-dcce3f2b7f7a",
           "mode": "list",
-          "cachedResultName": "upwork automation",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1mERLGgeClTHy7wvZWQNPmPsCrLadKTCCrNl_FbWX6nQ/edit?usp=drivesdk"
+          "cachedResultName": "Github Issues",
+          "cachedResultUrl": "https://www.notion.so/29ad8188083a80c5ae84dcce3f2b7f7a"
         },
-        "sheetName": {
-          "__rl": true,
-          "value": "gid=0",
-          "mode": "list",
-          "cachedResultName": "Sheet1",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1mERLGgeClTHy7wvZWQNPmPsCrLadKTCCrNl_FbWX6nQ/edit#gid=0"
-        },
-        "options": {
-          "returnFirstMatch": true
-        }
+        "options": {}
       },
-      "type": "n8n-nodes-base.googleSheets",
-      "typeVersion": 4.6,
+      "id": "a3b8539e-e572-4902-878f-9af64e24fd40",
+      "name": "Fetch FAQs from Notion",
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2,
       "position": [
-        -864,
-        240
+        -880,
+        0
       ],
-      "id": "e59341a6-c355-4b9b-83bc-7c90c31a4e78",
-      "name": "GET Refresh Code",
       "credentials": {
-        "googleSheetsOAuth2Api": {
-          "id": "kpPEOLCGn963qpoh",
-          "name": "automations@techdome.ai"
+        "notionApi": {
+          "id": "E9jA8DFWT2IxdpMU",
+          "name": "Notion account Vivek"
         }
       }
     },
     {
       "parameters": {
-        "method": "POST",
-        "url": "https://www.upwork.com/api/v3/oauth2/token",
-        "sendBody": true,
-        "contentType": "form-urlencoded",
-        "bodyParameters": {
-          "parameters": [
+        "assignments": {
+          "assignments": [
             {
-              "name": "grant_type",
-              "value": "refresh_token"
+              "id": "a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
+              "name": "Title",
+              "value": "={{ $json.name }}",
+              "type": "string"
             },
             {
-              "name": "client_id",
-              "value": "d52b9728a2f031bc81d360fee5d34b1f"
+              "id": "c3d4e5f6-a7b8-4c9d-0e1f-2a3b4c5d6e7f",
+              "name": "lastEdited",
+              "value": "={{ $json.property_created_at.start }}",
+              "type": "string"
             },
             {
-              "name": "client_secret",
-              "value": "7c6ac8fea04f7189"
+              "id": "e5f6a7b8-c9d0-4e1f-2a3b-4c5d6e7f8a9b",
+              "name": "slaStatus",
+              "value": "={{ $json.property_status }}",
+              "type": "string"
             },
             {
-              "name": "refresh_token",
-              "value": "={{ $json['refresh token'] }}"
+              "id": "f6a7b8c9-d0e1-4f2a-3b4c-5d6e7f8a9b0c",
+              "name": "pageUrl",
+              "value": "={{ $json.url }}",
+              "type": "string"
+            },
+            {
+              "id": "057fbd3f-9cd0-4420-a81f-d63b7d1c9ed5",
+              "name": "Severity",
+              "value": "={{ $json.property_severity }}",
+              "type": "string"
+            },
+            {
+              "id": "537c4ea9-f48e-433d-b0a0-099942ca0593",
+              "name": "Suggested Action",
+              "value": "={{ $json.property_suggested_action }}",
+              "type": "string"
+            },
+            {
+              "id": "33c00238-5f07-4950-aad4-d95a75bb7af7",
+              "name": "Error Category",
+              "value": "={{ $json.property_error_category }}",
+              "type": "string"
+            },
+            {
+              "id": "85aa9ccf-300a-45c1-8768-0789c028f074",
+              "name": "url",
+              "value": "={{ $json.url }}",
+              "type": "string"
+            },
+            {
+              "id": "a7171eb4-54dc-45c5-bed4-8872bf7d8022",
+              "name": "Source URL",
+              "value": "={{ $json.property_source_url }}",
+              "type": "string"
+            },
+            {
+              "id": "e5effafa-0f0b-446b-8a40-e1b83cce20bb",
+              "name": "Repository",
+              "value": "={{ $json.property_repository }}",
+              "type": "string"
+            },
+            {
+              "id": "4120ffb6-587e-4782-9fb6-ee3874d54e3c",
+              "name": "Root Cause",
+              "value": "={{ $json.property_root_cause }}",
+              "type": "string"
             }
           ]
         },
         "options": {}
       },
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
+      "id": "c91abee6-a10b-4c63-9f36-98d2414632b6",
+      "name": "Compute SLA Data",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
       "position": [
         -656,
-        240
-      ],
-      "id": "79a3e243-d733-40b7-8115-acc1e9467f3a",
-      "name": "Access Token"
+        0
+      ]
     },
     {
       "parameters": {
-        "method": "POST",
-        "url": "https://api.upwork.com/graphql",
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
-            {
-              "name": "Authorization",
-              "value": "=Bearer {{ $json.access_token }}"
-            },
-            {
-              "name": "Content-Type",
-              "value": "application/json"
-            },
-            {
-              "name": "X-Upwork-API-TenantId",
-              "value": "1546843978739367937"
-            }
-          ]
-        },
-        "sendBody": true,
-        "specifyBody": "json",
-        "jsonBody": "={\n  \"query\": \"query marketplaceJobPostingsSearch($marketPlaceJobFilter: MarketplaceJobPostingsSearchFilter, $searchType: MarketplaceJobPostingSearchType, $sortAttributes: [MarketplaceJobPostingSearchSortAttribute]) { marketplaceJobPostingsSearch(marketPlaceJobFilter: $marketPlaceJobFilter, searchType: $searchType, sortAttributes: $sortAttributes) { totalCount edges { node { id title description createdDateTime publishedDateTime client { totalHires verificationStatus } } } pageInfo { endCursor hasNextPage } } }\",\n  \"variables\": {\n    \"marketPlaceJobFilter\": {\n      \"searchExpression_eq\": \"{{ $('Get row(s) in sheet').item.json['job filter'] }}\",\n      \"hourlyRate_eq\": { \"rangeStart\": 35, \"rangeEnd\": null },\n      \"budgetRange_eq\": { \"rangeStart\": 1000, \"rangeEnd\": null },\n      \"proposalRange_eq\": { \"rangeStart\": 0, \"rangeEnd\": 20 },\n      \"verifiedPaymentOnly_eq\": true,\n      \"clientHiresRange_eq\": { \"rangeStart\": 5, \"rangeEnd\": null }\n    },\n    \"searchType\": \"USER_JOBS_SEARCH\",\n    \"sortAttributes\": [\n      { \"field\": \"RECENCY\" }\n    ]\n  }\n}\n",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [
-        -432,
-        240
-      ],
-      "id": "b8e6e164-96a1-4fc7-8571-07b8b3dabd6c",
-      "name": "Job Listings"
-    },
-    {
-      "parameters": {
-        "jsCode": "// Get all input items\nconst allItems = $input.all();\n\nlet output = [];\n\nallItems.forEach(item => {\n  const edges = item.json?.data?.marketplaceJobPostingsSearch?.edges;\n  if (edges && Array.isArray(edges)) {\n    edges.forEach((edge, index) => {\n      // Generate unique job identifier\n      const jobId = edge.node.id;\n      const uniqueId = `job_${jobId}_${Date.now()}_${index}`;\n      \n      output.push({\n        json: {\n          id: jobId,\n          title: edge.node.title,\n          description: edge.node.description,\n          upworkLink: `https://www.upwork.com/jobs/~02${jobId}`,\n          uniqueId: uniqueId,\n          acceptUrl: `https://n8n.tdwebsites.in/webhook/aceept?jobId=${jobId}&uniqueId=${uniqueId}`,\n          createdDateTime: edge.node.createdDateTime,\n          client: edge.node.client\n        }\n      });\n    });\n  }\n});\n\nreturn output;\n"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        -208,
-        240
-      ],
-      "id": "be49da71-cfa2-459b-a45b-0a9646320537",
-      "name": "Process Jobs with Accept URLs"
-    },
-    {
-      "parameters": {
-        "jsCode": "// Get all input items and create a single item with all jobs\nconst allItems = $input.all();\n\nlet allJobs = [];\n\nallItems.forEach(item => {\n  allJobs.push(item.json);\n});\n\n// Create webhook URL for n8n instance\nconst webhookBaseUrl = 'https://n8n.tdwebsites.in/webhook';\n\n// Return single item with all jobs\nreturn [{\n  json: {\n    jobs: allJobs,\n    webhookBaseUrl: webhookBaseUrl,\n    totalJobs: allJobs.length\n  }\n}];\n"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        -16,
-        240
-      ],
-      "id": "30a97865-4f96-4d3d-8199-30c39aad374f",
-      "name": "Prepare Email Data"
-    },
-    {
-      "parameters": {
-        "promptType": "define",
-        "text": "={{ $input }}",
-        "hasOutputParser": true,
-        "options": {
-          "systemMessage": "=You are tasked with generating a well-structured HTML email for job review with interactive accept buttons. Create an email that presents Upwork job postings with clickable accept buttons for each job.\n\nInput: You'll receive a single item containing:\n- jobs: Array of job objects with id, title, description, upworkLink, acceptUrl\n- webhookBaseUrl: Base URL for webhook calls\n- totalJobs: Number of jobs\n\nEmail Requirements:\n\n1. HTML Structure:\n   - Professional email layout with proper HTML structure\n   - Responsive design that works in email clients\n   - Clear header: \"Upwork Job Opportunities - [Current Date]\"\n\n2. For each job, include:\n   - Job number (1, 2, 3, etc.)\n   - Job title (bold and prominent)\n   - Job ID (clearly labeled)\n   - Concise 2-3 sentence summary of the job description\n   - Upwork link (\"View on Upwork\" button)\n   - Accept button (\"Accept for Proposal\" button in green)\n\n3. Accept Button Specifications:\n   - Green background color (#28a745)\n   - White text\n   - Clickable link that calls the acceptUrl\n   - Text: \"Accept for Proposal\"\n   - Should be prominent and clearly visible\n\n4. Styling:\n   - Use inline CSS for email compatibility\n   - Professional color scheme\n   - Clear separation between jobs\n   - Buttons should be styled as actual buttons, not just links\n\n5. Email Footer:\n   - Include note: \"Click 'Accept for Proposal' to automatically create a proposal for that job.\"\n   - Add timestamp and total job count\n\nOutput Format:\n- Subject: Plain text email subject\n- Body: Complete HTML email body with all jobs and interactive elements\n\nEnsure all accept buttons are functional and properly linked to their respective acceptUrl values."
-        }
-      },
-      "type": "@n8n/n8n-nodes-langchain.agent",
-      "typeVersion": 2.1,
-      "position": [
-        224,
-        240
-      ],
-      "id": "5e440724-83b1-4593-8c4b-83699341fdb4",
-      "name": "Create Interactive Email"
-    },
-    {
-      "parameters": {
-        "model": "gpt-4o",
-        "options": {}
-      },
-      "type": "@n8n/n8n-nodes-langchain.lmChatAzureOpenAi",
-      "typeVersion": 1,
-      "position": [
-        208,
-        432
-      ],
-      "id": "bd43eec5-1cd9-45f0-906b-bde29f2a9b61",
-      "name": "Azure OpenAI Chat Model",
-      "credentials": {
-        "azureOpenAiApi": {
-          "id": "C3WzT18XqF8OdVM6",
-          "name": "Azure Open AI account"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "jsonSchemaExample": "{\n\t\"Subject\": \" \",\n\t\"Body\": \" \"\n}"
-      },
-      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
-      "typeVersion": 1.3,
-      "position": [
-        400,
-        432
-      ],
-      "id": "84636aa1-3894-4713-b213-3d9903a9827f",
-      "name": "Structured Output Parser"
-    },
-    {
-      "parameters": {
-        "method": "POST",
-        "url": "https://www.upwork.com/api/v3/oauth2/token",
-        "sendBody": true,
-        "contentType": "form-urlencoded",
-        "bodyParameters": {
-          "parameters": [
-            {
-              "name": "grant_type",
-              "value": "refresh_token"
-            },
-            {
-              "name": "client_id",
-              "value": "d52b9728a2f031bc81d360fee5d34b1f"
-            },
-            {
-              "name": "client_secret",
-              "value": "7c6ac8fea04f7189"
-            },
-            {
-              "name": "refresh_token",
-              "value": "={{ $json['refresh token'] }}"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [
-        -976,
-        -304
-      ],
-      "id": "9a2d50dc-37d0-4f27-a883-c09a3054a422",
-      "name": "Get Access Token for Proposal"
-    },
-    {
-      "parameters": {
-        "method": "POST",
-        "url": "https://www.upwork.com/api/v3/oauth2/token",
-        "sendBody": true,
-        "contentType": "form-urlencoded",
-        "bodyParameters": {
-          "parameters": [
-            {
-              "name": "grant_type",
-              "value": "authorization_code"
-            },
-            {
-              "name": "client_id",
-              "value": "d52b9728a2f031bc81d360fee5d34b1f"
-            },
-            {
-              "name": "client_secret",
-              "value": "7c6ac8fea04f7189"
-            },
-            {
-              "name": "code",
-              "value": "3916109a76085af6da9181e1791b8185"
-            },
-            {
-              "name": "redirect_uri",
-              "value": "https://n8n.tdwebsites.in/rest/oauth2-credential/callback"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [
-        -624,
-        848
-      ],
-      "id": "8a2e0e01-7e33-4722-83be-b90a03de41f2",
-      "name": "Refresh Token",
-      "notes": "https://www.upwork.com/ab/account-security/oauth2/authorize?client_id=d52b9728a2f031bc81d360fee5d34b1f&response_type=code&redirect_uri=https%3A%2F%2Fn8n.tdwebsites.in%2Frest%2Foauth2-credential%2Fcallback"
-    },
-    {
-      "parameters": {
-        "operation": "update",
+        "operation": "appendOrUpdate",
         "documentId": {
           "__rl": true,
-          "value": "1mERLGgeClTHy7wvZWQNPmPsCrLadKTCCrNl_FbWX6nQ",
+          "value": "17rcNd_ZpUQLm0uWEVbD-NY6GyFUkrD4BglvawlyBygM",
           "mode": "list",
-          "cachedResultName": "upwork automation",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1mERLGgeClTHy7wvZWQNPmPsCrLadKTCCrNl_FbWX6nQ/edit?usp=drivesdk"
+          "cachedResultName": "sample_leads_50",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/17rcNd_ZpUQLm0uWEVbD-NY6GyFUkrD4BglvawlyBygM/edit?usp=drivesdk"
         },
         "sheetName": {
           "__rl": true,
-          "value": "gid=0",
+          "value": 1359568824,
           "mode": "list",
-          "cachedResultName": "Sheet1",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1mERLGgeClTHy7wvZWQNPmPsCrLadKTCCrNl_FbWX6nQ/edit#gid=0"
+          "cachedResultName": "FAQ Release ",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/17rcNd_ZpUQLm0uWEVbD-NY6GyFUkrD4BglvawlyBygM/edit#gid=1359568824"
         },
         "columns": {
-          "mappingMode": "defineBelow",
-          "value": {
-            "row_number": 2,
-            "refresh token": "={{ $json.refresh_token }}",
-            "date": "={{ $json.expires_in }}"
-          },
+          "mappingMode": "autoMapInputData",
+          "value": {},
           "matchingColumns": [
-            "row_number"
+            "Title"
           ],
           "schema": [
             {
-              "id": "refresh token",
-              "displayName": "refresh token",
+              "id": "Title",
+              "displayName": "Title",
               "required": false,
               "defaultMatch": false,
               "display": true,
@@ -328,8 +152,8 @@
               "removed": false
             },
             {
-              "id": "date",
-              "displayName": "date",
+              "id": "lastEdited",
+              "displayName": "lastEdited",
               "required": false,
               "defaultMatch": false,
               "display": true,
@@ -338,14 +162,93 @@
               "removed": false
             },
             {
-              "id": "row_number",
-              "displayName": "row_number",
+              "id": "slaStatus",
+              "displayName": "slaStatus",
               "required": false,
               "defaultMatch": false,
               "display": true,
-              "type": "number",
+              "type": "string",
               "canBeUsedToMatch": true,
-              "readOnly": true,
+              "removed": false
+            },
+            {
+              "id": "pageUrl",
+              "displayName": "pageUrl",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Severity",
+              "displayName": "Severity",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Suggested Action",
+              "displayName": "Suggested Action",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Error Category",
+              "displayName": "Error Category",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "url",
+              "displayName": "url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Source URL",
+              "displayName": "Source URL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Repository",
+              "displayName": "Repository",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Root Cause",
+              "displayName": "Root Cause",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
               "removed": false
             }
           ],
@@ -354,14 +257,14 @@
         },
         "options": {}
       },
+      "id": "225159ba-3b0e-402a-9e26-f4ccfe3564ab",
+      "name": "Update Google Sheets",
       "type": "n8n-nodes-base.googleSheets",
-      "typeVersion": 4.6,
+      "typeVersion": 4.4,
       "position": [
-        -416,
-        848
+        -432,
+        0
       ],
-      "id": "b57ff7ab-7ca9-40bd-8653-166ea2f58267",
-      "name": "Update row in sheet",
       "credentials": {
         "googleSheetsOAuth2Api": {
           "id": "kpPEOLCGn963qpoh",
@@ -370,3051 +273,313 @@
       }
     },
     {
-      "parameters": {},
-      "type": "n8n-nodes-base.manualTrigger",
-      "typeVersion": 1,
-      "position": [
-        -864,
-        848
-      ],
-      "id": "3e3669eb-ad96-4b36-9e8b-39e8c7b4eaee",
-      "name": "When clicking ‘Execute workflow’"
-    },
-    {
-      "parameters": {
-        "operation": "pdf",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.extractFromFile",
-      "typeVersion": 1,
-      "position": [
-        1040,
-        1024
-      ],
-      "id": "3f9d4be1-7917-47c6-8076-b47eeac8a7ec",
-      "name": "Extract from File1"
-    },
-    {
-      "parameters": {
-        "resource": "fileFolder",
-        "returnAll": true,
-        "filter": {
-          "folderId": {
-            "__rl": true,
-            "value": "1xwIvbVU2rN_tpBHMAiqXk-BzxZZk0MQI",
-            "mode": "list",
-            "cachedResultName": "upworks pdfs",
-            "cachedResultUrl": "https://drive.google.com/drive/folders/1xwIvbVU2rN_tpBHMAiqXk-BzxZZk0MQI"
-          }
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.googleDrive",
-      "typeVersion": 3,
-      "position": [
-        1056,
-        384
-      ],
-      "id": "e88ad781-f0a4-4e9c-9857-cc7c8b2e059e",
-      "name": "List CV1",
-      "alwaysOutputData": true,
-      "credentials": {
-        "googleDriveOAuth2Api": {
-          "id": "E7nEqUL27GUx1xHa",
-          "name": "Techdome Account"
-        }
-      }
-    },
-    {
       "parameters": {
         "conditions": {
-          "number": [
-            {
-              "value1": "={{ $json.isNotEmpty() }}",
-              "operation": "larger"
-            }
-          ]
-        }
-      },
-      "id": "70bf2192-1512-4a79-a715-5d000d8e7e91",
-      "name": "CV Exist1",
-      "type": "n8n-nodes-base.if",
-      "typeVersion": 1,
-      "position": [
-        1040,
-        592
-      ]
-    },
-    {
-      "parameters": {
-        "operation": "download",
-        "fileId": {
-          "__rl": true,
-          "value": "={{ $json.id }} ",
-          "mode": "id"
-        },
-        "options": {}
-      },
-      "id": "7eb11b4b-c432-4a4b-b791-30534b0b60f0",
-      "name": "Download CV PDF1",
-      "type": "n8n-nodes-base.googleDrive",
-      "typeVersion": 2,
-      "position": [
-        1056,
-        784
-      ],
-      "credentials": {
-        "googleDriveOAuth2Api": {
-          "id": "E7nEqUL27GUx1xHa",
-          "name": "Techdome Account"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "jsCode": "// n8n Function Node - Merge all `text` fields into a single array\nconst inputItems = $input.all();\nlet allTexts = [];\n\nfor (const item of inputItems) {\n  if (item.json && typeof item.json.text === 'string') {\n    allTexts.push(item.json.text);\n  }\n}\n\nreturn [\n  {\n    json: {\n      texts: allTexts\n    }\n  }\n];\n"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        1264,
-        1024
-      ],
-      "id": "4ff68830-c457-49ef-8a5c-fdeb2066f152",
-      "name": "Flatten Results3"
-    },
-    {
-      "parameters": {
-        "resource": "fileFolder",
-        "returnAll": true,
-        "filter": {
-          "folderId": {
-            "__rl": true,
-            "value": "1MGFjKRu3_NHVA3KnMeWTJrOzOu6Slm1D",
-            "mode": "list",
-            "cachedResultName": "Upwork attached cv",
-            "cachedResultUrl": "https://drive.google.com/drive/folders/1MGFjKRu3_NHVA3KnMeWTJrOzOu6Slm1D"
-          }
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.googleDrive",
-      "typeVersion": 3,
-      "position": [
-        -288,
-        -304
-      ],
-      "id": "fc8bd915-2a8e-4e45-8a84-3d31fc72cfdc",
-      "name": "List  Case Study2",
-      "alwaysOutputData": true,
-      "credentials": {
-        "googleDriveOAuth2Api": {
-          "id": "E7nEqUL27GUx1xHa",
-          "name": "Techdome Account"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "conditions": {
-          "number": [
-            {
-              "value1": "={{ $json.isNotEmpty() }}",
-              "operation": "larger"
-            }
-          ]
-        }
-      },
-      "id": "8a1811ca-74d8-4cb1-bffa-c9aee01ca372",
-      "name": "Case Study Exist2",
-      "type": "n8n-nodes-base.if",
-      "typeVersion": 1,
-      "position": [
-        -96,
-        -304
-      ]
-    },
-    {
-      "parameters": {
-        "operation": "download",
-        "fileId": {
-          "__rl": true,
-          "value": "={{ $json.id }} ",
-          "mode": "id"
-        },
-        "options": {}
-      },
-      "id": "63b0506c-75a0-45bc-9890-55eab5b85dde",
-      "name": "Download Case Study2",
-      "type": "n8n-nodes-base.googleDrive",
-      "typeVersion": 2,
-      "position": [
-        128,
-        -304
-      ],
-      "credentials": {
-        "googleDriveOAuth2Api": {
-          "id": "E7nEqUL27GUx1xHa",
-          "name": "Techdome Account"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "method": "POST",
-        "url": "https://api.mistral.ai/v1/files",
-        "authentication": "genericCredentialType",
-        "genericAuthType": "httpHeaderAuth",
-        "sendBody": true,
-        "contentType": "multipart-form-data",
-        "bodyParameters": {
-          "parameters": [
-            {
-              "name": "purpose",
-              "value": "ocr"
-            },
-            {
-              "parameterType": "formBinaryData",
-              "name": "=file",
-              "inputDataFieldName": "=data"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [
-        336,
-        -304
-      ],
-      "id": "8a15f9e2-be43-4f3e-b947-cf6c3f6f362c",
-      "name": "Upload to mistral ai1",
-      "credentials": {
-        "httpHeaderAuth": {
-          "id": "047ISRvu3ma9yfxk",
-          "name": "saurabh 1"
-        },
-        "httpBearerAuth": {
-          "id": "cR1TcHqDvuy7Oexw",
-          "name": "Bearer Auth account"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "url": "=https://api.mistral.ai/v1/files/{{ $json.id }}/url ",
-        "authentication": "genericCredentialType",
-        "genericAuthType": "httpHeaderAuth",
-        "sendQuery": true,
-        "queryParameters": {
-          "parameters": [
-            {
-              "name": "expiry",
-              "value": "24"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [
-        512,
-        -304
-      ],
-      "id": "9865d9e1-fad4-413b-b858-6b131e0fccf7",
-      "name": "Get Signed URL1",
-      "credentials": {
-        "httpHeaderAuth": {
-          "id": "047ISRvu3ma9yfxk",
-          "name": "saurabh 1"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "method": "POST",
-        "url": "https://api.mistral.ai/v1/ocr",
-        "authentication": "genericCredentialType",
-        "genericAuthType": "httpHeaderAuth",
-        "sendBody": true,
-        "specifyBody": "json",
-        "jsonBody": "={\n  \"model\": \"mistral-ocr-latest\",\n  \"document\": {\n    \"type\": \"document_url\",\n    \"document_url\": \"{{ $json.url }}\"\n  },\n  \"include_image_base64\": false\n} ",
-        "options": {
-          "response": {
-            "response": {
-              "responseFormat": "json"
-            }
-          }
-        }
-      },
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [
-        672,
-        -304
-      ],
-      "id": "991bb122-1c27-4513-996b-602dc33c8c45",
-      "name": "Get Ocr Result1",
-      "credentials": {
-        "httpHeaderAuth": {
-          "id": "047ISRvu3ma9yfxk",
-          "name": "saurabh 1"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "jsCode": "// n8n Function node\n// Input items: each has { pages: [{ markdown?: string, text?: string }, ...] }\n// Output: ONE item -> { texts: [ \"<pdf1 markdown>\", \"<pdf2 markdown>\", ... ] }\n\n// optional: strip inline image markdown like ![alt](img-x.jpeg)\nconst stripImages = s => (s || '').replace(/!\\[[^\\]]*]\\([^)]*\\)/g, '');\n\nconst inputItems = $input.all();\nconst texts = [];\n\nfor (const item of inputItems) {\n  const pages = Array.isArray(item.json?.pages) ? item.json.pages : [];\n  let combined = '';\n\n  for (const p of pages) {\n    // prefer markdown, fallback to text\n    combined += (p?.markdown ?? p?.text ?? '') + '\\n\\n';\n  }\n\n  const cleaned = stripImages(combined).trim();\n  if (cleaned) texts.push(cleaned);\n}\n\n// Return ONE item with the same shape you used earlier\nreturn [\n  {\n    json: {\n      texts\n    }\n  }\n];\n"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        848,
-        -304
-      ],
-      "id": "764ad5ec-707c-4500-bd34-d03b6b8af8d5",
-      "name": "flatten study1"
-    },
-    {
-      "parameters": {
-        "resource": "fileFolder",
-        "returnAll": true,
-        "filter": {
-          "folderId": {
-            "__rl": true,
-            "value": "1MGFjKRu3_NHVA3KnMeWTJrOzOu6Slm1D",
-            "mode": "list",
-            "cachedResultName": "Upwork attached cv",
-            "cachedResultUrl": "https://drive.google.com/drive/folders/1MGFjKRu3_NHVA3KnMeWTJrOzOu6Slm1D"
-          }
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.googleDrive",
-      "typeVersion": 3,
-      "position": [
-        1072,
-        -304
-      ],
-      "id": "19fd2163-3adc-47f5-9a5e-bb99d904a250",
-      "name": "List  Case Study3",
-      "alwaysOutputData": true,
-      "credentials": {
-        "googleDriveOAuth2Api": {
-          "id": "E7nEqUL27GUx1xHa",
-          "name": "Techdome Account"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "conditions": {
-          "number": [
-            {
-              "value1": "={{ $json.isNotEmpty() }}",
-              "operation": "larger"
-            }
-          ]
-        }
-      },
-      "id": "8679b0ae-5fac-45e2-bc51-80115c942f2c",
-      "name": "Case Study Exist3",
-      "type": "n8n-nodes-base.if",
-      "typeVersion": 1,
-      "position": [
-        1264,
-        -304
-      ]
-    },
-    {
-      "parameters": {
-        "operation": "download",
-        "fileId": {
-          "__rl": true,
-          "value": "={{ $json.id }} ",
-          "mode": "id"
-        },
-        "options": {}
-      },
-      "id": "2a36de97-3b30-45b6-9514-b6b3bb3995c4",
-      "name": "Download Case Study3",
-      "type": "n8n-nodes-base.googleDrive",
-      "typeVersion": 2,
-      "position": [
-        1056,
-        -64
-      ],
-      "credentials": {
-        "googleDriveOAuth2Api": {
-          "id": "E7nEqUL27GUx1xHa",
-          "name": "Techdome Account"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "jsCode": "// Collect all incoming items\nconst items = $input.all();\n\n// Build {id,name} list (with tolerant fallbacks)\nconst caseStudies = items.map((it, idx) => {\n  const j = it.json || {};\n  const id   = j.id ?? j.fileId ?? j.file_id ?? j.gdriveId ?? null;\n  const name = j.name ?? j.fileName ?? j.title ?? `document_${idx + 1}.pdf`;\n  return { id, name };\n}).filter(cs => cs.id && cs.name);\n\n// Pre-format variants for prompts\nconst caseStudiesStr = JSON.stringify(caseStudies);                 // JSON string\nconst caseStudiesLines = caseStudies.map((cs,i)=>`${i+1}. ${cs.name} — ${cs.id}`).join(\"\\n\");\n\nreturn [{\n  json: {\n    caseStudies,\n    caseStudiesStr,     // use in text fields: {{ $json.caseStudiesStr }}\n    caseStudiesLines    // or this: {{ $json.caseStudiesLines }}\n  }\n}];\n"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        1040,
-        176
-      ],
-      "id": "16075ca2-df48-42ca-b57e-5df0d4a9b54c",
-      "name": "format case study1"
-    },
-    {
-      "parameters": {
-        "method": "POST",
-        "url": "https://api.upwork.com/graphql",
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
-            {
-              "name": "Authorization",
-              "value": "=Bearer {{ $json.access_token }}"
-            },
-            {
-              "name": "Content-Type",
-              "value": "application/json"
-            },
-            {
-              "name": "X-Upwork-API-TenantId",
-              "value": "1546843978739367937"
-            }
-          ]
-        },
-        "sendBody": true,
-        "specifyBody": "json",
-        "jsonBody": "={\n  \"query\": \"query GetJobPostingDetails($ids: [ID!]!) { marketplaceJobPostingsContents(ids: $ids) { id title description publishedDateTime ciphertext } }\",\n  \"variables\": {\n    \"ids\": [\n      \"{{ $('Edit Fields').item.json.query.jobId }}\"\n    ]\n  }\n}\n",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [
-        -752,
-        -304
-      ],
-      "id": "11ac7515-c8eb-4186-8119-b36140088390",
-      "name": "Particular job details"
-    },
-    {
-      "parameters": {
-        "assignments": {
-          "assignments": [
-            {
-              "id": "50b5b9bf-c2ed-4bbc-9ee2-35fe00bf5be0",
-              "name": "query",
-              "value": "={{ $json.query }}",
-              "type": "object"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 3.4,
-      "position": [
-        -1392,
-        -304
-      ],
-      "id": "2b051409-416d-4daf-bef2-a2460b8a3946",
-      "name": "Edit Fields"
-    },
-    {
-      "parameters": {
-        "jsCode": "// n8n Function Node - Simple Professional Proposal Generator (Upwork Ready)\n// Input: JSON with \"output\" field containing the proposal text\n\nconst input = $input.all()[0]; // Get first input item\nif (!input || !input.json || !input.json.output) {\n  throw new Error(\"Input must contain 'output' field with proposal text\");\n}\n\nfunction generateSimpleHTML(text) {\n  // Parse the text into structured sections\n  const sections = parseProposalText(text);\n  \n  return `\n<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>Professional Proposal</title>\n</head>\n<body style=\"font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 800px; margin: 0 auto; padding: 20px; background-color: #ffffff;\">\n    ${generateSimpleContent(sections)}\n</body>\n</html>`;\n}\n\nfunction parseProposalText(text) {\n  const lines = text.split('\\n').map(line => line.trim()).filter(line => line.length > 0);\n  const sections = [];\n  let currentSection = null;\n  \n  for (let line of lines) {\n    // Remove markdown bold formatting but keep content\n    line = line.replace(/\\*\\*(.*?)\\*\\*/g, '$1');\n    \n    // Check if it's a header line (starts with Hello, Hi, or contains name)\n    if (/^(Hello!|Hi!|Hey!)/i.test(line)) {\n      currentSection = {\n        type: 'header',\n        title: line,\n        content: []\n      };\n      sections.push(currentSection);\n    }\n    // Check if it's a section title\n    else if (/^(Why Work with Me|What I Offer|Core Competencies|Tools & Technologies|My Approach|Featured Projects|Let's.*Together)/i.test(line)) {\n      currentSection = {\n        type: 'section',\n        title: line.replace(/\\*\\*/g, '').replace(/\\?$/, '?'),\n        content: []\n      };\n      sections.push(currentSection);\n    }\n    // Check if it's a bullet point\n    else if (/^[-*•]\\s/.test(line) || /^\\*\\*\\w+.*:\\*\\*/.test(line)) {\n      if (currentSection) {\n        let bulletText = line.replace(/^[-*•]\\s*/, '').replace(/\\*\\*(.*?):\\*\\*/g, '<strong>$1:</strong>');\n        \n        // Split title and description if there's a colon\n        const colonIndex = bulletText.indexOf(':');\n        if (colonIndex > 0 && colonIndex < 60) {\n          const title = bulletText.substring(0, colonIndex + 1);\n          const description = bulletText.substring(colonIndex + 1).trim();\n          currentSection.content.push({\n            type: 'bullet',\n            title: title,\n            description: description\n          });\n        } else {\n          currentSection.content.push({\n            type: 'bullet',\n            title: bulletText,\n            description: ''\n          });\n        }\n      }\n    }\n    // Regular text content\n    else if (line.length > 0) {\n      if (currentSection) {\n        currentSection.content.push({\n          type: 'text',\n          content: line\n        });\n      } else {\n        // Create intro section for orphaned text\n        currentSection = {\n          type: 'intro',\n          content: [{\n            type: 'text',\n            content: line\n          }]\n        };\n        sections.push(currentSection);\n      }\n    }\n  }\n  \n  return sections;\n}\n\nfunction generateSimpleContent(sections) {\n  let html = '';\n  \n  for (let section of sections) {\n    if (section.type === 'header') {\n      // Header section\n      html += `<h1 style=\"font-size: 24px; font-weight: bold; color: #2c3e50; margin-bottom: 20px; border-bottom: none;\">${section.title}</h1>\\n`;\n      section.content.forEach(item => {\n        if (item.type === 'text') {\n          html += `<p style=\"font-size: 16px; line-height: 1.6; margin-bottom: 20px; color: #4a5568;\">${item.content}</p>\\n`;\n        }\n      });\n    } else if (section.type === 'intro') {\n      // Intro text\n      section.content.forEach(item => {\n        if (item.type === 'text') {\n          html += `<p style=\"font-size: 16px; line-height: 1.6; margin-bottom: 20px; color: #4a5568;\">${item.content}</p>\\n`;\n        }\n      });\n    } else if (section.type === 'section') {\n      const isCTASection = /Let's.*Together/i.test(section.title);\n      \n      if (isCTASection) {\n        // CTA Section\n        html += `<h2 style=\"font-size: 20px; font-weight: bold; color: #2c3e50; margin: 30px 0 15px 0;\">${section.title}</h2>\\n`;\n        section.content.forEach(item => {\n          if (item.type === 'text') {\n            html += `<p style=\"font-size: 16px; line-height: 1.6; margin-bottom: 20px; color: #4a5568;\">${item.content}</p>\\n`;\n          }\n        });\n      } else {\n        // Regular Section\n        html += `<h2 style=\"font-size: 20px; font-weight: bold; color: #2c3e50; margin: 30px 0 15px 0;\">${section.title}</h2>\\n`;\n        \n        // Add any text content\n        section.content.forEach(item => {\n          if (item.type === 'text') {\n            html += `<p style=\"font-size: 16px; line-height: 1.6; margin-bottom: 15px; color: #4a5568;\">${item.content}</p>\\n`;\n          }\n        });\n        \n        // Add bullet points\n        const bullets = section.content.filter(item => item.type === 'bullet');\n        if (bullets.length > 0) {\n          html += `<ul style=\"margin: 15px 0; padding-left: 20px;\">\\n`;\n          bullets.forEach(bullet => {\n            html += `<li style=\"margin-bottom: 12px; font-size: 16px; line-height: 1.6;\">`;\n            if (bullet.title.includes('<strong>') || bullet.title.includes(':')) {\n              // Format as bold title with description\n              const cleanTitle = bullet.title.replace(/<\\/?strong>/g, '').replace(':', '');\n              html += `<strong>${cleanTitle}:</strong>`;\n              if (bullet.description) {\n                html += ` ${bullet.description}`;\n              }\n            } else {\n              // Regular bullet point\n              html += bullet.title;\n              if (bullet.description) {\n                html += ` ${bullet.description}`;\n              }\n            }\n            html += `</li>\\n`;\n          });\n          html += `</ul>\\n`;\n        }\n      } \n    }\n  }\n  \n  return html;\n}\n\n// Main execution\nconst emailHTML = generateSimpleHTML(input.json.output);\n\nreturn [{\n  json: {\n    htmlContent: emailHTML,\n    originalText: input.json.output,\n    contentType: \"text/html\"\n  }\n}];"
-      },
-      "id": "bd8b981b-312c-4c26-92c0-3cda709b949e",
-      "name": "Format Output1",
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 1,
-      "position": [
-        2160,
-        400
-      ]
-    },
-    {
-      "parameters": {
-        "resource": "message",
-        "subject": "=Proposal",
-        "includeHtml": true,
-        "htmlMessage": "={{ $('Format Output1').item.json.htmlContent }}",
-        "message": "Proposal",
-        "toList": [
-          "newscctv22@gmail.com",
-          "anmolkushwah19@gmail.com "
-        ],
-        "additionalFields": {
-          "attachmentsUi": {
-            "attachmentsBinary": [
-              {
-                "property": "=data"
-              }
-            ]
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
           },
-          "ccList": []
-        }
-      },
-      "id": "b966847a-d822-4fc8-a5d2-87bba0f166c7",
-      "name": "Send Proposals1",
-      "type": "n8n-nodes-base.gmail",
-      "typeVersion": 1,
-      "position": [
-        3280,
-        384
-      ],
-      "credentials": {
-        "gmailOAuth2": {
-          "id": "gEIaWCTvGfYjMSb3",
-          "name": "Gmail credentials"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "model": "gpt-4o-mini",
-        "options": {}
-      },
-      "type": "@n8n/n8n-nodes-langchain.lmChatAzureOpenAi",
-      "typeVersion": 1,
-      "position": [
-        1440,
-        1232
-      ],
-      "id": "d616d881-a3b3-4770-94a3-3d7fc3adf35b",
-      "name": "Azure OpenAI Chat Model5",
-      "credentials": {
-        "azureOpenAiApi": {
-          "id": "C3WzT18XqF8OdVM6",
-          "name": "Azure Open AI account"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "model": "gpt-4o-mini",
-        "options": {}
-      },
-      "type": "@n8n/n8n-nodes-langchain.lmChatAzureOpenAi",
-      "typeVersion": 1,
-      "position": [
-        2384,
-        656
-      ],
-      "id": "bf3d4bab-e2e9-40be-9e17-2dd88a7e0eb5",
-      "name": "Azure OpenAI Chat Model6",
-      "credentials": {
-        "azureOpenAiApi": {
-          "id": "C3WzT18XqF8OdVM6",
-          "name": "Azure Open AI account"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "promptType": "define",
-        "text": "=Job ID: {{ $('Edit Fields1').first().json.query.id }}\nJob Title: {{ $('Edit Fields1').first().json.query.title }}\nJob Description: {{ $('Edit Fields1').first().json.query.description }}\n\nCandidate CVs: {{ $json.texts }}\n",
-        "options": {
-          "systemMessage": "=You are an AI CV-Matching Assistant.\n\nTask:\n1. Read the Job ID, Job Title, and Job Description provided in the user message.  \n2. Extract key requirements such as skills, technologies, experience level, industry domain, and responsibilities.  \n3. Compare these requirements against the Candidate CVs provided.  \n\nInstructions:\n- Identify the single CV that best matches the job description.  \n- Consider skills, experience, domain relevance, and role suitability.  \n- Do not explain or rank multiple CVs. Select only one.  \n\nOutput strictly in the following format:\n\nBest_CV_Name: <Name of the best matching candidate>  \nMatched_Job: <Exact Job Description text from the user message>  \n"
-        }
-      },
-      "type": "@n8n/n8n-nodes-langchain.agent",
-      "typeVersion": 2.1,
-      "position": [
-        1520,
-        1024
-      ],
-      "id": "cbd9568e-5c7b-4ed4-9491-7d2bd1bee171",
-      "name": "AI Agent finding best Job1"
-    },
-    {
-      "parameters": {
-        "promptType": "define",
-        "text": "=Candidate Name:\n{{ $json.output.match(/Best_CV_Name:\\s*([^\\n]+)/)?.[1] }}\n\nJob Context:\n{{ $json.output }}\n\nCandidate Experience (CV Extract):\n{{ $('Flatten Results3').item.json.texts }}\n\n════════════════════════════\nTASK\n════════════════════════════\nWrite a senior-level proposal that feels like it was written by an experienced specialist who understands execution risk, buyer intent, and long-term outcomes.\n\nThis is NOT a resume.\nThis is NOT a generic proposal.\nThis is NOT an agency pitch.\n\n════════════════════════════\nWRITING STYLE\n════════════════════════════\n- Short paragraphs (1–3 lines)\n- Human, direct, confident\n- Consultant-style thinking\n- No formal section headers\n- No repetition of CV structure\n\n════════════════════════════\nSTRUCTURE (FOLLOW THIS FLOW)\n════════════════════════════\n\n1. Greeting  \nUse:\n\"Hello [Client Name],\"\nIf name is unavailable:\n\"Hello,\"\n\n2. Opening Alignment  \n- Mirror what the client is trying to achieve\n- Show understanding of the real problem beneath the task\n\n3. Credibility Framing  \n- Introduce yourself naturally (name + role + specialization)\n- Tie experience directly to this type of work\n\n4. Problem Understanding  \n- Explain the business or operational risk clearly\n- Focus on clarity, not features\n\n5. Execution Approach (bullets)  \nUse bullets like:\n• Architecture before execution  \n• Predictability over experimentation  \n• Clear ownership and boundaries  \n• Systems designed to scale cleanly  \n\nAdapt bullets based on CV relevance.\n\n6. Process (tight bullets only)\n• Requirements distillation  \n• System/workflow design  \n• Controlled execution  \n• Validation and refinement  \n\n7. Deliverables & Outcomes  \n- What the client will receive\n- Why it reduces risk or rework\n- Mention readiness for future phases if relevant\n\n8. Clarifying Questions  \nAsk 2–3 sharp questions tied to the job.\n\n9. Close  \nEnd exactly with:\n\"Happy to discuss this further if it aligns with what you’re looking for.\"\n",
-        "options": {
-          "systemMessage": "=You are a senior independent specialist who writes high-conviction, execution-focused proposals for Upwork-style engagements.\n\nYou do NOT write resumes.\nYou do NOT write profile summaries.\nYou do NOT use sectioned resume formats.\n\nYour writing is calm, confident, and senior.\nYou write like an experienced operator, not a marketer or agency.\n\nHard rules:\n- Write strictly in first person (“I”)\n- No emojis\n- No buzzwords or hype\n- No agency language\n- No invented skills\n- Never restate the CV verbatim\n- No headings like PROFILE, CORE COMPETENCIES, TOOLS, etc.\n\nYour goal is to build trust through clarity, judgment, and execution logic.\n"
-        }
-      },
-      "type": "@n8n/n8n-nodes-langchain.agent",
-      "typeVersion": 2.1,
-      "position": [
-        1840,
-        688
-      ],
-      "id": "f14f74a6-2a21-4c13-b99b-4f4beb3de67e",
-      "name": "AI Agent proposal writer1"
-    },
-    {
-      "parameters": {
-        "promptType": "define",
-        "text": "=Proposal Context (plain text):\n{{ $('AI Agent proposal writer1').item.json.output }}\n\nAvailable Case Studies (JSON):\n{{ $('format case study1').first().json.caseStudiesStr }}\n\nTask:\n1. Infer the PRIMARY professional discipline required by the proposal.\n   (Examples: UI/UX Design, Product Design, Product Management, Backend Engineering, Automation, CRM, Marketing, etc.)\n\n2. From the available case studies, select the ONE case study that:\n   - Matches the inferred discipline\n   - Demonstrates execution, not just strategy\n   - Is most relevant to the proposal’s core problem\n\nSTRICT RULES:\n- The case study discipline MUST match the inferred discipline\n- Do NOT select case studies from a different discipline\n- Prefer hands-on execution over planning or strategy\n- Use only the provided case study list\n\nReturn ONLY valid JSON in this exact format:\n{\n  \"inferredDiscipline\": \"string\",\n  \"fileId\": \"string\",\n  \"fileName\": \"string\",\n  \"reason\": \"string\"\n}\n",
-        "options": {
-          "systemMessage": "=You are a strict decision-making AI.\n\nYour job is to:\n1. Infer the dominant professional discipline from the proposal\n2. Select the most relevant case study that matches that discipline\n\nHARD CONSTRAINTS:\n- Discipline mismatch = automatic rejection\n- Design ≠ Product Management\n- Engineering ≠ Strategy\n- Marketing ≠ Operations\n- You MUST choose based on execution relevance, not keyword overlap\n- You MUST return valid JSON only\n- No explanations outside the JSON\n\nIf multiple case studies partially match, choose the one with the clearest execution alignment.\n"
-        }
-      },
-      "type": "@n8n/n8n-nodes-langchain.agent",
-      "typeVersion": 2.1,
-      "position": [
-        2384,
-        400
-      ],
-      "id": "b62b7bc1-c8dd-4dbe-a016-147e2629f76c",
-      "name": "AI Agent Best Case Study1"
-    },
-    {
-      "parameters": {
-        "jsCode": "const items = $input.all();\n\nreturn items.map((item, index) => {\n  let parsed = {};\n  \n  if (typeof item.json.output === 'string') {\n    try {\n      parsed = JSON.parse(item.json.output);\n    } catch (err) {\n      const m = item.json.output.match(/\\{[\\s\\S]*\\}/);\n      if (m) parsed = JSON.parse(m[0]);\n    }\n  }\n\n  return {\n    json: {\n      id: index + 1,\n      name: parsed.fileName ?? item.json.name ?? `Item ${index + 1}`,\n      description: parsed.reason ?? item.json.description ?? \"N/A\",\n      fileId: parsed.fileId ?? null,\n      fileName: parsed.fileName ?? null,\n      reason: parsed.reason ?? null,\n      myNewField: 1\n    }\n  };\n});\n"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        2800,
-        400
-      ],
-      "id": "14aaa3d9-e041-4857-8fa5-a92cd1889004",
-      "name": "formal case studies1"
-    },
-    {
-      "parameters": {
-        "operation": "download",
-        "fileId": {
-          "__rl": true,
-          "value": "={{ $json.fileId }}",
-          "mode": "id"
+          "conditions": [
+            {
+              "id": "f7a8b9c0-d1e2-4f3a-4b5c-6d7e8f9a0b1c",
+              "leftValue": "={{ $json.slaStatus }}",
+              "rightValue": "OVERDUE",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
         },
         "options": {}
       },
-      "id": "a4c433ef-c53b-4a3f-80f3-ec1c123dad3a",
-      "name": "Download Best Case Study1",
-      "type": "n8n-nodes-base.googleDrive",
+      "id": "6591c9d7-02fa-4703-ae28-a2bf4b3047c2",
+      "name": "Filter Overdue FAQs",
+      "type": "n8n-nodes-base.if",
       "typeVersion": 2,
       "position": [
-        3040,
-        384
-      ],
-      "credentials": {
-        "googleDriveOAuth2Api": {
-          "id": "E7nEqUL27GUx1xHa",
-          "name": "Techdome Account"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "model": "gpt-4o-mini",
-        "options": {}
-      },
-      "type": "@n8n/n8n-nodes-langchain.lmChatAzureOpenAi",
-      "typeVersion": 1,
-      "position": [
-        1904,
-        896
-      ],
-      "id": "c93da072-5579-484f-8ac8-c8bdee3c38cf",
-      "name": "Azure OpenAI Chat Model7",
-      "credentials": {
-        "azureOpenAiApi": {
-          "id": "C3WzT18XqF8OdVM6",
-          "name": "Azure Open AI account"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "resource": "message",
-        "subject": "={{ $json.output.Subject }}",
-        "includeHtml": true,
-        "htmlMessage": "={{ $json.output.Body }}",
-        "message": "Upwork Job ",
-        "toList": [
-          "snehygupta99@gmail.com  ",
-          "rahuljoshi0808@gmail.com "
-        ],
-        "additionalFields": {
-          "ccList": []
-        }
-      },
-      "id": "ed666828-65be-4e80-b5a0-50c28f526101",
-      "name": "Send Proposals",
-      "type": "n8n-nodes-base.gmail",
-      "typeVersion": 1,
-      "position": [
-        624,
-        240
-      ],
-      "credentials": {
-        "gmailOAuth2": {
-          "id": "gEIaWCTvGfYjMSb3",
-          "name": "Gmail credentials"
-        }
-      }
+        -208,
+        0
+      ]
     },
     {
       "parameters": {
         "assignments": {
           "assignments": [
             {
-              "id": "50b5b9bf-c2ed-4bbc-9ee2-35fe00bf5be0",
-              "name": "query",
-              "value": "={{ $json.data.marketplaceJobPostingsContents[0] }}",
-              "type": "object"
+              "id": "a9b0c1d2-e3f4-4a5b-6c7d-8e9f0a1b2c3d",
+              "name": "overdueList",
+              "value": "=Title:- {{ $json.Title }} \n\nRepository:- {{ $json.Repository }}\n\nSuggested Action:- {{ $json['Suggested Action'] }} \n\nView FAQ:- {{ $json.pageUrl }} \n\nSeverity:- {{ $json.Severity }}",
+              "type": "string"
             }
           ]
         },
         "options": {}
       },
+      "id": "dbb34840-d2d5-45b6-bce1-a846bd8a872d",
+      "name": "Format Overdue Message",
       "type": "n8n-nodes-base.set",
-      "typeVersion": 3.4,
+      "typeVersion": 3.3,
       "position": [
-        -512,
-        -304
-      ],
-      "id": "a0dc0756-60a7-4b87-be44-cf242c1be944",
-      "name": "Edit Fields1"
+        16,
+        0
+      ]
     },
     {
       "parameters": {
-        "documentId": {
-          "__rl": true,
-          "value": "1mERLGgeClTHy7wvZWQNPmPsCrLadKTCCrNl_FbWX6nQ",
-          "mode": "list",
-          "cachedResultName": "upwork automation",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1mERLGgeClTHy7wvZWQNPmPsCrLadKTCCrNl_FbWX6nQ/edit?usp=drivesdk"
-        },
-        "sheetName": {
-          "__rl": true,
-          "value": "gid=0",
-          "mode": "list",
-          "cachedResultName": "Sheet1",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1mERLGgeClTHy7wvZWQNPmPsCrLadKTCCrNl_FbWX6nQ/edit#gid=0"
-        },
-        "options": {
-          "returnFirstMatch": true
-        }
-      },
-      "type": "n8n-nodes-base.googleSheets",
-      "typeVersion": 4.6,
-      "position": [
-        -1184,
-        -304
-      ],
-      "id": "63209b42-2ed4-438a-a53e-b87e4c091bd5",
-      "name": "GET Refresh Code1",
-      "credentials": {
-        "googleSheetsOAuth2Api": {
-          "id": "kpPEOLCGn963qpoh",
-          "name": "automations@techdome.ai"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "mode": "combine",
+        "aggregate": "aggregateAllItemData",
         "options": {}
       },
-      "type": "n8n-nodes-base.merge",
-      "typeVersion": 3.2,
+      "id": "ff683bc5-afce-4f38-b4d9-4086c674c55a",
+      "name": "Aggregate Overdue FAQs",
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
       "position": [
-        -1840,
-        896
-      ],
-      "id": "1f7595dc-25de-40ea-b144-3384e627d248",
-      "name": "Merge"
+        240,
+        0
+      ]
     },
     {
       "parameters": {
-        "path": "aceept",
-        "options": {}
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "C09GNB90TED",
+          "mode": "list",
+          "cachedResultName": "general-information"
+        },
+        "text": "=:warning: *FAQ Freshness Alert - Overdue Items Detected*\n\nThe following FAQs have exceeded the 30-day freshness SLA and need review and is Overdue:\n\n{{ $json.data[0].overdueList }}\n\n_Please update these FAQs to ensure documentation accuracy.",
+        "otherOptions": {
+          "mrkdwn": true
+        }
       },
-      "type": "n8n-nodes-base.webhook",
+      "id": "0a07b80d-e874-4d95-9c9d-0f1ee505e88e",
+      "name": "Send Slack Alert",
+      "type": "n8n-nodes-base.slack",
       "typeVersion": 2.1,
       "position": [
-        -1632,
-        -304
+        464,
+        0
       ],
-      "id": "5e2d6189-f1cd-408b-bdf2-e7553f6e0b67",
-      "name": "Webhook",
-      "webhookId": "de3fcc29-45a9-429b-a4e6-5d345a13682d"
-    },
-    {
-      "parameters": {
-        "documentId": {
-          "__rl": true,
-          "value": "1bl92PGX8Mnfi5p0MoGN9LiZ0Q1DF_iOBqrDdYFhIqmU",
-          "mode": "list",
-          "cachedResultName": "upwork data sheet ",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1bl92PGX8Mnfi5p0MoGN9LiZ0Q1DF_iOBqrDdYFhIqmU/edit?usp=drivesdk"
-        },
-        "sheetName": {
-          "__rl": true,
-          "value": "gid=0",
-          "mode": "list",
-          "cachedResultName": "Sheet1",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1bl92PGX8Mnfi5p0MoGN9LiZ0Q1DF_iOBqrDdYFhIqmU/edit#gid=0"
-        },
-        "filtersUI": {
-          "values": [
-            {
-              "lookupColumn": "day",
-              "lookupValue": "={{$now.weekdayLong}}"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.googleSheets",
-      "typeVersion": 4.7,
-      "position": [
-        -1408,
-        224
-      ],
-      "id": "151610fa-e400-4749-8eaa-914aa57bbebe",
-      "name": "Get row(s) in sheet",
+      "webhookId": "c3ee5e90-bdda-4b9b-9596-c708e7008406",
       "credentials": {
-        "googleSheetsOAuth2Api": {
-          "id": "kpPEOLCGn963qpoh",
-          "name": "automations@techdome.ai"
+        "slackApi": {
+          "id": "rNqvWj9TfChPVRYY",
+          "name": "Slack account vivek"
         }
       }
     },
     {
       "parameters": {
-        "options": {}
+        "rule": {
+          "interval": [
+            {
+              "field": "weeks",
+              "triggerAtDay": [
+                1
+              ],
+              "triggerAtHour": 10
+            }
+          ]
+        }
       },
-      "type": "n8n-nodes-base.splitInBatches",
-      "typeVersion": 3,
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
       "position": [
-        -1120,
-        224
+        -1104,
+        0
       ],
-      "id": "48c740eb-ccdc-413b-b464-cdb37f58110b",
-      "name": "Loop Over Items"
+      "id": "43c10a5e-6d62-496e-bae6-e3c0a91c0f47",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "content": "## 📋 FAQ Freshness Monitor\n\n### How it works\nThis workflow keeps your FAQ documentation fresh by checking when each FAQ in your Notion database was last updated. It runs every Monday morning, calculates which entries are older than 30 days, and updates a Google Sheet with the results. If any FAQs are overdue, a Slack alert goes out to your chosen channel. This helps the team stay on top of content maintenance without manual checks.\n\n### Setup steps\n1. Connect your Notion, Google Sheets, and Slack accounts in n8n.\n2. In Notion, share your FAQ database with the n8n integration and note the database ID.\n3. Create a Google Sheet with the headers listed in this workflow.\n4. Add your sheet ID and Slack channel ID as environment variables.\n5. Adjust the schedule time if needed (default is Monday, 10 AM).\n6. Run once manually to confirm everything’s flowing correctly.\n7. Enable the workflow and let it handle the weekly checks automatically.\n",
+        "height": 572,
+        "width": 451
+      },
+      "id": "eda6066a-249c-4af5-81c6-37ad2d283617",
+      "name": "Sticky Note - Workflow Overview",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1904,
+        -784
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "## Data Source & Trigger \n\nThis section controls when and where data comes from.\n- The Schedule Trigger starts the workflow automatically every Monday at 10 AM.\n- The Notion node connects to your FAQ database and pulls all records for analysis.\nTip: Make sure your Notion integration has access and the database ID is set correctly.\n",
+        "height": 412,
+        "width": 524,
+        "color": 2
+      },
+      "id": "b3869e4d-6352-4474-b856-f489836b5ac0",
+      "name": "Sticky Note - Schedule",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1232,
+        -224
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "## Overdue Detection & Message Prep\n\n\nThis section filters out FAQs that haven’t been updated in the last 30 days.\n- The IF node checks the SLA status (OVERDUE).\n- The Set and Aggregate nodes format all overdue items into a single message array for Slack.\nYou can adjust the filter logic or add extra criteria (like severity).\n",
+        "height": 528,
+        "width": 380,
+        "color": 2
+      },
+      "id": "7b4cede6-9181-4ddb-a734-ed47b79988f7",
+      "name": "Sticky Note - Notion Setup",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -208,
+        -336
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "## Data Processing & Storage\n\n\nHere, the workflow transforms the Notion data and syncs it with Google Sheets.\n- The Set node maps FAQ fields (title, last edited, severity, etc.).\n- The Sheets node appends or updates rows in your sheet, using “Title” as the match key.\nYou can tweak this mapping if your Notion field names differ.\n",
+        "height": 460,
+        "width": 460,
+        "color": 2
+      },
+      "id": "15ef453d-c0d4-456c-a906-90595ecd3323",
+      "name": "Sticky Note - Data Transform",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -688,
+        -256
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "## Alerts & Communication\n\n\nFinally, the workflow sends the summary message to Slack.\n- If there are overdue FAQs, a detailed message is sent to the configured channel.\n- Optionally, you can add a small “All Clear” message node for cases with no overdue items.\nTip: Test this manually once to confirm Slack permissions and formatting.\n",
+        "height": 612,
+        "width": 444,
+        "color": 2
+      },
+      "id": "66a6e85b-477c-4bf3-a45e-c0c57098d26d",
+      "name": "Sticky Note - No Overdue Path",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        192,
+        -352
+      ],
+      "typeVersion": 1
     }
   ],
   "connections": {
-    "Schedule Trigger1": {
+    "Fetch FAQs from Notion": {
       "main": [
         [
           {
-            "node": "Get row(s) in sheet",
+            "node": "Compute SLA Data",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "GET Refresh Code": {
+    "Compute SLA Data": {
       "main": [
         [
           {
-            "node": "Access Token",
+            "node": "Update Google Sheets",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Access Token": {
+    "Update Google Sheets": {
       "main": [
         [
           {
-            "node": "Job Listings",
+            "node": "Filter Overdue FAQs",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Job Listings": {
+    "Filter Overdue FAQs": {
       "main": [
         [
           {
-            "node": "Process Jobs with Accept URLs",
+            "node": "Format Overdue Message",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "Format Overdue Message": {
+      "main": [
+        [
+          {
+            "node": "Aggregate Overdue FAQs",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Process Jobs with Accept URLs": {
+    "Aggregate Overdue FAQs": {
       "main": [
         [
           {
-            "node": "Prepare Email Data",
+            "node": "Send Slack Alert",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Prepare Email Data": {
+    "Schedule Trigger": {
       "main": [
         [
           {
-            "node": "Create Interactive Email",
+            "node": "Fetch FAQs from Notion",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Create Interactive Email": {
+    "Send Slack Alert": {
       "main": [
-        [
-          {
-            "node": "Send Proposals",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Azure OpenAI Chat Model": {
-      "ai_languageModel": [
-        [
-          {
-            "node": "Create Interactive Email",
-            "type": "ai_languageModel",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Structured Output Parser": {
-      "ai_outputParser": [
-        [
-          {
-            "node": "Create Interactive Email",
-            "type": "ai_outputParser",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Get Access Token for Proposal": {
-      "main": [
-        [
-          {
-            "node": "Particular job details",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Refresh Token": {
-      "main": [
-        [
-          {
-            "node": "Update row in sheet",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "When clicking ‘Execute workflow’": {
-      "main": [
-        [
-          {
-            "node": "Refresh Token",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Extract from File1": {
-      "main": [
-        [
-          {
-            "node": "Flatten Results3",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "List CV1": {
-      "main": [
-        [
-          {
-            "node": "CV Exist1",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "CV Exist1": {
-      "main": [
-        [
-          {
-            "node": "Download CV PDF1",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Download CV PDF1": {
-      "main": [
-        [
-          {
-            "node": "Extract from File1",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "List  Case Study2": {
-      "main": [
-        [
-          {
-            "node": "Case Study Exist2",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Case Study Exist2": {
-      "main": [
-        [
-          {
-            "node": "Download Case Study2",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Download Case Study2": {
-      "main": [
-        [
-          {
-            "node": "Upload to mistral ai1",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Upload to mistral ai1": {
-      "main": [
-        [
-          {
-            "node": "Get Signed URL1",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Get Signed URL1": {
-      "main": [
-        [
-          {
-            "node": "Get Ocr Result1",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Get Ocr Result1": {
-      "main": [
-        [
-          {
-            "node": "flatten study1",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "flatten study1": {
-      "main": [
-        [
-          {
-            "node": "List  Case Study3",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "List  Case Study3": {
-      "main": [
-        [
-          {
-            "node": "Case Study Exist3",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Case Study Exist3": {
-      "main": [
-        [
-          {
-            "node": "Download Case Study3",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Download Case Study3": {
-      "main": [
-        [
-          {
-            "node": "format case study1",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "format case study1": {
-      "main": [
-        [
-          {
-            "node": "List CV1",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Flatten Results3": {
-      "main": [
-        [
-          {
-            "node": "AI Agent finding best Job1",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Edit Fields": {
-      "main": [
-        [
-          {
-            "node": "GET Refresh Code1",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Format Output1": {
-      "main": [
-        [
-          {
-            "node": "AI Agent Best Case Study1",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Azure OpenAI Chat Model5": {
-      "ai_languageModel": [
-        [
-          {
-            "node": "AI Agent finding best Job1",
-            "type": "ai_languageModel",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Azure OpenAI Chat Model6": {
-      "ai_languageModel": [
-        [
-          {
-            "node": "AI Agent Best Case Study1",
-            "type": "ai_languageModel",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "AI Agent finding best Job1": {
-      "main": [
-        [
-          {
-            "node": "AI Agent proposal writer1",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "AI Agent proposal writer1": {
-      "main": [
-        [
-          {
-            "node": "Format Output1",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "AI Agent Best Case Study1": {
-      "main": [
-        [
-          {
-            "node": "formal case studies1",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "formal case studies1": {
-      "main": [
-        [
-          {
-            "node": "Download Best Case Study1",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Download Best Case Study1": {
-      "main": [
-        [
-          {
-            "node": "Send Proposals1",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Azure OpenAI Chat Model7": {
-      "ai_languageModel": [
-        [
-          {
-            "node": "AI Agent proposal writer1",
-            "type": "ai_languageModel",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Particular job details": {
-      "main": [
-        [
-          {
-            "node": "Edit Fields1",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Edit Fields1": {
-      "main": [
-        [
-          {
-            "node": "List  Case Study2",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "GET Refresh Code1": {
-      "main": [
-        [
-          {
-            "node": "Get Access Token for Proposal",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Webhook": {
-      "main": [
-        [
-          {
-            "node": "Edit Fields",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Get row(s) in sheet": {
-      "main": [
-        [
-          {
-            "node": "Loop Over Items",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Loop Over Items": {
-      "main": [
-        [],
-        [
-          {
-            "node": "GET Refresh Code",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Send Proposals": {
-      "main": [
-        [
-          {
-            "node": "Loop Over Items",
-            "type": "main",
-            "index": 0
-          }
-        ]
+        []
       ]
     }
   },
   "settings": {
     "executionOrder": "v1"
   },
-  "staticData": {
-    "node:Schedule Trigger1": {
-      "recurrenceRules": [
-        20
-      ]
-    }
-  },
+  "staticData": null,
   "meta": {
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "aa7d7767-c611-41ca-a0e3-47e533ecaf24",
-  "activeVersionId": "bf6183ef-4f7b-4f21-bf3b-9b78b9906518",
-  "triggerCount": 2,
+  "versionId": "0b7f626d-16b4-4d06-bd0c-1a78cd2e8e3f",
+  "activeVersionId": null,
+  "triggerCount": 0,
   "shared": [
     {
-      "updatedAt": "2025-08-20T12:29:06.943Z",
-      "createdAt": "2025-08-20T12:29:06.943Z",
+      "updatedAt": "2025-10-29T08:58:09.971Z",
+      "createdAt": "2025-10-29T08:58:09.971Z",
       "role": "workflow:owner",
-      "workflowId": "bY9HGgxOJvIhlfQ1",
+      "workflowId": "BrAg7iFY7zDtl2GG",
       "projectId": "iXigq15mRQoAAIrt"
     }
   ],
-  "activeVersion": {
-    "updatedAt": "2025-12-22T13:35:27.708Z",
-    "createdAt": "2025-12-22T13:35:27.708Z",
-    "versionId": "bf6183ef-4f7b-4f21-bf3b-9b78b9906518",
-    "workflowId": "bY9HGgxOJvIhlfQ1",
-    "nodes": [
-      {
-        "parameters": {
-          "rule": {
-            "interval": [
-              {
-                "field": "cronExpression",
-                "expression": " 0 0 10,15,20 * * *"
-              }
-            ]
-          }
-        },
-        "type": "n8n-nodes-base.scheduleTrigger",
-        "typeVersion": 1.2,
-        "position": [
-          -1664,
-          224
-        ],
-        "id": "b58d0685-413a-4b48-8a90-748b2233dfdb",
-        "name": "Schedule Trigger1"
-      },
-      {
-        "parameters": {
-          "documentId": {
-            "__rl": true,
-            "value": "1mERLGgeClTHy7wvZWQNPmPsCrLadKTCCrNl_FbWX6nQ",
-            "mode": "list",
-            "cachedResultName": "upwork automation",
-            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1mERLGgeClTHy7wvZWQNPmPsCrLadKTCCrNl_FbWX6nQ/edit?usp=drivesdk"
-          },
-          "sheetName": {
-            "__rl": true,
-            "value": "gid=0",
-            "mode": "list",
-            "cachedResultName": "Sheet1",
-            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1mERLGgeClTHy7wvZWQNPmPsCrLadKTCCrNl_FbWX6nQ/edit#gid=0"
-          },
-          "options": {
-            "returnFirstMatch": true
-          }
-        },
-        "type": "n8n-nodes-base.googleSheets",
-        "typeVersion": 4.6,
-        "position": [
-          -864,
-          240
-        ],
-        "id": "e59341a6-c355-4b9b-83bc-7c90c31a4e78",
-        "name": "GET Refresh Code",
-        "credentials": {
-          "googleSheetsOAuth2Api": {
-            "id": "kpPEOLCGn963qpoh",
-            "name": "automations@techdome.ai"
-          }
-        }
-      },
-      {
-        "parameters": {
-          "method": "POST",
-          "url": "https://www.upwork.com/api/v3/oauth2/token",
-          "sendBody": true,
-          "contentType": "form-urlencoded",
-          "bodyParameters": {
-            "parameters": [
-              {
-                "name": "grant_type",
-                "value": "refresh_token"
-              },
-              {
-                "name": "client_id",
-                "value": "d52b9728a2f031bc81d360fee5d34b1f"
-              },
-              {
-                "name": "client_secret",
-                "value": "7c6ac8fea04f7189"
-              },
-              {
-                "name": "refresh_token",
-                "value": "={{ $json['refresh token'] }}"
-              }
-            ]
-          },
-          "options": {}
-        },
-        "type": "n8n-nodes-base.httpRequest",
-        "typeVersion": 4.2,
-        "position": [
-          -656,
-          240
-        ],
-        "id": "79a3e243-d733-40b7-8115-acc1e9467f3a",
-        "name": "Access Token"
-      },
-      {
-        "parameters": {
-          "method": "POST",
-          "url": "https://api.upwork.com/graphql",
-          "sendHeaders": true,
-          "headerParameters": {
-            "parameters": [
-              {
-                "name": "Authorization",
-                "value": "=Bearer {{ $json.access_token }}"
-              },
-              {
-                "name": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "name": "X-Upwork-API-TenantId",
-                "value": "1546843978739367937"
-              }
-            ]
-          },
-          "sendBody": true,
-          "specifyBody": "json",
-          "jsonBody": "={\n  \"query\": \"query marketplaceJobPostingsSearch($marketPlaceJobFilter: MarketplaceJobPostingsSearchFilter, $searchType: MarketplaceJobPostingSearchType, $sortAttributes: [MarketplaceJobPostingSearchSortAttribute]) { marketplaceJobPostingsSearch(marketPlaceJobFilter: $marketPlaceJobFilter, searchType: $searchType, sortAttributes: $sortAttributes) { totalCount edges { node { id title description createdDateTime publishedDateTime client { totalHires verificationStatus } } } pageInfo { endCursor hasNextPage } } }\",\n  \"variables\": {\n    \"marketPlaceJobFilter\": {\n      \"searchExpression_eq\": \"{{ $('Get row(s) in sheet').item.json['job filter'] }}\",\n      \"hourlyRate_eq\": { \"rangeStart\": 35, \"rangeEnd\": null },\n      \"budgetRange_eq\": { \"rangeStart\": 1000, \"rangeEnd\": null },\n      \"proposalRange_eq\": { \"rangeStart\": 0, \"rangeEnd\": 20 },\n      \"verifiedPaymentOnly_eq\": true,\n      \"clientHiresRange_eq\": { \"rangeStart\": 5, \"rangeEnd\": null }\n    },\n    \"searchType\": \"USER_JOBS_SEARCH\",\n    \"sortAttributes\": [\n      { \"field\": \"RECENCY\" }\n    ]\n  }\n}\n",
-          "options": {}
-        },
-        "type": "n8n-nodes-base.httpRequest",
-        "typeVersion": 4.2,
-        "position": [
-          -432,
-          240
-        ],
-        "id": "b8e6e164-96a1-4fc7-8571-07b8b3dabd6c",
-        "name": "Job Listings"
-      },
-      {
-        "parameters": {
-          "jsCode": "// Get all input items\nconst allItems = $input.all();\n\nlet output = [];\n\nallItems.forEach(item => {\n  const edges = item.json?.data?.marketplaceJobPostingsSearch?.edges;\n  if (edges && Array.isArray(edges)) {\n    edges.forEach((edge, index) => {\n      // Generate unique job identifier\n      const jobId = edge.node.id;\n      const uniqueId = `job_${jobId}_${Date.now()}_${index}`;\n      \n      output.push({\n        json: {\n          id: jobId,\n          title: edge.node.title,\n          description: edge.node.description,\n          upworkLink: `https://www.upwork.com/jobs/~02${jobId}`,\n          uniqueId: uniqueId,\n          acceptUrl: `https://n8n.tdwebsites.in/webhook/aceept?jobId=${jobId}&uniqueId=${uniqueId}`,\n          createdDateTime: edge.node.createdDateTime,\n          client: edge.node.client\n        }\n      });\n    });\n  }\n});\n\nreturn output;\n"
-        },
-        "type": "n8n-nodes-base.code",
-        "typeVersion": 2,
-        "position": [
-          -208,
-          240
-        ],
-        "id": "be49da71-cfa2-459b-a45b-0a9646320537",
-        "name": "Process Jobs with Accept URLs"
-      },
-      {
-        "parameters": {
-          "jsCode": "// Get all input items and create a single item with all jobs\nconst allItems = $input.all();\n\nlet allJobs = [];\n\nallItems.forEach(item => {\n  allJobs.push(item.json);\n});\n\n// Create webhook URL for n8n instance\nconst webhookBaseUrl = 'https://n8n.tdwebsites.in/webhook';\n\n// Return single item with all jobs\nreturn [{\n  json: {\n    jobs: allJobs,\n    webhookBaseUrl: webhookBaseUrl,\n    totalJobs: allJobs.length\n  }\n}];\n"
-        },
-        "type": "n8n-nodes-base.code",
-        "typeVersion": 2,
-        "position": [
-          -16,
-          240
-        ],
-        "id": "30a97865-4f96-4d3d-8199-30c39aad374f",
-        "name": "Prepare Email Data"
-      },
-      {
-        "parameters": {
-          "promptType": "define",
-          "text": "={{ $input }}",
-          "hasOutputParser": true,
-          "options": {
-            "systemMessage": "=You are tasked with generating a well-structured HTML email for job review with interactive accept buttons. Create an email that presents Upwork job postings with clickable accept buttons for each job.\n\nInput: You'll receive a single item containing:\n- jobs: Array of job objects with id, title, description, upworkLink, acceptUrl\n- webhookBaseUrl: Base URL for webhook calls\n- totalJobs: Number of jobs\n\nEmail Requirements:\n\n1. HTML Structure:\n   - Professional email layout with proper HTML structure\n   - Responsive design that works in email clients\n   - Clear header: \"Upwork Job Opportunities - [Current Date]\"\n\n2. For each job, include:\n   - Job number (1, 2, 3, etc.)\n   - Job title (bold and prominent)\n   - Job ID (clearly labeled)\n   - Concise 2-3 sentence summary of the job description\n   - Upwork link (\"View on Upwork\" button)\n   - Accept button (\"Accept for Proposal\" button in green)\n\n3. Accept Button Specifications:\n   - Green background color (#28a745)\n   - White text\n   - Clickable link that calls the acceptUrl\n   - Text: \"Accept for Proposal\"\n   - Should be prominent and clearly visible\n\n4. Styling:\n   - Use inline CSS for email compatibility\n   - Professional color scheme\n   - Clear separation between jobs\n   - Buttons should be styled as actual buttons, not just links\n\n5. Email Footer:\n   - Include note: \"Click 'Accept for Proposal' to automatically create a proposal for that job.\"\n   - Add timestamp and total job count\n\nOutput Format:\n- Subject: Plain text email subject\n- Body: Complete HTML email body with all jobs and interactive elements\n\nEnsure all accept buttons are functional and properly linked to their respective acceptUrl values."
-          }
-        },
-        "type": "@n8n/n8n-nodes-langchain.agent",
-        "typeVersion": 2.1,
-        "position": [
-          224,
-          240
-        ],
-        "id": "5e440724-83b1-4593-8c4b-83699341fdb4",
-        "name": "Create Interactive Email"
-      },
-      {
-        "parameters": {
-          "model": "gpt-4o",
-          "options": {}
-        },
-        "type": "@n8n/n8n-nodes-langchain.lmChatAzureOpenAi",
-        "typeVersion": 1,
-        "position": [
-          208,
-          432
-        ],
-        "id": "bd43eec5-1cd9-45f0-906b-bde29f2a9b61",
-        "name": "Azure OpenAI Chat Model",
-        "credentials": {
-          "azureOpenAiApi": {
-            "id": "C3WzT18XqF8OdVM6",
-            "name": "Azure Open AI account"
-          }
-        }
-      },
-      {
-        "parameters": {
-          "jsonSchemaExample": "{\n\t\"Subject\": \" \",\n\t\"Body\": \" \"\n}"
-        },
-        "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
-        "typeVersion": 1.3,
-        "position": [
-          400,
-          432
-        ],
-        "id": "84636aa1-3894-4713-b213-3d9903a9827f",
-        "name": "Structured Output Parser"
-      },
-      {
-        "parameters": {
-          "method": "POST",
-          "url": "https://www.upwork.com/api/v3/oauth2/token",
-          "sendBody": true,
-          "contentType": "form-urlencoded",
-          "bodyParameters": {
-            "parameters": [
-              {
-                "name": "grant_type",
-                "value": "refresh_token"
-              },
-              {
-                "name": "client_id",
-                "value": "d52b9728a2f031bc81d360fee5d34b1f"
-              },
-              {
-                "name": "client_secret",
-                "value": "7c6ac8fea04f7189"
-              },
-              {
-                "name": "refresh_token",
-                "value": "={{ $json['refresh token'] }}"
-              }
-            ]
-          },
-          "options": {}
-        },
-        "type": "n8n-nodes-base.httpRequest",
-        "typeVersion": 4.2,
-        "position": [
-          -976,
-          -304
-        ],
-        "id": "9a2d50dc-37d0-4f27-a883-c09a3054a422",
-        "name": "Get Access Token for Proposal"
-      },
-      {
-        "parameters": {
-          "method": "POST",
-          "url": "https://www.upwork.com/api/v3/oauth2/token",
-          "sendBody": true,
-          "contentType": "form-urlencoded",
-          "bodyParameters": {
-            "parameters": [
-              {
-                "name": "grant_type",
-                "value": "authorization_code"
-              },
-              {
-                "name": "client_id",
-                "value": "d52b9728a2f031bc81d360fee5d34b1f"
-              },
-              {
-                "name": "client_secret",
-                "value": "7c6ac8fea04f7189"
-              },
-              {
-                "name": "code",
-                "value": "3916109a76085af6da9181e1791b8185"
-              },
-              {
-                "name": "redirect_uri",
-                "value": "https://n8n.tdwebsites.in/rest/oauth2-credential/callback"
-              }
-            ]
-          },
-          "options": {}
-        },
-        "type": "n8n-nodes-base.httpRequest",
-        "typeVersion": 4.2,
-        "position": [
-          -624,
-          848
-        ],
-        "id": "8a2e0e01-7e33-4722-83be-b90a03de41f2",
-        "name": "Refresh Token",
-        "notes": "https://www.upwork.com/ab/account-security/oauth2/authorize?client_id=d52b9728a2f031bc81d360fee5d34b1f&response_type=code&redirect_uri=https%3A%2F%2Fn8n.tdwebsites.in%2Frest%2Foauth2-credential%2Fcallback"
-      },
-      {
-        "parameters": {
-          "operation": "update",
-          "documentId": {
-            "__rl": true,
-            "value": "1mERLGgeClTHy7wvZWQNPmPsCrLadKTCCrNl_FbWX6nQ",
-            "mode": "list",
-            "cachedResultName": "upwork automation",
-            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1mERLGgeClTHy7wvZWQNPmPsCrLadKTCCrNl_FbWX6nQ/edit?usp=drivesdk"
-          },
-          "sheetName": {
-            "__rl": true,
-            "value": "gid=0",
-            "mode": "list",
-            "cachedResultName": "Sheet1",
-            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1mERLGgeClTHy7wvZWQNPmPsCrLadKTCCrNl_FbWX6nQ/edit#gid=0"
-          },
-          "columns": {
-            "mappingMode": "defineBelow",
-            "value": {
-              "row_number": 2,
-              "refresh token": "={{ $json.refresh_token }}",
-              "date": "={{ $json.expires_in }}"
-            },
-            "matchingColumns": [
-              "row_number"
-            ],
-            "schema": [
-              {
-                "id": "refresh token",
-                "displayName": "refresh token",
-                "required": false,
-                "defaultMatch": false,
-                "display": true,
-                "type": "string",
-                "canBeUsedToMatch": true,
-                "removed": false
-              },
-              {
-                "id": "date",
-                "displayName": "date",
-                "required": false,
-                "defaultMatch": false,
-                "display": true,
-                "type": "string",
-                "canBeUsedToMatch": true,
-                "removed": false
-              },
-              {
-                "id": "row_number",
-                "displayName": "row_number",
-                "required": false,
-                "defaultMatch": false,
-                "display": true,
-                "type": "number",
-                "canBeUsedToMatch": true,
-                "readOnly": true,
-                "removed": false
-              }
-            ],
-            "attemptToConvertTypes": false,
-            "convertFieldsToString": false
-          },
-          "options": {}
-        },
-        "type": "n8n-nodes-base.googleSheets",
-        "typeVersion": 4.6,
-        "position": [
-          -416,
-          848
-        ],
-        "id": "b57ff7ab-7ca9-40bd-8653-166ea2f58267",
-        "name": "Update row in sheet",
-        "credentials": {
-          "googleSheetsOAuth2Api": {
-            "id": "kpPEOLCGn963qpoh",
-            "name": "automations@techdome.ai"
-          }
-        }
-      },
-      {
-        "parameters": {},
-        "type": "n8n-nodes-base.manualTrigger",
-        "typeVersion": 1,
-        "position": [
-          -864,
-          848
-        ],
-        "id": "3e3669eb-ad96-4b36-9e8b-39e8c7b4eaee",
-        "name": "When clicking ‘Execute workflow’"
-      },
-      {
-        "parameters": {
-          "operation": "pdf",
-          "options": {}
-        },
-        "type": "n8n-nodes-base.extractFromFile",
-        "typeVersion": 1,
-        "position": [
-          1040,
-          1024
-        ],
-        "id": "3f9d4be1-7917-47c6-8076-b47eeac8a7ec",
-        "name": "Extract from File1"
-      },
-      {
-        "parameters": {
-          "resource": "fileFolder",
-          "returnAll": true,
-          "filter": {
-            "folderId": {
-              "__rl": true,
-              "value": "1xwIvbVU2rN_tpBHMAiqXk-BzxZZk0MQI",
-              "mode": "list",
-              "cachedResultName": "upworks pdfs",
-              "cachedResultUrl": "https://drive.google.com/drive/folders/1xwIvbVU2rN_tpBHMAiqXk-BzxZZk0MQI"
-            }
-          },
-          "options": {}
-        },
-        "type": "n8n-nodes-base.googleDrive",
-        "typeVersion": 3,
-        "position": [
-          1056,
-          384
-        ],
-        "id": "e88ad781-f0a4-4e9c-9857-cc7c8b2e059e",
-        "name": "List CV1",
-        "alwaysOutputData": true,
-        "credentials": {
-          "googleDriveOAuth2Api": {
-            "id": "E7nEqUL27GUx1xHa",
-            "name": "Techdome Account"
-          }
-        }
-      },
-      {
-        "parameters": {
-          "conditions": {
-            "number": [
-              {
-                "value1": "={{ $json.isNotEmpty() }}",
-                "operation": "larger"
-              }
-            ]
-          }
-        },
-        "id": "70bf2192-1512-4a79-a715-5d000d8e7e91",
-        "name": "CV Exist1",
-        "type": "n8n-nodes-base.if",
-        "typeVersion": 1,
-        "position": [
-          1040,
-          592
-        ]
-      },
-      {
-        "parameters": {
-          "operation": "download",
-          "fileId": {
-            "__rl": true,
-            "value": "={{ $json.id }} ",
-            "mode": "id"
-          },
-          "options": {}
-        },
-        "id": "7eb11b4b-c432-4a4b-b791-30534b0b60f0",
-        "name": "Download CV PDF1",
-        "type": "n8n-nodes-base.googleDrive",
-        "typeVersion": 2,
-        "position": [
-          1056,
-          784
-        ],
-        "credentials": {
-          "googleDriveOAuth2Api": {
-            "id": "E7nEqUL27GUx1xHa",
-            "name": "Techdome Account"
-          }
-        }
-      },
-      {
-        "parameters": {
-          "jsCode": "// n8n Function Node - Merge all `text` fields into a single array\nconst inputItems = $input.all();\nlet allTexts = [];\n\nfor (const item of inputItems) {\n  if (item.json && typeof item.json.text === 'string') {\n    allTexts.push(item.json.text);\n  }\n}\n\nreturn [\n  {\n    json: {\n      texts: allTexts\n    }\n  }\n];\n"
-        },
-        "type": "n8n-nodes-base.code",
-        "typeVersion": 2,
-        "position": [
-          1264,
-          1024
-        ],
-        "id": "4ff68830-c457-49ef-8a5c-fdeb2066f152",
-        "name": "Flatten Results3"
-      },
-      {
-        "parameters": {
-          "resource": "fileFolder",
-          "returnAll": true,
-          "filter": {
-            "folderId": {
-              "__rl": true,
-              "value": "1MGFjKRu3_NHVA3KnMeWTJrOzOu6Slm1D",
-              "mode": "list",
-              "cachedResultName": "Upwork attached cv",
-              "cachedResultUrl": "https://drive.google.com/drive/folders/1MGFjKRu3_NHVA3KnMeWTJrOzOu6Slm1D"
-            }
-          },
-          "options": {}
-        },
-        "type": "n8n-nodes-base.googleDrive",
-        "typeVersion": 3,
-        "position": [
-          -288,
-          -304
-        ],
-        "id": "fc8bd915-2a8e-4e45-8a84-3d31fc72cfdc",
-        "name": "List  Case Study2",
-        "alwaysOutputData": true,
-        "credentials": {
-          "googleDriveOAuth2Api": {
-            "id": "E7nEqUL27GUx1xHa",
-            "name": "Techdome Account"
-          }
-        }
-      },
-      {
-        "parameters": {
-          "conditions": {
-            "number": [
-              {
-                "value1": "={{ $json.isNotEmpty() }}",
-                "operation": "larger"
-              }
-            ]
-          }
-        },
-        "id": "8a1811ca-74d8-4cb1-bffa-c9aee01ca372",
-        "name": "Case Study Exist2",
-        "type": "n8n-nodes-base.if",
-        "typeVersion": 1,
-        "position": [
-          -96,
-          -304
-        ]
-      },
-      {
-        "parameters": {
-          "operation": "download",
-          "fileId": {
-            "__rl": true,
-            "value": "={{ $json.id }} ",
-            "mode": "id"
-          },
-          "options": {}
-        },
-        "id": "63b0506c-75a0-45bc-9890-55eab5b85dde",
-        "name": "Download Case Study2",
-        "type": "n8n-nodes-base.googleDrive",
-        "typeVersion": 2,
-        "position": [
-          128,
-          -304
-        ],
-        "credentials": {
-          "googleDriveOAuth2Api": {
-            "id": "E7nEqUL27GUx1xHa",
-            "name": "Techdome Account"
-          }
-        }
-      },
-      {
-        "parameters": {
-          "method": "POST",
-          "url": "https://api.mistral.ai/v1/files",
-          "authentication": "genericCredentialType",
-          "genericAuthType": "httpHeaderAuth",
-          "sendBody": true,
-          "contentType": "multipart-form-data",
-          "bodyParameters": {
-            "parameters": [
-              {
-                "name": "purpose",
-                "value": "ocr"
-              },
-              {
-                "parameterType": "formBinaryData",
-                "name": "=file",
-                "inputDataFieldName": "=data"
-              }
-            ]
-          },
-          "options": {}
-        },
-        "type": "n8n-nodes-base.httpRequest",
-        "typeVersion": 4.2,
-        "position": [
-          336,
-          -304
-        ],
-        "id": "8a15f9e2-be43-4f3e-b947-cf6c3f6f362c",
-        "name": "Upload to mistral ai1",
-        "credentials": {
-          "httpHeaderAuth": {
-            "id": "047ISRvu3ma9yfxk",
-            "name": "saurabh 1"
-          },
-          "httpBearerAuth": {
-            "id": "cR1TcHqDvuy7Oexw",
-            "name": "Bearer Auth account"
-          }
-        }
-      },
-      {
-        "parameters": {
-          "url": "=https://api.mistral.ai/v1/files/{{ $json.id }}/url ",
-          "authentication": "genericCredentialType",
-          "genericAuthType": "httpHeaderAuth",
-          "sendQuery": true,
-          "queryParameters": {
-            "parameters": [
-              {
-                "name": "expiry",
-                "value": "24"
-              }
-            ]
-          },
-          "options": {}
-        },
-        "type": "n8n-nodes-base.httpRequest",
-        "typeVersion": 4.2,
-        "position": [
-          512,
-          -304
-        ],
-        "id": "9865d9e1-fad4-413b-b858-6b131e0fccf7",
-        "name": "Get Signed URL1",
-        "credentials": {
-          "httpHeaderAuth": {
-            "id": "047ISRvu3ma9yfxk",
-            "name": "saurabh 1"
-          }
-        }
-      },
-      {
-        "parameters": {
-          "method": "POST",
-          "url": "https://api.mistral.ai/v1/ocr",
-          "authentication": "genericCredentialType",
-          "genericAuthType": "httpHeaderAuth",
-          "sendBody": true,
-          "specifyBody": "json",
-          "jsonBody": "={\n  \"model\": \"mistral-ocr-latest\",\n  \"document\": {\n    \"type\": \"document_url\",\n    \"document_url\": \"{{ $json.url }}\"\n  },\n  \"include_image_base64\": false\n} ",
-          "options": {
-            "response": {
-              "response": {
-                "responseFormat": "json"
-              }
-            }
-          }
-        },
-        "type": "n8n-nodes-base.httpRequest",
-        "typeVersion": 4.2,
-        "position": [
-          672,
-          -304
-        ],
-        "id": "991bb122-1c27-4513-996b-602dc33c8c45",
-        "name": "Get Ocr Result1",
-        "credentials": {
-          "httpHeaderAuth": {
-            "id": "047ISRvu3ma9yfxk",
-            "name": "saurabh 1"
-          }
-        }
-      },
-      {
-        "parameters": {
-          "jsCode": "// n8n Function node\n// Input items: each has { pages: [{ markdown?: string, text?: string }, ...] }\n// Output: ONE item -> { texts: [ \"<pdf1 markdown>\", \"<pdf2 markdown>\", ... ] }\n\n// optional: strip inline image markdown like ![alt](img-x.jpeg)\nconst stripImages = s => (s || '').replace(/!\\[[^\\]]*]\\([^)]*\\)/g, '');\n\nconst inputItems = $input.all();\nconst texts = [];\n\nfor (const item of inputItems) {\n  const pages = Array.isArray(item.json?.pages) ? item.json.pages : [];\n  let combined = '';\n\n  for (const p of pages) {\n    // prefer markdown, fallback to text\n    combined += (p?.markdown ?? p?.text ?? '') + '\\n\\n';\n  }\n\n  const cleaned = stripImages(combined).trim();\n  if (cleaned) texts.push(cleaned);\n}\n\n// Return ONE item with the same shape you used earlier\nreturn [\n  {\n    json: {\n      texts\n    }\n  }\n];\n"
-        },
-        "type": "n8n-nodes-base.code",
-        "typeVersion": 2,
-        "position": [
-          848,
-          -304
-        ],
-        "id": "764ad5ec-707c-4500-bd34-d03b6b8af8d5",
-        "name": "flatten study1"
-      },
-      {
-        "parameters": {
-          "resource": "fileFolder",
-          "returnAll": true,
-          "filter": {
-            "folderId": {
-              "__rl": true,
-              "value": "1MGFjKRu3_NHVA3KnMeWTJrOzOu6Slm1D",
-              "mode": "list",
-              "cachedResultName": "Upwork attached cv",
-              "cachedResultUrl": "https://drive.google.com/drive/folders/1MGFjKRu3_NHVA3KnMeWTJrOzOu6Slm1D"
-            }
-          },
-          "options": {}
-        },
-        "type": "n8n-nodes-base.googleDrive",
-        "typeVersion": 3,
-        "position": [
-          1072,
-          -304
-        ],
-        "id": "19fd2163-3adc-47f5-9a5e-bb99d904a250",
-        "name": "List  Case Study3",
-        "alwaysOutputData": true,
-        "credentials": {
-          "googleDriveOAuth2Api": {
-            "id": "E7nEqUL27GUx1xHa",
-            "name": "Techdome Account"
-          }
-        }
-      },
-      {
-        "parameters": {
-          "conditions": {
-            "number": [
-              {
-                "value1": "={{ $json.isNotEmpty() }}",
-                "operation": "larger"
-              }
-            ]
-          }
-        },
-        "id": "8679b0ae-5fac-45e2-bc51-80115c942f2c",
-        "name": "Case Study Exist3",
-        "type": "n8n-nodes-base.if",
-        "typeVersion": 1,
-        "position": [
-          1264,
-          -304
-        ]
-      },
-      {
-        "parameters": {
-          "operation": "download",
-          "fileId": {
-            "__rl": true,
-            "value": "={{ $json.id }} ",
-            "mode": "id"
-          },
-          "options": {}
-        },
-        "id": "2a36de97-3b30-45b6-9514-b6b3bb3995c4",
-        "name": "Download Case Study3",
-        "type": "n8n-nodes-base.googleDrive",
-        "typeVersion": 2,
-        "position": [
-          1056,
-          -64
-        ],
-        "credentials": {
-          "googleDriveOAuth2Api": {
-            "id": "E7nEqUL27GUx1xHa",
-            "name": "Techdome Account"
-          }
-        }
-      },
-      {
-        "parameters": {
-          "jsCode": "// Collect all incoming items\nconst items = $input.all();\n\n// Build {id,name} list (with tolerant fallbacks)\nconst caseStudies = items.map((it, idx) => {\n  const j = it.json || {};\n  const id   = j.id ?? j.fileId ?? j.file_id ?? j.gdriveId ?? null;\n  const name = j.name ?? j.fileName ?? j.title ?? `document_${idx + 1}.pdf`;\n  return { id, name };\n}).filter(cs => cs.id && cs.name);\n\n// Pre-format variants for prompts\nconst caseStudiesStr = JSON.stringify(caseStudies);                 // JSON string\nconst caseStudiesLines = caseStudies.map((cs,i)=>`${i+1}. ${cs.name} — ${cs.id}`).join(\"\\n\");\n\nreturn [{\n  json: {\n    caseStudies,\n    caseStudiesStr,     // use in text fields: {{ $json.caseStudiesStr }}\n    caseStudiesLines    // or this: {{ $json.caseStudiesLines }}\n  }\n}];\n"
-        },
-        "type": "n8n-nodes-base.code",
-        "typeVersion": 2,
-        "position": [
-          1040,
-          176
-        ],
-        "id": "16075ca2-df48-42ca-b57e-5df0d4a9b54c",
-        "name": "format case study1"
-      },
-      {
-        "parameters": {
-          "method": "POST",
-          "url": "https://api.upwork.com/graphql",
-          "sendHeaders": true,
-          "headerParameters": {
-            "parameters": [
-              {
-                "name": "Authorization",
-                "value": "=Bearer {{ $json.access_token }}"
-              },
-              {
-                "name": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "name": "X-Upwork-API-TenantId",
-                "value": "1546843978739367937"
-              }
-            ]
-          },
-          "sendBody": true,
-          "specifyBody": "json",
-          "jsonBody": "={\n  \"query\": \"query GetJobPostingDetails($ids: [ID!]!) { marketplaceJobPostingsContents(ids: $ids) { id title description publishedDateTime ciphertext } }\",\n  \"variables\": {\n    \"ids\": [\n      \"{{ $('Edit Fields').item.json.query.jobId }}\"\n    ]\n  }\n}\n",
-          "options": {}
-        },
-        "type": "n8n-nodes-base.httpRequest",
-        "typeVersion": 4.2,
-        "position": [
-          -752,
-          -304
-        ],
-        "id": "11ac7515-c8eb-4186-8119-b36140088390",
-        "name": "Particular job details"
-      },
-      {
-        "parameters": {
-          "assignments": {
-            "assignments": [
-              {
-                "id": "50b5b9bf-c2ed-4bbc-9ee2-35fe00bf5be0",
-                "name": "query",
-                "value": "={{ $json.query }}",
-                "type": "object"
-              }
-            ]
-          },
-          "options": {}
-        },
-        "type": "n8n-nodes-base.set",
-        "typeVersion": 3.4,
-        "position": [
-          -1392,
-          -304
-        ],
-        "id": "2b051409-416d-4daf-bef2-a2460b8a3946",
-        "name": "Edit Fields"
-      },
-      {
-        "parameters": {
-          "jsCode": "// n8n Function Node - Simple Professional Proposal Generator (Upwork Ready)\n// Input: JSON with \"output\" field containing the proposal text\n\nconst input = $input.all()[0]; // Get first input item\nif (!input || !input.json || !input.json.output) {\n  throw new Error(\"Input must contain 'output' field with proposal text\");\n}\n\nfunction generateSimpleHTML(text) {\n  // Parse the text into structured sections\n  const sections = parseProposalText(text);\n  \n  return `\n<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>Professional Proposal</title>\n</head>\n<body style=\"font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 800px; margin: 0 auto; padding: 20px; background-color: #ffffff;\">\n    ${generateSimpleContent(sections)}\n</body>\n</html>`;\n}\n\nfunction parseProposalText(text) {\n  const lines = text.split('\\n').map(line => line.trim()).filter(line => line.length > 0);\n  const sections = [];\n  let currentSection = null;\n  \n  for (let line of lines) {\n    // Remove markdown bold formatting but keep content\n    line = line.replace(/\\*\\*(.*?)\\*\\*/g, '$1');\n    \n    // Check if it's a header line (starts with Hello, Hi, or contains name)\n    if (/^(Hello!|Hi!|Hey!)/i.test(line)) {\n      currentSection = {\n        type: 'header',\n        title: line,\n        content: []\n      };\n      sections.push(currentSection);\n    }\n    // Check if it's a section title\n    else if (/^(Why Work with Me|What I Offer|Core Competencies|Tools & Technologies|My Approach|Featured Projects|Let's.*Together)/i.test(line)) {\n      currentSection = {\n        type: 'section',\n        title: line.replace(/\\*\\*/g, '').replace(/\\?$/, '?'),\n        content: []\n      };\n      sections.push(currentSection);\n    }\n    // Check if it's a bullet point\n    else if (/^[-*•]\\s/.test(line) || /^\\*\\*\\w+.*:\\*\\*/.test(line)) {\n      if (currentSection) {\n        let bulletText = line.replace(/^[-*•]\\s*/, '').replace(/\\*\\*(.*?):\\*\\*/g, '<strong>$1:</strong>');\n        \n        // Split title and description if there's a colon\n        const colonIndex = bulletText.indexOf(':');\n        if (colonIndex > 0 && colonIndex < 60) {\n          const title = bulletText.substring(0, colonIndex + 1);\n          const description = bulletText.substring(colonIndex + 1).trim();\n          currentSection.content.push({\n            type: 'bullet',\n            title: title,\n            description: description\n          });\n        } else {\n          currentSection.content.push({\n            type: 'bullet',\n            title: bulletText,\n            description: ''\n          });\n        }\n      }\n    }\n    // Regular text content\n    else if (line.length > 0) {\n      if (currentSection) {\n        currentSection.content.push({\n          type: 'text',\n          content: line\n        });\n      } else {\n        // Create intro section for orphaned text\n        currentSection = {\n          type: 'intro',\n          content: [{\n            type: 'text',\n            content: line\n          }]\n        };\n        sections.push(currentSection);\n      }\n    }\n  }\n  \n  return sections;\n}\n\nfunction generateSimpleContent(sections) {\n  let html = '';\n  \n  for (let section of sections) {\n    if (section.type === 'header') {\n      // Header section\n      html += `<h1 style=\"font-size: 24px; font-weight: bold; color: #2c3e50; margin-bottom: 20px; border-bottom: none;\">${section.title}</h1>\\n`;\n      section.content.forEach(item => {\n        if (item.type === 'text') {\n          html += `<p style=\"font-size: 16px; line-height: 1.6; margin-bottom: 20px; color: #4a5568;\">${item.content}</p>\\n`;\n        }\n      });\n    } else if (section.type === 'intro') {\n      // Intro text\n      section.content.forEach(item => {\n        if (item.type === 'text') {\n          html += `<p style=\"font-size: 16px; line-height: 1.6; margin-bottom: 20px; color: #4a5568;\">${item.content}</p>\\n`;\n        }\n      });\n    } else if (section.type === 'section') {\n      const isCTASection = /Let's.*Together/i.test(section.title);\n      \n      if (isCTASection) {\n        // CTA Section\n        html += `<h2 style=\"font-size: 20px; font-weight: bold; color: #2c3e50; margin: 30px 0 15px 0;\">${section.title}</h2>\\n`;\n        section.content.forEach(item => {\n          if (item.type === 'text') {\n            html += `<p style=\"font-size: 16px; line-height: 1.6; margin-bottom: 20px; color: #4a5568;\">${item.content}</p>\\n`;\n          }\n        });\n      } else {\n        // Regular Section\n        html += `<h2 style=\"font-size: 20px; font-weight: bold; color: #2c3e50; margin: 30px 0 15px 0;\">${section.title}</h2>\\n`;\n        \n        // Add any text content\n        section.content.forEach(item => {\n          if (item.type === 'text') {\n            html += `<p style=\"font-size: 16px; line-height: 1.6; margin-bottom: 15px; color: #4a5568;\">${item.content}</p>\\n`;\n          }\n        });\n        \n        // Add bullet points\n        const bullets = section.content.filter(item => item.type === 'bullet');\n        if (bullets.length > 0) {\n          html += `<ul style=\"margin: 15px 0; padding-left: 20px;\">\\n`;\n          bullets.forEach(bullet => {\n            html += `<li style=\"margin-bottom: 12px; font-size: 16px; line-height: 1.6;\">`;\n            if (bullet.title.includes('<strong>') || bullet.title.includes(':')) {\n              // Format as bold title with description\n              const cleanTitle = bullet.title.replace(/<\\/?strong>/g, '').replace(':', '');\n              html += `<strong>${cleanTitle}:</strong>`;\n              if (bullet.description) {\n                html += ` ${bullet.description}`;\n              }\n            } else {\n              // Regular bullet point\n              html += bullet.title;\n              if (bullet.description) {\n                html += ` ${bullet.description}`;\n              }\n            }\n            html += `</li>\\n`;\n          });\n          html += `</ul>\\n`;\n        }\n      } \n    }\n  }\n  \n  return html;\n}\n\n// Main execution\nconst emailHTML = generateSimpleHTML(input.json.output);\n\nreturn [{\n  json: {\n    htmlContent: emailHTML,\n    originalText: input.json.output,\n    contentType: \"text/html\"\n  }\n}];"
-        },
-        "id": "bd8b981b-312c-4c26-92c0-3cda709b949e",
-        "name": "Format Output1",
-        "type": "n8n-nodes-base.code",
-        "typeVersion": 1,
-        "position": [
-          2160,
-          400
-        ]
-      },
-      {
-        "parameters": {
-          "resource": "message",
-          "subject": "=Proposal",
-          "includeHtml": true,
-          "htmlMessage": "={{ $('Format Output1').item.json.htmlContent }}",
-          "message": "Proposal",
-          "toList": [
-            "newscctv22@gmail.com",
-            "anmolkushwah19@gmail.com "
-          ],
-          "additionalFields": {
-            "attachmentsUi": {
-              "attachmentsBinary": [
-                {
-                  "property": "=data"
-                }
-              ]
-            },
-            "ccList": []
-          }
-        },
-        "id": "b966847a-d822-4fc8-a5d2-87bba0f166c7",
-        "name": "Send Proposals1",
-        "type": "n8n-nodes-base.gmail",
-        "typeVersion": 1,
-        "position": [
-          3280,
-          384
-        ],
-        "credentials": {
-          "gmailOAuth2": {
-            "id": "gEIaWCTvGfYjMSb3",
-            "name": "Gmail credentials"
-          }
-        }
-      },
-      {
-        "parameters": {
-          "model": "gpt-4o-mini",
-          "options": {}
-        },
-        "type": "@n8n/n8n-nodes-langchain.lmChatAzureOpenAi",
-        "typeVersion": 1,
-        "position": [
-          1440,
-          1232
-        ],
-        "id": "d616d881-a3b3-4770-94a3-3d7fc3adf35b",
-        "name": "Azure OpenAI Chat Model5",
-        "credentials": {
-          "azureOpenAiApi": {
-            "id": "C3WzT18XqF8OdVM6",
-            "name": "Azure Open AI account"
-          }
-        }
-      },
-      {
-        "parameters": {
-          "model": "gpt-4o-mini",
-          "options": {}
-        },
-        "type": "@n8n/n8n-nodes-langchain.lmChatAzureOpenAi",
-        "typeVersion": 1,
-        "position": [
-          2384,
-          656
-        ],
-        "id": "bf3d4bab-e2e9-40be-9e17-2dd88a7e0eb5",
-        "name": "Azure OpenAI Chat Model6",
-        "credentials": {
-          "azureOpenAiApi": {
-            "id": "C3WzT18XqF8OdVM6",
-            "name": "Azure Open AI account"
-          }
-        }
-      },
-      {
-        "parameters": {
-          "promptType": "define",
-          "text": "=Job ID: {{ $('Edit Fields1').first().json.query.id }}\nJob Title: {{ $('Edit Fields1').first().json.query.title }}\nJob Description: {{ $('Edit Fields1').first().json.query.description }}\n\nCandidate CVs: {{ $json.texts }}\n",
-          "options": {
-            "systemMessage": "=You are an AI CV-Matching Assistant.\n\nTask:\n1. Read the Job ID, Job Title, and Job Description provided in the user message.  \n2. Extract key requirements such as skills, technologies, experience level, industry domain, and responsibilities.  \n3. Compare these requirements against the Candidate CVs provided.  \n\nInstructions:\n- Identify the single CV that best matches the job description.  \n- Consider skills, experience, domain relevance, and role suitability.  \n- Do not explain or rank multiple CVs. Select only one.  \n\nOutput strictly in the following format:\n\nBest_CV_Name: <Name of the best matching candidate>  \nMatched_Job: <Exact Job Description text from the user message>  \n"
-          }
-        },
-        "type": "@n8n/n8n-nodes-langchain.agent",
-        "typeVersion": 2.1,
-        "position": [
-          1520,
-          1024
-        ],
-        "id": "cbd9568e-5c7b-4ed4-9491-7d2bd1bee171",
-        "name": "AI Agent finding best Job1"
-      },
-      {
-        "parameters": {
-          "promptType": "define",
-          "text": "=Candidate Name:\n{{ $json.output.match(/Best_CV_Name:\\s*([^\\n]+)/)?.[1] }}\n\nJob Context:\n{{ $json.output }}\n\nCandidate Experience (CV Extract):\n{{ $('Flatten Results3').item.json.texts }}\n\n════════════════════════════\nTASK\n════════════════════════════\nWrite a senior-level proposal that feels like it was written by an experienced specialist who understands execution risk, buyer intent, and long-term outcomes.\n\nThis is NOT a resume.\nThis is NOT a generic proposal.\nThis is NOT an agency pitch.\n\n════════════════════════════\nWRITING STYLE\n════════════════════════════\n- Short paragraphs (1–3 lines)\n- Human, direct, confident\n- Consultant-style thinking\n- No formal section headers\n- No repetition of CV structure\n\n════════════════════════════\nSTRUCTURE (FOLLOW THIS FLOW)\n════════════════════════════\n\n1. Greeting  \nUse:\n\"Hello [Client Name],\"\nIf name is unavailable:\n\"Hello,\"\n\n2. Opening Alignment  \n- Mirror what the client is trying to achieve\n- Show understanding of the real problem beneath the task\n\n3. Credibility Framing  \n- Introduce yourself naturally (name + role + specialization)\n- Tie experience directly to this type of work\n\n4. Problem Understanding  \n- Explain the business or operational risk clearly\n- Focus on clarity, not features\n\n5. Execution Approach (bullets)  \nUse bullets like:\n• Architecture before execution  \n• Predictability over experimentation  \n• Clear ownership and boundaries  \n• Systems designed to scale cleanly  \n\nAdapt bullets based on CV relevance.\n\n6. Process (tight bullets only)\n• Requirements distillation  \n• System/workflow design  \n• Controlled execution  \n• Validation and refinement  \n\n7. Deliverables & Outcomes  \n- What the client will receive\n- Why it reduces risk or rework\n- Mention readiness for future phases if relevant\n\n8. Clarifying Questions  \nAsk 2–3 sharp questions tied to the job.\n\n9. Close  \nEnd exactly with:\n\"Happy to discuss this further if it aligns with what you’re looking for.\"\n",
-          "options": {
-            "systemMessage": "=You are a senior independent specialist who writes high-conviction, execution-focused proposals for Upwork-style engagements.\n\nYou do NOT write resumes.\nYou do NOT write profile summaries.\nYou do NOT use sectioned resume formats.\n\nYour writing is calm, confident, and senior.\nYou write like an experienced operator, not a marketer or agency.\n\nHard rules:\n- Write strictly in first person (“I”)\n- No emojis\n- No buzzwords or hype\n- No agency language\n- No invented skills\n- Never restate the CV verbatim\n- No headings like PROFILE, CORE COMPETENCIES, TOOLS, etc.\n\nYour goal is to build trust through clarity, judgment, and execution logic.\n"
-          }
-        },
-        "type": "@n8n/n8n-nodes-langchain.agent",
-        "typeVersion": 2.1,
-        "position": [
-          1840,
-          688
-        ],
-        "id": "f14f74a6-2a21-4c13-b99b-4f4beb3de67e",
-        "name": "AI Agent proposal writer1"
-      },
-      {
-        "parameters": {
-          "promptType": "define",
-          "text": "=Proposal Context (plain text):\n{{ $('AI Agent proposal writer1').item.json.output }}\n\nAvailable Case Studies (JSON):\n{{ $('format case study1').first().json.caseStudiesStr }}\n\nTask:\n1. Infer the PRIMARY professional discipline required by the proposal.\n   (Examples: UI/UX Design, Product Design, Product Management, Backend Engineering, Automation, CRM, Marketing, etc.)\n\n2. From the available case studies, select the ONE case study that:\n   - Matches the inferred discipline\n   - Demonstrates execution, not just strategy\n   - Is most relevant to the proposal’s core problem\n\nSTRICT RULES:\n- The case study discipline MUST match the inferred discipline\n- Do NOT select case studies from a different discipline\n- Prefer hands-on execution over planning or strategy\n- Use only the provided case study list\n\nReturn ONLY valid JSON in this exact format:\n{\n  \"inferredDiscipline\": \"string\",\n  \"fileId\": \"string\",\n  \"fileName\": \"string\",\n  \"reason\": \"string\"\n}\n",
-          "options": {
-            "systemMessage": "=You are a strict decision-making AI.\n\nYour job is to:\n1. Infer the dominant professional discipline from the proposal\n2. Select the most relevant case study that matches that discipline\n\nHARD CONSTRAINTS:\n- Discipline mismatch = automatic rejection\n- Design ≠ Product Management\n- Engineering ≠ Strategy\n- Marketing ≠ Operations\n- You MUST choose based on execution relevance, not keyword overlap\n- You MUST return valid JSON only\n- No explanations outside the JSON\n\nIf multiple case studies partially match, choose the one with the clearest execution alignment.\n"
-          }
-        },
-        "type": "@n8n/n8n-nodes-langchain.agent",
-        "typeVersion": 2.1,
-        "position": [
-          2384,
-          400
-        ],
-        "id": "b62b7bc1-c8dd-4dbe-a016-147e2629f76c",
-        "name": "AI Agent Best Case Study1"
-      },
-      {
-        "parameters": {
-          "jsCode": "const items = $input.all();\n\nreturn items.map((item, index) => {\n  let parsed = {};\n  \n  if (typeof item.json.output === 'string') {\n    try {\n      parsed = JSON.parse(item.json.output);\n    } catch (err) {\n      const m = item.json.output.match(/\\{[\\s\\S]*\\}/);\n      if (m) parsed = JSON.parse(m[0]);\n    }\n  }\n\n  return {\n    json: {\n      id: index + 1,\n      name: parsed.fileName ?? item.json.name ?? `Item ${index + 1}`,\n      description: parsed.reason ?? item.json.description ?? \"N/A\",\n      fileId: parsed.fileId ?? null,\n      fileName: parsed.fileName ?? null,\n      reason: parsed.reason ?? null,\n      myNewField: 1\n    }\n  };\n});\n"
-        },
-        "type": "n8n-nodes-base.code",
-        "typeVersion": 2,
-        "position": [
-          2800,
-          400
-        ],
-        "id": "14aaa3d9-e041-4857-8fa5-a92cd1889004",
-        "name": "formal case studies1"
-      },
-      {
-        "parameters": {
-          "operation": "download",
-          "fileId": {
-            "__rl": true,
-            "value": "={{ $json.fileId }}",
-            "mode": "id"
-          },
-          "options": {}
-        },
-        "id": "a4c433ef-c53b-4a3f-80f3-ec1c123dad3a",
-        "name": "Download Best Case Study1",
-        "type": "n8n-nodes-base.googleDrive",
-        "typeVersion": 2,
-        "position": [
-          3040,
-          384
-        ],
-        "credentials": {
-          "googleDriveOAuth2Api": {
-            "id": "E7nEqUL27GUx1xHa",
-            "name": "Techdome Account"
-          }
-        }
-      },
-      {
-        "parameters": {
-          "model": "gpt-4o-mini",
-          "options": {}
-        },
-        "type": "@n8n/n8n-nodes-langchain.lmChatAzureOpenAi",
-        "typeVersion": 1,
-        "position": [
-          1904,
-          896
-        ],
-        "id": "c93da072-5579-484f-8ac8-c8bdee3c38cf",
-        "name": "Azure OpenAI Chat Model7",
-        "credentials": {
-          "azureOpenAiApi": {
-            "id": "C3WzT18XqF8OdVM6",
-            "name": "Azure Open AI account"
-          }
-        }
-      },
-      {
-        "parameters": {
-          "resource": "message",
-          "subject": "={{ $json.output.Subject }}",
-          "includeHtml": true,
-          "htmlMessage": "={{ $json.output.Body }}",
-          "message": "Upwork Job ",
-          "toList": [
-            "anmolkushwah19@gmail.com  ",
-            "rahuljoshi0808@gmail.com "
-          ],
-          "additionalFields": {
-            "ccList": []
-          }
-        },
-        "id": "ed666828-65be-4e80-b5a0-50c28f526101",
-        "name": "Send Proposals",
-        "type": "n8n-nodes-base.gmail",
-        "typeVersion": 1,
-        "position": [
-          624,
-          240
-        ],
-        "credentials": {
-          "gmailOAuth2": {
-            "id": "gEIaWCTvGfYjMSb3",
-            "name": "Gmail credentials"
-          }
-        }
-      },
-      {
-        "parameters": {
-          "assignments": {
-            "assignments": [
-              {
-                "id": "50b5b9bf-c2ed-4bbc-9ee2-35fe00bf5be0",
-                "name": "query",
-                "value": "={{ $json.data.marketplaceJobPostingsContents[0] }}",
-                "type": "object"
-              }
-            ]
-          },
-          "options": {}
-        },
-        "type": "n8n-nodes-base.set",
-        "typeVersion": 3.4,
-        "position": [
-          -512,
-          -304
-        ],
-        "id": "a0dc0756-60a7-4b87-be44-cf242c1be944",
-        "name": "Edit Fields1"
-      },
-      {
-        "parameters": {
-          "documentId": {
-            "__rl": true,
-            "value": "1mERLGgeClTHy7wvZWQNPmPsCrLadKTCCrNl_FbWX6nQ",
-            "mode": "list",
-            "cachedResultName": "upwork automation",
-            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1mERLGgeClTHy7wvZWQNPmPsCrLadKTCCrNl_FbWX6nQ/edit?usp=drivesdk"
-          },
-          "sheetName": {
-            "__rl": true,
-            "value": "gid=0",
-            "mode": "list",
-            "cachedResultName": "Sheet1",
-            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1mERLGgeClTHy7wvZWQNPmPsCrLadKTCCrNl_FbWX6nQ/edit#gid=0"
-          },
-          "options": {
-            "returnFirstMatch": true
-          }
-        },
-        "type": "n8n-nodes-base.googleSheets",
-        "typeVersion": 4.6,
-        "position": [
-          -1184,
-          -304
-        ],
-        "id": "63209b42-2ed4-438a-a53e-b87e4c091bd5",
-        "name": "GET Refresh Code1",
-        "credentials": {
-          "googleSheetsOAuth2Api": {
-            "id": "kpPEOLCGn963qpoh",
-            "name": "automations@techdome.ai"
-          }
-        }
-      },
-      {
-        "parameters": {
-          "mode": "combine",
-          "options": {}
-        },
-        "type": "n8n-nodes-base.merge",
-        "typeVersion": 3.2,
-        "position": [
-          -1840,
-          896
-        ],
-        "id": "1f7595dc-25de-40ea-b144-3384e627d248",
-        "name": "Merge"
-      },
-      {
-        "parameters": {
-          "path": "aceept",
-          "options": {}
-        },
-        "type": "n8n-nodes-base.webhook",
-        "typeVersion": 2.1,
-        "position": [
-          -1632,
-          -304
-        ],
-        "id": "5e2d6189-f1cd-408b-bdf2-e7553f6e0b67",
-        "name": "Webhook",
-        "webhookId": "de3fcc29-45a9-429b-a4e6-5d345a13682d"
-      },
-      {
-        "parameters": {
-          "documentId": {
-            "__rl": true,
-            "value": "1bl92PGX8Mnfi5p0MoGN9LiZ0Q1DF_iOBqrDdYFhIqmU",
-            "mode": "list",
-            "cachedResultName": "upwork data sheet ",
-            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1bl92PGX8Mnfi5p0MoGN9LiZ0Q1DF_iOBqrDdYFhIqmU/edit?usp=drivesdk"
-          },
-          "sheetName": {
-            "__rl": true,
-            "value": "gid=0",
-            "mode": "list",
-            "cachedResultName": "Sheet1",
-            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1bl92PGX8Mnfi5p0MoGN9LiZ0Q1DF_iOBqrDdYFhIqmU/edit#gid=0"
-          },
-          "filtersUI": {
-            "values": [
-              {
-                "lookupColumn": "day",
-                "lookupValue": "={{$now.weekdayLong}}"
-              }
-            ]
-          },
-          "options": {}
-        },
-        "type": "n8n-nodes-base.googleSheets",
-        "typeVersion": 4.7,
-        "position": [
-          -1408,
-          224
-        ],
-        "id": "151610fa-e400-4749-8eaa-914aa57bbebe",
-        "name": "Get row(s) in sheet",
-        "credentials": {
-          "googleSheetsOAuth2Api": {
-            "id": "kpPEOLCGn963qpoh",
-            "name": "automations@techdome.ai"
-          }
-        }
-      },
-      {
-        "parameters": {
-          "options": {}
-        },
-        "type": "n8n-nodes-base.splitInBatches",
-        "typeVersion": 3,
-        "position": [
-          -1120,
-          224
-        ],
-        "id": "48c740eb-ccdc-413b-b464-cdb37f58110b",
-        "name": "Loop Over Items"
-      }
-    ],
-    "connections": {
-      "Schedule Trigger1": {
-        "main": [
-          [
-            {
-              "node": "Get row(s) in sheet",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "GET Refresh Code": {
-        "main": [
-          [
-            {
-              "node": "Access Token",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "Access Token": {
-        "main": [
-          [
-            {
-              "node": "Job Listings",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "Job Listings": {
-        "main": [
-          [
-            {
-              "node": "Process Jobs with Accept URLs",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "Process Jobs with Accept URLs": {
-        "main": [
-          [
-            {
-              "node": "Prepare Email Data",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "Prepare Email Data": {
-        "main": [
-          [
-            {
-              "node": "Create Interactive Email",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "Create Interactive Email": {
-        "main": [
-          [
-            {
-              "node": "Send Proposals",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "Azure OpenAI Chat Model": {
-        "ai_languageModel": [
-          [
-            {
-              "node": "Create Interactive Email",
-              "type": "ai_languageModel",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "Structured Output Parser": {
-        "ai_outputParser": [
-          [
-            {
-              "node": "Create Interactive Email",
-              "type": "ai_outputParser",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "Get Access Token for Proposal": {
-        "main": [
-          [
-            {
-              "node": "Particular job details",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "Refresh Token": {
-        "main": [
-          [
-            {
-              "node": "Update row in sheet",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "When clicking ‘Execute workflow’": {
-        "main": [
-          [
-            {
-              "node": "Refresh Token",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "Extract from File1": {
-        "main": [
-          [
-            {
-              "node": "Flatten Results3",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "List CV1": {
-        "main": [
-          [
-            {
-              "node": "CV Exist1",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "CV Exist1": {
-        "main": [
-          [
-            {
-              "node": "Download CV PDF1",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "Download CV PDF1": {
-        "main": [
-          [
-            {
-              "node": "Extract from File1",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "List  Case Study2": {
-        "main": [
-          [
-            {
-              "node": "Case Study Exist2",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "Case Study Exist2": {
-        "main": [
-          [
-            {
-              "node": "Download Case Study2",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "Download Case Study2": {
-        "main": [
-          [
-            {
-              "node": "Upload to mistral ai1",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "Upload to mistral ai1": {
-        "main": [
-          [
-            {
-              "node": "Get Signed URL1",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "Get Signed URL1": {
-        "main": [
-          [
-            {
-              "node": "Get Ocr Result1",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "Get Ocr Result1": {
-        "main": [
-          [
-            {
-              "node": "flatten study1",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "flatten study1": {
-        "main": [
-          [
-            {
-              "node": "List  Case Study3",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "List  Case Study3": {
-        "main": [
-          [
-            {
-              "node": "Case Study Exist3",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "Case Study Exist3": {
-        "main": [
-          [
-            {
-              "node": "Download Case Study3",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "Download Case Study3": {
-        "main": [
-          [
-            {
-              "node": "format case study1",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "format case study1": {
-        "main": [
-          [
-            {
-              "node": "List CV1",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "Flatten Results3": {
-        "main": [
-          [
-            {
-              "node": "AI Agent finding best Job1",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "Edit Fields": {
-        "main": [
-          [
-            {
-              "node": "GET Refresh Code1",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "Format Output1": {
-        "main": [
-          [
-            {
-              "node": "AI Agent Best Case Study1",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "Azure OpenAI Chat Model5": {
-        "ai_languageModel": [
-          [
-            {
-              "node": "AI Agent finding best Job1",
-              "type": "ai_languageModel",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "Azure OpenAI Chat Model6": {
-        "ai_languageModel": [
-          [
-            {
-              "node": "AI Agent Best Case Study1",
-              "type": "ai_languageModel",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "AI Agent finding best Job1": {
-        "main": [
-          [
-            {
-              "node": "AI Agent proposal writer1",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "AI Agent proposal writer1": {
-        "main": [
-          [
-            {
-              "node": "Format Output1",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "AI Agent Best Case Study1": {
-        "main": [
-          [
-            {
-              "node": "formal case studies1",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "formal case studies1": {
-        "main": [
-          [
-            {
-              "node": "Download Best Case Study1",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "Download Best Case Study1": {
-        "main": [
-          [
-            {
-              "node": "Send Proposals1",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "Azure OpenAI Chat Model7": {
-        "ai_languageModel": [
-          [
-            {
-              "node": "AI Agent proposal writer1",
-              "type": "ai_languageModel",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "Particular job details": {
-        "main": [
-          [
-            {
-              "node": "Edit Fields1",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "Edit Fields1": {
-        "main": [
-          [
-            {
-              "node": "List  Case Study2",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "GET Refresh Code1": {
-        "main": [
-          [
-            {
-              "node": "Get Access Token for Proposal",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "Webhook": {
-        "main": [
-          [
-            {
-              "node": "Edit Fields",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "Get row(s) in sheet": {
-        "main": [
-          [
-            {
-              "node": "Loop Over Items",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "Loop Over Items": {
-        "main": [
-          [],
-          [
-            {
-              "node": "GET Refresh Code",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "Send Proposals": {
-        "main": [
-          [
-            {
-              "node": "Loop Over Items",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
-      }
-    },
-    "authors": "IT Support",
-    "name": null,
-    "description": null
-  },
+  "activeVersion": null,
   "tags": []
 }
