@@ -1,0 +1,608 @@
+{
+  "updatedAt": "2025-09-12T11:31:57.000Z",
+  "createdAt": "2025-09-08T13:10:40.677Z",
+  "id": "BykSQdHlk9FP9Bwv",
+  "name": "Automate Candidate Rejections with Google Sheets, GPT-4o-mini, Gmail & ClickUp",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1amF-5HBJXfgNr2L0qieDtv6IfEGMDlgyIwleetqZMF8",
+          "mode": "list",
+          "cachedResultName": "Structured Interview Feedback Capture ",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1amF-5HBJXfgNr2L0qieDtv6IfEGMDlgyIwleetqZMF8/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1033546856,
+          "mode": "list",
+          "cachedResultName": "Form responses 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1amF-5HBJXfgNr2L0qieDtv6IfEGMDlgyIwleetqZMF8/edit#gid=1033546856"
+        },
+        "options": {}
+      },
+      "id": "5e09921b-495b-4051-8e7e-094101b0405b",
+      "name": "Get row(s) in sheet",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [
+        -896,
+        272
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "ptC5XVqswYJ3rH2d",
+          "name": "Google Sheets account 3"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -1168,
+        272
+      ],
+      "id": "5691d2d0-3a2d-4916-956b-0ba7dc7b0b87",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "710a8526-abaa-4d5d-9668-847cc648e7fb",
+              "leftValue": "={{ $json.meetsThreshold }}",
+              "rightValue": "={{true}}",
+              "operator": {
+                "type": "number",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        384,
+        272
+      ],
+      "id": "ed0faf32-f431-4d7c-812c-eb0d5900dbde",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "team": "9014872066",
+        "space": "90143686913",
+        "folderless": true,
+        "list": "901411343468",
+        "name": "={{ $json.taskName }}",
+        "additionalFields": {
+          "assignees": [
+            224432632
+          ],
+          "content": "={{ $json.taskDescription }}",
+          "dueDate": "={{ new Date(Date.now() + 7*24*60*60*1000).toISOString() }}"
+        }
+      },
+      "type": "n8n-nodes-base.clickUp",
+      "typeVersion": 1,
+      "position": [
+        1072,
+        288
+      ],
+      "id": "d7aa7e85-fa0b-4297-a41d-4b5c1782dbe9",
+      "name": "Create a task",
+      "credentials": {
+        "clickUpApi": {
+          "id": "kahuAqa6VKsSxhn1",
+          "name": "ClickUp account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Using the following candidate data, generate a complete HTML document for a professional rejection email:\n\n**Candidate Information:**\n- Name: {{ $json.candidateName }}\n- Email: {{ $json.candidateEmail }}\n- Average Score: {{ $json.averageScore }}/5\n- Total Score: {{ $json.totalScore }}/{{ $json.maxPossibleScore }}\n- Feedback Count: {{ $json.feedbackCount }}\n- Individual Scores: {{ JSON.stringify($json.breakdown) }}\n- Interview Notes: {{ $json.allNotes }}\n\nCreate an HTML email that includes:\n1. Professional and respectful tone throughout\n2. Clear but gentle communication of the decision\n3. Acknowledgment of their effort and time invested\n4. Constructive feedback highlighting their strengths\n5. Areas for potential improvement (framed positively)\n6. Encouragement to apply for future opportunities\n7. Professional styling with clean, readable formatting\n8. Gratitude for their participation in the process\n\nThe email should be compassionate, specific to their performance, and maintain their confidence while being honest about the outcome. Avoid being overly detailed about weaknesses and focus on constructive guidance.",
+        "messages": {
+          "messageValues": [
+            {
+              "message": "You are a professional HR communication specialist creating compassionate and respectful rejection emails. Generate professional, empathetic HTML content that maintains the candidate's dignity while clearly communicating the decision. Focus on providing constructive feedback and encouragement for future opportunities."
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.7,
+      "position": [
+        720,
+        656
+      ],
+      "id": "d5f58e01-4ca6-4e7f-8b8b-175f8009f201",
+      "name": "Basic LLM Chain"
+    },
+    {
+      "parameters": {
+        "model": "gpt-4o-mini",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatAzureOpenAi",
+      "typeVersion": 1,
+      "position": [
+        640,
+        896
+      ],
+      "id": "1d13280a-7c62-4d56-a5c7-60b21f83517a",
+      "name": "Azure OpenAI Chat Model1",
+      "credentials": {
+        "azureOpenAiApi": {
+          "id": "C3WzT18XqF8OdVM6",
+          "name": "Azure Open AI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "Execute workflow' (Manual Trigger)\n\nType: Manual Trigger\nAction: Starts the workflow when manually executed\nDescription: Entry point for the automation",
+        "height": 176
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1232,
+        32
+      ],
+      "typeVersion": 1,
+      "id": "896b7ce1-dc3d-412b-a102-1a1a6a67a204",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "Get row(s) in sheet (Google Sheets)\n\nType: Google Sheets Reader\nAction: Retrieves interview feedback data from Google Sheets\nDescription: Pulls structured interview feedback from \"Form responses 1\" sheet",
+        "height": 208
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -960,
+        432
+      ],
+      "typeVersion": 1,
+      "id": "1cb85452-3ffe-467f-a22a-3b5d3ad72463",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "Azure OpenAI Chat Model2 (AI Model)\n\nType: Azure OpenAI Connection\nAction: Provides GPT-4o-mini model for data processing\nDescription: Backend AI model for parsing interview feedback",
+        "height": 176
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -528,
+        576
+      ],
+      "typeVersion": 1,
+      "id": "a94b4a1b-9826-4425-b74d-83222509b02c",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "Basic LLM Chain2 (AI Processing)\n\nType: LangChain LLM\nAction: Processes raw interview data using GPT-4o-mini\nDescription: Converts Google Sheets data into structured candidate profiles with scores",
+        "height": 192
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -592,
+        16
+      ],
+      "typeVersion": 1,
+      "id": "2144dd60-1439-43cc-ad5f-2c84ad3a78f3",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "Set threshold flag (meetsThreshold)\n\nType: Code Node\nAction: Adds threshold check (averageScore >= 3)\nDescription: Determines if candidates meet minimum requirements",
+        "height": 192
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -208,
+        32
+      ],
+      "typeVersion": 1,
+      "id": "50700ff2-3f4d-497c-b327-59780c52e734",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "Build ClickUp rejection task\n\nType: Code Node\nAction: Prepares rejection task data for ClickUp\nDescription: Formats candidate rejection information for tracking",
+        "height": 192
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        688,
+        432
+      ],
+      "typeVersion": 1,
+      "id": "ae0c80f9-7de8-4c82-95ae-225d82ee9fa7",
+      "name": "Sticky Note11"
+    },
+    {
+      "parameters": {
+        "content": "Create a task (Project Management)\n\nType: ClickUp\nAction: Creates rejection tracking task in ClickUp\nDescription: Records rejected candidates in project management",
+        "height": 192
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1200,
+        384
+      ],
+      "typeVersion": 1,
+      "id": "b481151c-59fb-4f0a-a345-e594fbe113f1",
+      "name": "Sticky Note12"
+    },
+    {
+      "parameters": {
+        "content": "Basic LLM Chain (Rejection Email Generation)\n\nType: LangChain LLM\nAction: Generates compassionate HTML rejection email\nDescription: Creates professional, respectful rejection communication with constructive feedback",
+        "height": 224
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        800,
+        800
+      ],
+      "typeVersion": 1,
+      "id": "5f326d40-38b1-491a-9b7a-58cc8a77374d",
+      "name": "Sticky Note13"
+    },
+    {
+      "parameters": {
+        "content": "Compose rejection email + metadata\nType: Code Node\nAction: Combines rejection email content with candidate data\nDescription: Prepares final rejection email for sending",
+        "height": 192
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1120,
+        832
+      ],
+      "typeVersion": 1,
+      "id": "10a811f1-82cf-44af-b91f-76f9e49e3ea9",
+      "name": "Sticky Note14"
+    },
+    {
+      "parameters": {
+        "content": "Send Rejection Email1 (Send Rejection Email)\n\nType: Gmail\nAction: Sends professional rejection email to candidates\nDescription: Delivers compassionate rejection notification",
+        "height": 208
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1664,
+        672
+      ],
+      "typeVersion": 1,
+      "id": "f39d6a97-51a9-4789-b8e7-56a105732c75",
+      "name": "Sticky Note15"
+    },
+    {
+      "parameters": {
+        "content": "Azure OpenAI Chat Model1 (AI Model)\n\nType: Azure OpenAI Connection\nAction: Powers rejection email generation\nDescription: Backend model for creating empathetic rejection emails",
+        "height": 192
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        480,
+        1040
+      ],
+      "typeVersion": 1,
+      "id": "a6b0c4d6-5ff9-4b7b-94d2-0e5d62b491bb",
+      "name": "Sticky Note16"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Analyze the following interview feedback data and return structured candidate profiles:\n\n{{ JSON.stringify($json, null, 2) }}\n\n**Required Output Format:** Return a JSON array with this exact structure:\n\n```json\n[\n  {\n    \"candidateName\": \"string\",\n    \"candidateEmail\": \"string\", \n    \"averageScore\": number,\n    \"feedbackCount\": number,\n    \"allNotes\": \"string\",\n    \"shouldReject\": boolean,\n    \"totalScore\": number,\n    \"maxPossibleScore\": number,\n    \"breakdown\": [\n      {\n        \"interviewer\": \"string\",\n        \"techSkills\": number,\n        \"communication\": number, \n        \"problemSolving\": number,\n        \"cultureFit\": number\n      }\n    ]\n  }\n]",
+        "messages": {
+          "messageValues": [
+            {
+              "message": "You are a candidate evaluation AI agent specializing in processing interview feedback data. Your role is to analyze candidate interview data and calculate comprehensive evaluation metrics in a specific JSON format.  You excel at: - Parsing interview feedback with varying field formats - Calculating average scores across multiple competencies   - Extracting candidate contact information - Structuring evaluation data for decision-making - Handling field name variations (spaces, newlines, special characters)"
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.7,
+      "position": [
+        -592,
+        272
+      ],
+      "id": "e5e7f8d3-cbfc-4b62-9271-35a14eda8a26",
+      "name": "Basic LLM Chain2"
+    },
+    {
+      "parameters": {
+        "model": "gpt-4o-mini",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatAzureOpenAi",
+      "typeVersion": 1,
+      "position": [
+        -640,
+        544
+      ],
+      "id": "25d2de23-9b00-4bee-99e3-ea2e72243451",
+      "name": "Azure OpenAI Chat Model2",
+      "credentials": {
+        "azureOpenAiApi": {
+          "id": "C3WzT18XqF8OdVM6",
+          "name": "Azure Open AI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "If (Decision Branch)\n\nType: Conditional Logic\nAction: Routes candidates based on meetsThreshold value\nDescription: TRUE branch = candidates who passed (score ≥3), FALSE branch = rejected candidates",
+        "height": 192
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        304,
+        32
+      ],
+      "typeVersion": 1,
+      "id": "4c314c63-1fec-4d5e-b372-18c55d7c4136",
+      "name": "Sticky Note17"
+    },
+    {
+      "parameters": {
+        "content": "Consolidate candidate data from LLM\n\nType: Code Node\nAction: Extracts JSON from LLM response and consolidates candidate data\nDescription: Merges multiple feedback entries per candidate and calculates final scores",
+        "height": 208
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        48,
+        464
+      ],
+      "typeVersion": 1,
+      "id": "3fbc3a95-eacc-4775-8c9b-c503621d2667",
+      "name": "Sticky Note18"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.candidateEmail }}",
+        "subject": "=Interview Update - {{ $json.candidateName }}",
+        "message": "={{ $json.htmlContent }}",
+        "options": {}
+      },
+      "id": "067dff48-20a6-4463-96b6-2d677bed7e80",
+      "name": "Send Rejection Email1",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1456,
+        656
+      ],
+      "webhookId": "86f9bdab-5560-4c7e-bbdd-85291f22843d",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "RchiXdmY8WaQhOSJ",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get the input data from previous node\nconst inputData = $input.all();\n\n// Process each item and add threshold check\nconst processedData = inputData.map(item => {\n  const data = item.json;\n  \n  // Convert averageScore to number (in case it's a string)\n  const averageScore = Number(data.averageScore);\n  \n  // Check if averageScore >= 3 (candidates with scores 3 or above go to true branch)\n  const shouldGoToTrueBranch = averageScore >= 3;\n  \n  // Return the data with the threshold check added\n  return {\n    json: {\n      ...data,\n      averageScore: averageScore, // Ensure it's a number\n      meetsThreshold: shouldGoToTrueBranch\n    }\n  };\n});\n\nreturn processedData;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -144,
+        272
+      ],
+      "id": "25480bf3-4577-4bca-9a69-af3fe247b6dd",
+      "name": "Set threshold flag (meetsThreshold)"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get the LLM output\nconst inputData = $input.all();\n\n// Function to extract JSON from markdown code blocks\nfunction extractJsonFromText(text) {\n  // Remove markdown code block markers\n  const cleanText = text.replace(/```json\\n|\\n```/g, '');\n  try {\n    return JSON.parse(cleanText);\n  } catch (error) {\n    console.error('Failed to parse JSON:', error);\n    return null;\n  }\n}\n\n// Process each LLM response and extract the JSON\nlet allCandidates = [];\nconst candidateMap = new Map();\n\ninputData.forEach(item => {\n  const jsonData = extractJsonFromText(item.json.text);\n  if (jsonData && Array.isArray(jsonData)) {\n    jsonData.forEach(candidate => {\n      const candidateName = candidate.candidateName;\n      \n      if (candidateMap.has(candidateName)) {\n        // Merge with existing candidate data\n        const existing = candidateMap.get(candidateName);\n        \n        // Combine breakdown arrays\n        existing.breakdown.push(...candidate.breakdown);\n        \n        // Combine notes\n        existing.allNotes += '\\n\\n' + candidate.allNotes;\n        \n        // Recalculate totals\n        existing.feedbackCount += candidate.feedbackCount;\n        existing.totalScore += candidate.totalScore;\n        existing.maxPossibleScore += candidate.maxPossibleScore;\n        \n        // Recalculate average score\n        const allScores = existing.breakdown.flatMap(b => [\n          b.techSkills, b.communication, b.problemSolving, b.cultureFit\n        ]);\n        existing.averageScore = parseFloat((allScores.reduce((a, b) => a + b, 0) / allScores.length).toFixed(2));\n        \n        // Update shouldReject based on new average\n        existing.shouldReject = existing.averageScore < 3.0;\n        \n        // Add meetsThreshold field\n        existing.meetsThreshold = existing.averageScore >= 3;\n        \n      } else {\n        // Add new candidate with meetsThreshold\n        const newCandidate = { \n          ...candidate,\n          meetsThreshold: candidate.averageScore >= 3\n        };\n        candidateMap.set(candidateName, newCandidate);\n      }\n    });\n  }\n});\n\n// Convert map to array\nconst result = Array.from(candidateMap.values());\n\nreturn result.map(candidate => ({ json: candidate }));"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        112,
+        272
+      ],
+      "id": "5927b63e-c1f1-4876-9317-428455239b5a",
+      "name": "Consolidate candidate data from LLM"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get the input data\nconst inputData = $input.all();\n\n// Process each candidate\nconst processedData = inputData.map(item => {\n  const data = item.json;\n  \n  // Create task name\n  const taskName = `Interview Review - ${data.candidateName}`;\n  \n  // Create detailed description\n  const description = `REJECT_CANDIDATE\n\n**Candidate Information:**\n- Name: ${data.candidateName}\n- Email: ${data.candidateEmail}\n- Average Score: ${data.averageScore}/5\n- Total Score: ${data.totalScore}/${data.maxPossibleScore}\n- Feedback Count: ${data.feedbackCount}\n- Should Reject: ${data.shouldReject ? 'Yes' : 'No'}\n- Meets Threshold: ${data.meetsThreshold ? 'Yes' : 'No'}\n\n**Individual Scores:**\n${data.breakdown.map(b => \n  `Interviewer: ${b.interviewer}\n  - Tech Skills: ${b.techSkills}/5\n  - Communication: ${b.communication}/5\n  - Problem Solving: ${b.problemSolving}/5\n  - Culture Fit: ${b.cultureFit}/5`\n).join('\\n\\n')}\n\n**All Notes:**\n${data.allNotes}\n\n**Recommendation:** This candidate does not meet our requirements and should be rejected.`;\n\n  return {\n    json: {\n      taskName: taskName,\n      taskDescription: description,\n      candidateName: data.candidateName,\n      candidateEmail: data.candidateEmail,\n      averageScore: data.averageScore,\n      shouldReject: data.shouldReject\n    }\n  };\n});\n\nreturn processedData;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        752,
+        288
+      ],
+      "id": "0a3a33da-b34f-4a2f-8ebe-5ce83f17a13b",
+      "name": "Build ClickUp rejection task"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get the input data from the current node (LLM output)\nconst llmData = $input.all()[0].json;\n\n// Get candidate data from the IF node (which has the original candidate info)\nconst candidateData = $('If').first().json;\n\nreturn [{\n  json: {\n    htmlContent: llmData.text, // The rejection email HTML from LLM\n    candidateName: candidateData.candidateName,\n    candidateEmail: candidateData.candidateEmail,\n    averageScore: candidateData.averageScore,\n    totalScore: candidateData.totalScore,\n    maxPossibleScore: candidateData.maxPossibleScore,\n    feedbackCount: candidateData.feedbackCount,\n    rejectionDate: new Date().toISOString(),\n    emailSubject: `Thank you for your interest - ${candidateData.candidateName}`,\n    taskName: `Interview Review - ${candidateData.candidateName} - REJECTED`,\n    taskDescription: `CANDIDATE REJECTED - ${candidateData.candidateName} has not met the minimum requirements. Average Score: ${candidateData.averageScore}/5`\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1168,
+        656
+      ],
+      "id": "b69b047f-661b-4c2d-9521-024a41a247c4",
+      "name": "Compose rejection email + metadata"
+    }
+  ],
+  "connections": {
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Build ClickUp rejection task",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Azure OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "Compose rejection email + metadata",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Azure OpenAI Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain2",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain2": {
+      "main": [
+        [
+          {
+            "node": "Set threshold flag (meetsThreshold)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set threshold flag (meetsThreshold)": {
+      "main": [
+        [
+          {
+            "node": "Consolidate candidate data from LLM",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Consolidate candidate data from LLM": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build ClickUp rejection task": {
+      "main": [
+        [
+          {
+            "node": "Create a task",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Compose rejection email + metadata": {
+      "main": [
+        [
+          {
+            "node": "Send Rejection Email1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": {},
+  "versionId": "b425ebc4-efc0-47f7-9a3f-0469fca8a071",
+  "activeVersionId": null,
+  "triggerCount": 0,
+  "shared": [
+    {
+      "updatedAt": "2025-09-08T13:10:40.680Z",
+      "createdAt": "2025-09-08T13:10:40.680Z",
+      "role": "workflow:owner",
+      "workflowId": "BykSQdHlk9FP9Bwv",
+      "projectId": "iXigq15mRQoAAIrt"
+    }
+  ],
+  "activeVersion": null,
+  "tags": []
+}
