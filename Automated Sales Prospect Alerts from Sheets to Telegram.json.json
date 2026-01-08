@@ -1,0 +1,191 @@
+{
+  "updatedAt": "2025-09-11T06:47:08.000Z",
+  "createdAt": "2025-08-29T11:34:24.328Z",
+  "id": "0Ax0atcMpGFzLIh0",
+  "name": "Automated Sales Prospect Alerts from Sheets to Telegram",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "content": "Function: Transforms raw sheet data into user-friendly format\nPurpose: Creates clean, organized message structure for notifications",
+        "height": 128,
+        "width": 208,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        64,
+        80
+      ],
+      "typeVersion": 1,
+      "id": "ae109ec2-371a-4911-bcc0-250801c2593a",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "Function: Retrieves lead and sales data from your spreadsheet\nData Types: Customer info, contact details, lead status, sales records",
+        "height": 144,
+        "width": 208,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -160,
+        -272
+      ],
+      "typeVersion": 1,
+      "id": "54054d3e-cb16-4b27-bb91-64a3c60191e0",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -336,
+        -80
+      ],
+      "id": "70431db8-1e8b-4cc4-9657-409b35ad4e17",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "chatId": "{{paste your chat id here }}",
+        "text": "={{ $json.messageText }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        352,
+        -80
+      ],
+      "id": "aefd1dff-b4fb-40bf-8a43-0f9358bb5a86",
+      "name": "Send a text message",
+      "webhookId": "4f35a13c-afa2-457c-8432-8ae7891e9f61",
+      "credentials": {
+        "telegramApi": {
+          "id": "7YyOQlYeUAQ5mTTN",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "{{paste your url here}}",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "",
+          "mode": "list",
+          "cachedResultName": "",
+          "cachedResultUrl": ""
+        }
+      },
+      "id": "6833dfee-2011-4bfc-bfad-ce140415581f",
+      "name": "Get row(s) in sheet",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [
+        -96,
+        -80
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "ptC5XVqswYJ3rH2d",
+          "name": "Google Sheets account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "Function: Sends formatted lead information as notifications\nPlatform: Telegram (as shown by the icon)\nTrigger: Automatically sends when new leads are detected\nRecipients: Sales team members for quick follow-up\n\n",
+        "height": 192,
+        "width": 224,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        288,
+        -304
+      ],
+      "typeVersion": 1,
+      "id": "5e10f694-2e72-4602-86a9-9140b5a883b7",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"messageText\": \"*🎯 NEW LEAD ALERT*\\n\\n*Company:* {{ $json['Company Name'] }}\\n*Contact:* {{ $json['Contact Person'] }}\\n*Position:* {{ $json['Job Title'] }}\\n*Industry:* {{ $json.Industry }}\\n*Location:* {{ $json.Location }}\\n\\n📧 *Email:* {{ $json.Email }}\\n📱 *Phone:* {{ $json.Phone }}\\n🔗 *Source:* {{ $json['Lead Source'] }}\\n\\n*Status:* {{ $json.Status === 'New' ? '🆕 New' : $json.Status === 'Contacted' ? '📞 Contacted' : $json.Status === 'In Progress' ? '⏳ In Progress' : $json.Status === 'Won' ? '✅ Won' : '❌ Lost' }}\\n\\n_Ready to connect with this prospect!_\",\n  \n  \"contactInfo\": {\n    \"name\": \"{{ $json['Contact Person'] }}\",\n    \"company\": \"{{ $json['Company Name'] }}\",\n    \"email\": \"{{ $json.Email }}\",\n    \"phone\": \"{{ $json.Phone }}\",\n    \"cleanPhone\": \"{{ $json.Phone.replace('+91-', '91').replace('-', '') }}\",\n    \"industry\": \"{{ $json.Industry }}\",\n    \"location\": \"{{ $json.Location }}\",\n    \"status\": \"{{ $json.Status }}\",\n    \"source\": \"{{ $json['Lead Source'] }}\"\n  },\n  \n  \"quickActions\": {\n    \"callLink\": \"tel:{{ $json.Phone.replace('+91-', '') }}\",\n    \"emailLink\": \"mailto:{{ $json.Email }}?subject=Regarding {{ $json['Company Name'] }} Partnership\",\n    \"whatsappLink\": \"https://wa.me/{{ $json.Phone.replace('+91-', '91').replace('-', '') }}\",\n    \"linkedinSearch\": \"https://www.linkedin.com/search/results/people/?keywords={{ $json['Contact Person'] }} {{ $json['Company Name'] }}\"\n  },\n  \n  \"priority\": \"{{ $json['Lead Source'] === 'Referral' ? 'HIGH' : $json['Lead Source'] === 'LinkedIn' ? 'MEDIUM' : 'STANDARD' }}\",\n  \n  \"statusEmoji\": \"{{ $json.Status === 'New' ? '🆕' : $json.Status === 'Contacted' ? '📞' : $json.Status === 'In Progress' ? '⏳' : $json.Status === 'Won' ? '✅' : '❌' }}\",\n  \n  \"nextAction\": \"{{ $json.Status === 'New' ? 'Initial Contact Required' : $json.Status === 'Contacted' ? 'Follow-up Needed' : $json.Status === 'In Progress' ? 'Check Progress' : 'Complete' }}\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        112,
+        -80
+      ],
+      "id": "5cd83455-a157-48ec-8be4-988f1f5f88c0",
+      "name": "Prepare Lead Message"
+    }
+  ],
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Prepare Lead Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Lead Message": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": {},
+  "versionId": "4b6c790f-fbc1-435d-bd10-d27bae84b3ea",
+  "activeVersionId": null,
+  "triggerCount": 0,
+  "shared": [
+    {
+      "updatedAt": "2025-08-29T11:34:24.331Z",
+      "createdAt": "2025-08-29T11:34:24.331Z",
+      "role": "workflow:owner",
+      "workflowId": "0Ax0atcMpGFzLIh0",
+      "projectId": "iXigq15mRQoAAIrt"
+    }
+  ],
+  "activeVersion": null,
+  "tags": []
+}
