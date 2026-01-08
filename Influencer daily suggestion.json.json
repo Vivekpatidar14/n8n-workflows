@@ -1,207 +1,580 @@
 {
-  "updatedAt": "2025-08-12T03:46:25.000Z",
-  "createdAt": "2025-08-07T11:52:23.763Z",
-  "id": "4Mr57mBTiQiphFDX",
-  "name": "Influencer daily suggestion",
+  "updatedAt": "2025-09-12T02:03:10.000Z",
+  "createdAt": "2025-09-05T05:23:02.661Z",
+  "id": "9KRdh9YURctQ9kIo",
+  "name": "Automated Lead Intelligence: Enrich Sheets Data with Clearbit & Sync to CRMs",
   "active": false,
   "isArchived": false,
   "nodes": [
     {
       "parameters": {
-        "jsCode": "// Advanced Professional LinkedIn Trending Topics Report Generator\n// Enhanced with Outlook compatibility for consistent email rendering\n\nconst items = $input.all();\nconst currentDate = new Date().toLocaleDateString('en-US', {\n  weekday: 'long',\n  year: 'numeric',\n  month: 'long',\n  day: 'numeric'\n});\n\nconst currentTime = new Date().toLocaleTimeString('en-US', {\n  hour: '2-digit',\n  minute: '2-digit',\n  timeZoneName: 'short'\n});\n\n// Extract trending topics from input with enhanced error handling\nlet trendingTopics = [];\ntry {\n  if (items[0]?.json?.text) {\n    const jsonMatch = items[0].json.text.match(/```json(.+?)```/s);\n    if (jsonMatch && jsonMatch[1]) {\n      trendingTopics = JSON.parse(jsonMatch[1].trim());\n    }\n  } else if (items[0]?.json && Array.isArray(items[0].json)) {\n    trendingTopics = items[0].json;\n  } else if (Array.isArray(items)) {\n    trendingTopics = items.map(item => item.json);\n  }\n} catch (error) {\n  console.error('Error parsing trending topics:', error);\n  trendingTopics = [];\n}\n\n// Generate hashtags function\nconst generateHashtags = (title, description) => {\n  const text = (title + ' ' + description).toLowerCase();\n  const stopWords = ['the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for', 'of', 'with', 'by'];\n  \n  const industryHashtags = {\n    'ai|artificial intelligence|machine learning|ml': ['#AI', '#MachineLearning', '#ArtificialIntelligence', '#TechInnovation'],\n    'remote work|wfh|work from home|hybrid': ['#RemoteWork', '#WFH', '#HybridWork', '#DigitalNomad', '#FlexibleWork'],\n    'leadership|management|executive': ['#Leadership', '#Management', '#ExecutiveInsights', '#LeadershipDevelopment'],\n    'data|analytics|big data|data science': ['#Data', '#DataScience', '#Analytics', '#BigData', '#DataDriven'],\n    'marketing|digital marketing|brand': ['#Marketing', '#DigitalMarketing', '#Branding', '#ContentMarketing'],\n    'startup|entrepreneur|innovation': ['#Startup', '#Entrepreneur', '#Innovation', '#Entrepreneurship'],\n    'mental health|wellness|wellbeing': ['#MentalHealth', '#Wellness', '#WorkLifeBalance', '#EmployeeWellbeing'],\n    'diversity|inclusion|dei': ['#Diversity', '#Inclusion', '#DEI', '#WorkplaceCulture'],\n    'finance|fintech|investment': ['#Finance', '#FinTech', '#Investment', '#FinancialTech'],\n    'sales|revenue|growth': ['#Sales', '#SalesStrategy', '#RevenueGrowth', '#BusinessDevelopment'],\n    'customer|client|service': ['#CustomerExperience', '#CustomerSuccess', '#ClientService'],\n    'technology|tech|digital transformation': ['#Technology', '#Tech', '#DigitalTransformation', '#TechTrends'],\n    'team|collaboration|workplace': ['#Teamwork', '#Collaboration', '#WorkplaceCulture', '#TeamBuilding'],\n    'skill|training|learning|development': ['#SkillDevelopment', '#Learning', '#ProfessionalDevelopment', '#Training'],\n    'productivity|efficiency|automation': ['#Productivity', '#Efficiency', '#Automation', '#WorkSmart']\n  };\n  \n  let hashtags = new Set(['#LinkedIn', '#Professional']);\n  \n  Object.entries(industryHashtags).forEach(([pattern, tags]) => {\n    const regex = new RegExp(pattern, 'i');\n    if (regex.test(text)) {\n      tags.forEach(tag => hashtags.add(tag));\n    }\n  });\n  \n  const titleWords = title.split(/[\\s\\-_]+/)\n    .filter(word => word.length > 3 && !stopWords.includes(word.toLowerCase()))\n    .slice(0, 3);\n    \n  titleWords.forEach(word => {\n    const cleanWord = word.replace(/[^\\w]/g, '');\n    if (cleanWord.length > 2) {\n      hashtags.add('#' + cleanWord.charAt(0).toUpperCase() + cleanWord.slice(1).toLowerCase());\n    }\n  });\n  \n  return Array.from(hashtags).slice(0, 10).join(' ');\n};\n\n// Calculate engagement potential score\nconst calculateEngagementScore = (topic) => {\n  const text = (topic.title + ' ' + topic.description).toLowerCase();\n  let score = 50; // Base score\n  \n  const highEngagementWords = ['ai', 'future', 'trend', 'innovation', 'success', 'growth', 'leadership', 'strategy'];\n  highEngagementWords.forEach(word => {\n    if (text.includes(word)) score += 10;\n  });\n  \n  if (topic.description.length > 100 && topic.description.length < 300) score += 15;\n  \n  if (topic.title.split(' ').length >= 3 && topic.title.split(' ').length <= 8) score += 10;\n  \n  return Math.min(100, score);\n};\n\n// Generate the Outlook-compatible HTML report\nconst htmlReport = `\n<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>LinkedIn Trending Topics Report</title>\n    <!--[if mso]>\n    <noscript>\n        <xml>\n            <o:OfficeDocumentSettings>\n                <o:AllowPNG/>\n                <o:PixelsPerInch>96</o:PixelsPerInch>\n            </o:OfficeDocumentSettings>\n        </xml>\n    </noscript>\n    <![endif]-->\n    <style type=\"text/css\">\n        /* Reset and base styles */\n        body, table, td, p, a, li, blockquote {\n            -webkit-text-size-adjust: 100%;\n            -ms-text-size-adjust: 100%;\n        }\n        \n        table, td {\n            mso-table-lspace: 0pt;\n            mso-table-rspace: 0pt;\n            border-collapse: collapse !important;\n        }\n        \n        body {\n            margin: 0 !important;\n            padding: 0 !important;\n            background-color: #f5f7fa;\n            font-family: Arial, sans-serif;\n            font-size: 14px;\n            line-height: 1.4;\n            color: #333333;\n        }\n        \n        /* Outlook-specific fixes */\n        .outlook-group-fix {\n            width: 100% !important;\n        }\n        \n        /* Main container */\n        .email-container {\n            max-width: 650px;\n            margin: 0 auto;\n            background-color: #ffffff;\n        }\n        \n        /* Header styles */\n        .header {\n            background-color: #0077b5;\n            padding: 30px 20px;\n            text-align: center;\n        }\n        \n        .header h1 {\n            margin: 0 0 10px 0;\n            color: #ffffff;\n            font-size: 28px;\n            font-weight: bold;\n            line-height: 1.2;\n        }\n        \n        .header-subtitle {\n            margin: 0 0 10px 0;\n            color: #ffffff;\n            font-size: 16px;\n            opacity: 0.9;\n        }\n        \n        .header-time {\n            margin: 0;\n            color: #ffffff;\n            font-size: 14px;\n            opacity: 0.8;\n        }\n        \n        /* Stats section */\n        .stats-section {\n            padding: 20px;\n            background-color: #ffffff;\n        }\n        \n        .stats-table {\n            width: 100%;\n            border-collapse: collapse;\n        }\n        \n        .stat-cell {\n            width: 25%;\n            padding: 15px;\n            text-align: center;\n            background-color: #f8f9fa;\n            border: 1px solid #e9ecef;\n            vertical-align: top;\n        }\n        \n        .stat-number {\n            display: block;\n            font-size: 24px;\n            font-weight: bold;\n            color: #0077b5;\n            margin-bottom: 5px;\n            line-height: 1.1;\n        }\n        \n        .stat-label {\n            color: #666666;\n            font-size: 12px;\n            font-weight: normal;\n            margin: 0;\n        }\n        \n        /* Content section */\n        .content-section {\n            padding: 20px;\n            background-color: #ffffff;\n        }\n        \n        /* Main data table */\n        .data-table {\n            width: 100%;\n            border-collapse: collapse;\n            margin: 0;\n        }\n        \n        .data-table th {\n            background-color: #0077b5;\n            color: #ffffff;\n            padding: 12px 8px;\n            text-align: left;\n            font-weight: bold;\n            font-size: 13px;\n            border: 1px solid #005b8c;\n        }\n        \n        .data-table td {\n            padding: 12px 8px;\n            border: 1px solid #e9ecef;\n            vertical-align: top;\n            font-size: 13px;\n            line-height: 1.4;\n        }\n        \n        .data-table tr:nth-child(even) td {\n            background-color: #f8f9fa;\n        }\n        \n        .topic-rank {\n            display: inline-block;\n            background-color: #e3f2fd;\n            color: #0077b5;\n            padding: 3px 8px;\n            font-size: 11px;\n            font-weight: bold;\n            border-radius: 3px;\n            margin-right: 5px;\n        }\n        \n        .topic-title {\n            font-weight: bold;\n            color: #005b8c;\n            margin: 0 0 5px 0;\n        }\n        \n        .engagement-score {\n            display: inline-block;\n            background-color: #e6f7ee;\n            color: #28a745;\n            padding: 3px 8px;\n            font-size: 11px;\n            font-weight: bold;\n            border-radius: 3px;\n            margin-top: 8px;\n        }\n        \n        .hashtags {\n            font-size: 12px;\n            color: #666666;\n            line-height: 1.3;\n            word-break: break-word;\n        }\n        \n        /* Footer */\n        .footer {\n            background-color: #f8f9fa;\n            padding: 20px;\n            text-align: center;\n            color: #666666;\n            font-size: 13px;\n        }\n        \n        /* Mobile responsiveness */\n        @media only screen and (max-width: 600px) {\n            .email-container {\n                width: 100% !important;\n                max-width: 100% !important;\n            }\n            \n            .header h1 {\n                font-size: 24px !important;\n            }\n            \n            .stat-cell {\n                width: 50% !important;\n                display: block !important;\n            }\n            \n            .data-table th,\n            .data-table td {\n                padding: 8px 5px !important;\n                font-size: 12px !important;\n            }\n        }\n    </style>\n</head>\n<body>\n    <!-- Main container table -->\n    <table role=\"presentation\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" width=\"100%\">\n        <tr>\n            <td align=\"center\" style=\"padding: 20px 0; background-color: #f5f7fa;\">\n                \n                <!-- Email container -->\n                <table role=\"presentation\" class=\"email-container\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" width=\"650\" style=\"max-width: 650px;\">\n                    \n                    <!-- Header -->\n                    <tr>\n                        <td class=\"header\">\n                            <h1>📊 LinkedIn Trends Report</h1>\n                            <p class=\"header-subtitle\">Professional insights in structured format</p>\n                            <p class=\"header-time\">${currentDate} • Generated at ${currentTime}</p>\n                        </td>\n                    </tr>\n                    \n                    <!-- Stats Section -->\n                    <tr>\n                        <td class=\"stats-section\">\n                            <table role=\"presentation\" class=\"stats-table\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" width=\"100%\">\n                                <tr>\n                                    <td class=\"stat-cell\">\n                                        <span class=\"stat-number\">${trendingTopics.length}</span>\n                                        <p class=\"stat-label\">Trending Topics</p>\n                                    </td>\n                                    <td class=\"stat-cell\">\n                                        <span class=\"stat-number\">${Math.round(trendingTopics.reduce((acc, topic) => acc + calculateEngagementScore(topic), 0) / trendingTopics.length)}%</span>\n                                        <p class=\"stat-label\">Avg Engagement</p>\n                                    </td>\n                                    <td class=\"stat-cell\">\n                                        <span class=\"stat-number\">${trendingTopics.length * 10}+</span>\n                                        <p class=\"stat-label\">Hashtags</p>\n                                    </td>\n                                    <td class=\"stat-cell\">\n                                        <span class=\"stat-number\">100%</span>\n                                        <p class=\"stat-label\">Ready to Use</p>\n                                    </td>\n                                </tr>\n                            </table>\n                        </td>\n                    </tr>\n                    \n                    <!-- Content Section -->\n                    <tr>\n                        <td class=\"content-section\">\n                            <table role=\"presentation\" class=\"data-table\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" width=\"100%\">\n                                <thead>\n                                    <tr>\n                                        <th width=\"8%\">Rank</th>\n                                        <th width=\"25%\">Topic</th>\n                                        <th width=\"35%\">Description</th>\n                                        <th width=\"32%\">Hashtags</th>\n                                    </tr>\n                                </thead>\n                                <tbody>\n                                    ${trendingTopics.map((topic, index) => {\n                                        const hashtags = generateHashtags(topic.title, topic.description);\n                                        const engagementScore = calculateEngagementScore(topic);\n                                        \n                                        return `\n                                        <tr>\n                                            <td align=\"center\">\n                                                <span class=\"topic-rank\">#${index + 1}</span>\n                                            </td>\n                                            <td>\n                                                <p class=\"topic-title\">${topic.title}</p>\n                                            </td>\n                                            <td>\n                                                ${topic.description}\n                                                <div class=\"engagement-score\">${engagementScore}% Engagement</div>\n                                            </td>\n                                            <td>\n                                                <div class=\"hashtags\">${hashtags}</div>\n                                            </td>\n                                        </tr>\n                                        `;\n                                    }).join('')}\n                                </tbody>\n                            </table>\n                        </td>\n                    </tr>\n                    \n                    <!-- Footer -->\n                    <tr>\n                        <td class=\"footer\">\n                            <p>🤖 Automated LinkedIn Intelligence System • Generated on ${currentDate}</p>\n                        </td>\n                    </tr>\n                    \n                </table>\n                \n            </td>\n        </tr>\n    </table>\n</body>\n</html>\n`;\n\n// Enhanced email subject with personalization\nconst emailSubject = `📊 ${trendingTopics.length} LinkedIn Trends - Structured Report ${currentDate}`;\n\n// Enhanced summary with engagement metrics\nconst topicsSummary = trendingTopics.map((topic, index) => \n  `${index + 1}. ${topic.title} (${calculateEngagementScore(topic)}% engagement)`\n).join('\\n');\n\n// Return comprehensive data package\nreturn [{\n  json: {\n    email_html: htmlReport,\n    email_subject: emailSubject,\n    topics_summary: topicsSummary,\n    topics_count: trendingTopics.length,\n    generation_date: new Date().toISOString(),\n    average_engagement_score: Math.round(trendingTopics.reduce((acc, topic) => acc + calculateEngagementScore(topic), 0) / trendingTopics.length),\n    total_hashtags: trendingTopics.length * 10,\n    trending_topics: trendingTopics.map((topic, index) => ({\n      ...topic,\n      engagement_score: calculateEngagementScore(topic),\n      rank: index + 1,\n      hashtags: generateHashtags(topic.title, topic.description),\n      content_suggestion: topic.description.length > 200 ? topic.description.substring(0, 200) + '...' : topic.description\n    }))\n  }\n}];"
+        "functionCode": "// Extract domain from email address\nconst items = $input.all();\n\nreturn items.map(item => {\n  const email = item.json['Email'] || '';\n  let domain = '';\n  \n  if (email && email.includes('@')) {\n    domain = email.split('@')[1].toLowerCase();\n  }\n  \n  return {\n    json: {\n      ...item.json,\n      'Domain': domain\n    }\n  };\n});"
       },
-      "id": "47228c55-bd7e-459f-93ea-5c4185c4863f",
-      "name": "Process and Identify Top Topics",
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
+      "id": "b5f6b0d6-369f-4c5f-b118-94a29839f8a9",
+      "name": "Extract Domain from Email",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
       "position": [
-        592,
-        -128
+        -704,
+        -80
       ]
     },
     {
       "parameters": {
-        "promptType": "define",
-        "text": "=Fetch the latest trending topics from LinkedIn along with a short, relevant description for each topic. Return the results as an array of objects, where each object contains a `title` and `description`. Ensure the topics are current, professional, and suitable for a business or corporate audience.\n",
-        "messages": {
-          "messageValues": [
-            {
-              "message": "You are an AI assistant integrated into an automation workflow designed to extract trending professional topics from LinkedIn. Your task is to return a list of 3–5 currently trending LinkedIn topics, each with a brief but informative description (1–2 sentences). These results will be used in a later step to generate a formatted newsletter email for professionals. Ensure the language is clear, concise, and professional."
+        "url": "=https://logo.clearbit.com/{{ $json['Domain'] }}",
+        "options": {
+          "redirect": {
+            "redirect": {
+              "maxRedirects": 5
             }
-          ]
-        },
-        "batching": {}
+          },
+          "response": {
+            "response": {
+              "fullResponse": true
+            }
+          }
+        }
       },
-      "type": "@n8n/n8n-nodes-langchain.chainLlm",
-      "typeVersion": 1.7,
+      "id": "069a4d85-19c3-46b9-b759-4c8e5d9974c8",
+      "name": "Get Company Logo",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
       "position": [
-        208,
-        -240
-      ],
-      "id": "adab755d-3887-4773-9fdb-d772506fef71",
-      "name": "Basic LLM Chain"
+        -432,
+        -192
+      ]
     },
     {
       "parameters": {
-        "model": "gpt-4o-mini",
-        "options": {}
+        "url": "=https://autocomplete.clearbit.com/v1/companies/suggest?query={{ $json['Domain'] }}",
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
       },
-      "type": "@n8n/n8n-nodes-langchain.lmChatAzureOpenAi",
+      "id": "a729bd15-33db-441c-bc2f-a82c074587d3",
+      "name": "Clearbit Company Enrichment",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        -432,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "// Production Merge Enrichment Function\nconst triggerData = $('Extract Domain from Email').first().json;\nconst logoData = $('Get Company Logo').first().json;\nconst clearbitData = $('Clearbit Company Enrichment').first().json;\n\n// Extract logo URL (priority: direct logo API > clearbit logo > fallback)\nlet logoUrl = '';\nif (logoData && logoData.url) {\n  logoUrl = logoData.url;\n} else if (clearbitData && clearbitData.logo) {\n  logoUrl = clearbitData.logo;\n} else {\n  logoUrl = `https://logo.clearbit.com/${triggerData.Domain}`;\n}\n\n// Use enriched company name from Clearbit if available\nlet enrichedCompanyName = triggerData['Company Name'] || '';\nif (clearbitData && clearbitData.name) {\n  enrichedCompanyName = clearbitData.name;\n}\n\n// Determine industry from enriched company name\nlet enrichedIndustry = 'General Business';\nconst companyNameLower = enrichedCompanyName.toLowerCase();\nif (companyNameLower.includes('tech') || companyNameLower.includes('web services') || companyNameLower.includes('software')) {\n  enrichedIndustry = 'Technology';\n} else if (companyNameLower.includes('engineer') || companyNameLower.includes('engineering')) {\n  enrichedIndustry = 'Engineering Services';\n} else if (companyNameLower.includes('philosophy')) {\n  enrichedIndustry = 'Consulting Services';\n}\n\n// Generate brand colors based on industry\nlet brandColors = '#000000';\nswitch(enrichedIndustry) {\n  case 'Technology':\n    brandColors = '#0066CC';\n    break;\n  case 'Engineering Services':\n    brandColors = '#FF6B35';\n    break;\n  case 'Consulting Services':\n    brandColors = '#8A2BE2';\n    break;\n  default:\n    brandColors = '#' + Math.floor(Math.random()*16777215).toString(16).padStart(6, '0');\n}\n\nreturn [{\n  json: {\n    'Lead Name': triggerData['Contact Person'] || '',\n    'Email': triggerData['Email'] || '',\n    'Company': enrichedCompanyName,\n    'Enriched Industry': enrichedIndustry,\n    'Logo URL': logoUrl,\n    'Brand Colors': brandColors,\n    'Assigned Rep': triggerData['Assigness'] || '',\n    'Notes': `Lead enriched on ${new Date().toISOString().split('T')[0]}. Enhanced company: ${enrichedCompanyName}. Domain: ${clearbitData?.domain || triggerData.Domain}. Industry: ${enrichedIndustry}.`,\n    'Original Status': triggerData['Status'] || '',\n    'Meeting Date': triggerData['Meeting Date'] || '',\n    'Domain Verified': clearbitData?.domain || triggerData.Domain,\n    'Enrichment Source': 'Clearbit API'\n  }\n}];"
+      },
+      "id": "6c4ef611-64ba-4913-a103-422ebd5d4aa7",
+      "name": "Merge Enrichment Data",
+      "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        336,
-        -16
+        64,
+        -80
       ],
-      "id": "3f0985b6-926d-4cdf-ade6-653cec0c5b50",
-      "name": "Azure OpenAI Chat Model",
+      "retryOnFail": false,
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "1t48jAkJ0XxK2xVMUWvL71vP5feN_ZDC21W6Pu7nK_Ng",
+          "mode": "list",
+          "cachedResultName": "Lead Profile Enrichment",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1t48jAkJ0XxK2xVMUWvL71vP5feN_ZDC21W6Pu7nK_Ng/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1t48jAkJ0XxK2xVMUWvL71vP5feN_ZDC21W6Pu7nK_Ng/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ $json.id }}",
+            "name": "={{ $json.name }}",
+            "url": "={{ $json.url }}",
+            "property_name": "={{ $json.property_name }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "name",
+              "displayName": "name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "url",
+              "displayName": "url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "property_name",
+              "displayName": "property_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "86cac053-0ae2-406f-ba48-ce2f92d90460",
+      "name": "Append to Enriched Leads Sheet",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [
+        592,
+        -240
+      ],
       "credentials": {
-        "azureOpenAiApi": {
-          "id": "C3WzT18XqF8OdVM6",
-          "name": "Azure Open AI account"
+        "googleSheetsOAuth2Api": {
+          "id": "ptC5XVqswYJ3rH2d",
+          "name": "Google Sheets account 3"
         }
       }
+    },
+    {
+      "parameters": {
+        "team": "9014872066",
+        "space": "90143686913",
+        "folderless": true,
+        "list": "901411343468",
+        "name": "={{ $json['Lead Name'] }}",
+        "additionalFields": {
+          "assignees": [
+            224432632
+          ],
+          "content": "={{ $json.Notes }}",
+          "dueDate": "={{ $json['Meeting Date'] }}"
+        }
+      },
+      "type": "n8n-nodes-base.clickUp",
+      "typeVersion": 1,
+      "position": [
+        352,
+        32
+      ],
+      "id": "d9652af1-de37-4084-b206-a06b2434e023",
+      "name": "Create a task",
+      "credentials": {
+        "clickUpApi": {
+          "id": "kahuAqa6VKsSxhn1",
+          "name": "ClickUp account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "id": "booking-status-check",
+              "leftValue": "={{ $json['Booking Status'] }}",
+              "rightValue": "BOOKED",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            },
+            {
+              "id": "hours-elapsed-check",
+              "leftValue": "={{ Math.floor((new Date() - new Date($json.initialReplyDate)) / (1000 * 60 * 60)) }}",
+              "rightValue": 24,
+              "operator": {
+                "type": "number",
+                "operation": "gte"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "id": "19015249-6fcb-497e-8326-2635dbd72067",
+      "name": "Check If Unbooked",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        -976,
+        -80
+      ]
     },
     {
       "parameters": {},
       "type": "n8n-nodes-base.manualTrigger",
       "typeVersion": 1,
       "position": [
-        -64,
+        -1440,
         -80
       ],
-      "id": "0d3852aa-ace4-49bb-80ff-b30734ed63af",
+      "id": "bace46f7-0b1d-457b-9756-fb160f46a8d0",
       "name": "When clicking ‘Execute workflow’"
     },
     {
       "parameters": {
-        "resource": "message",
-        "subject": "=LinkedIn Report",
-        "includeHtml": true,
-        "htmlMessage": "={{ $json.email_html }}",
-        "message": "Linkedin Report",
-        "toList": [
-          "vivek.patidar@techdome.net.in"
-        ],
-        "additionalFields": {}
+        "resource": "databasePage",
+        "databaseId": {
+          "__rl": true,
+          "value": "265802b9-1fa0-806f-a52a-e6d71d9ff2e0",
+          "mode": "list",
+          "cachedResultName": "test db",
+          "cachedResultUrl": "https://www.notion.so/265802b91fa0806fa52ae6d71d9ff2e0"
+        },
+        "title": "={{ $json.Company }}",
+        "blockUi": {
+          "blockValues": [
+            {
+              "textContent": "={{ $json['Lead Name'] }}"
+            },
+            {
+              "textContent": "={{ $json.Email }}"
+            },
+            {
+              "textContent": "={{ $json['Enriched Industry'] }}"
+            },
+            {
+              "textContent": "={{ $json['Logo URL'] }}"
+            },
+            {
+              "textContent": "={{ $json['Brand Colors'] }}"
+            },
+            {
+              "textContent": "={{ $json['Assigned Rep'] }}"
+            },
+            {
+              "textContent": "={{ $json.Notes }}"
+            },
+            {
+              "textContent": "={{ $json['Meeting Date'] }}"
+            }
+          ]
+        },
+        "options": {}
       },
-      "id": "c3f5df3f-80a2-4c4b-be02-a513c636e98d",
-      "name": "Send Daily Report Email",
-      "type": "n8n-nodes-base.gmail",
-      "typeVersion": 1,
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2.2,
       "position": [
-        864,
-        -128
+        336,
+        -240
       ],
+      "id": "37248473-7f25-49f5-be69-87f71f8f89aa",
+      "name": "Create a database page",
       "credentials": {
-        "gmailOAuth2": {
-          "id": "gEIaWCTvGfYjMSb3",
-          "name": "Gmail credentials"
+        "notionApi": {
+          "id": "iDjtgSTYG9ECVBtT",
+          "name": "Notion account 2"
         }
       }
     },
     {
       "parameters": {
-        "content": "Transforms AI-generated topics into professional HTML email reports.\nFeatures: Dynamic hashtag generation, engagement scoring, visual styling.\nCreates: Ready-to-post content snippets, strategic hashtags, professional layouts.\nOutput: Complete HTML email with embedded analytics and user-friendly design.",
-        "height": 256
+        "content": "When clicking ‘Execute workflow’ (Manual Trigger)\n\nStarts the workflow manually when you run it in n8n."
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        592,
-        -400
+        -1520,
+        -288
       ],
       "typeVersion": 1,
-      "id": "ed694b5e-7459-44bb-ac07-cf932155470d",
-      "name": "Sticky Note"
-    },
-    {
-      "parameters": {
-        "content": "Processes current market data to identify trending LinkedIn topics.\n\nAnalyzes engagement patterns, content themes, and professional discussions.\nOutputs: Structured JSON with topic titles, descriptions, and relevance scores.\n\nModel: Optimized for business/professional content analysis.",
-        "height": 304,
-        "color": 6
-      },
-      "type": "n8n-nodes-base.stickyNote",
-      "position": [
-        64,
-        -592
-      ],
-      "typeVersion": 1,
-      "id": "a09844ee-68e7-4432-b687-86fce5fe7531",
+      "id": "6a52ff0b-fbbf-4c71-8a15-1cc469216c1b",
       "name": "Sticky Note1"
     },
     {
       "parameters": {
-        "content": "Sends professionally formatted trending topics report via email.\nIncludes: Interactive content, copy-paste ready posts, engagement metrics.\nRecipients: Stakeholders, content teams, marketing professionals.\nTiming: Configurable for optimal delivery windows (morning preferred).",
-        "height": 256,
-        "color": 3
-      },
-      "type": "n8n-nodes-base.stickyNote",
-      "position": [
-        944,
-        -400
-      ],
-      "typeVersion": 1,
-      "id": "1329a8eb-038a-4734-9199-67901e8c97b4",
-      "name": "Sticky Note2"
-    },
-    {
-      "parameters": {
-        "content": "\nManually starts the LinkedIn trending topics analysis workflow.\n \nUse this to test the workflow or run ad-hoc reports.\n\nPerfect for initial setup and troubleshooting.",
-        "height": 208,
-        "color": 3
-      },
-      "type": "n8n-nodes-base.stickyNote",
-      "position": [
-        -256,
-        -288
-      ],
-      "typeVersion": 1,
-      "id": "895e14da-77f0-453e-92ae-3d28bd75aba4",
-      "name": "Sticky Note4"
-    },
-    {
-      "parameters": {
-        "content": "Powers the LLM Chain with enterprise-grade AI processing.\nConfigured for: Professional content analysis, trend identification.\nHandles: Natural language processing, content categorization, sentiment analysis.\nEnsures consistent, high-quality topic extraction and insights.",
-        "height": 240,
+        "content": "Get row(s) in sheet1 (Google Sheets)\n\nPulls lead data from your sample leads sheet (sample_leads_50).",
         "color": 2
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        144,
-        128
+        -1248,
+        112
       ],
       "typeVersion": 1,
-      "id": "100757f0-63ec-4d48-abac-686169a9316e",
+      "id": "c0c3334c-a316-4d62-a9df-d8a497fb5a55",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "Check If Unbooked (IF Node)\n\nChecks two conditions:\n\nIf booking status = BOOKED.\n\nOR if more than 24 hours passed since initial reply.\n\nIf either is true → continues to enrichment.",
+        "height": 224,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1040,
+        -336
+      ],
+      "typeVersion": 1,
+      "id": "89b26487-67da-4723-9912-4b5f5e52850b",
       "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "Extract Domain from Email (Function Node)\n\nExtracts the domain name from the lead’s email address.\n\n",
+        "height": 128,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -768,
+        112
+      ],
+      "typeVersion": 1,
+      "id": "a36e6320-2834-4fe9-83df-c5083a1453a7",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "Get Company Logo (HTTP Request to Clearbit Logo API)\n\nFetches the company’s logo from Clearbit using the domain.",
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -512,
+        -432
+      ],
+      "typeVersion": 1,
+      "id": "27b872b7-6892-4c6c-bf88-a03f972ca96a",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "content": "Clearbit Company Enrichment (HTTP Request)\n\nQueries Clearbit’s company suggest API using the domain.\n\nReturns company name, logo, and other metadata.",
+        "height": 176,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -480,
+        176
+      ],
+      "typeVersion": 1,
+      "id": "33b11579-8056-47f2-a6b7-c8b0b96395ba",
+      "name": "Sticky Note6"
+    },
+    {
+      "parameters": {
+        "content": "Merge (Merge Node,)\n\nWas meant to combine logo + enrichment data.\n",
+        "height": 112,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -224,
+        -240
+      ],
+      "typeVersion": 1,
+      "id": "0f8134d0-9797-4e2d-bb31-9f698b1748e0",
+      "name": "Sticky Note7"
+    },
+    {
+      "parameters": {
+        "content": "Merge Enrichment Data (Function Node)\n\nCentral enrichment logic:\n\nMerges lead info + Clearbit data.\n\nPicks logo URL (priority: logo API > Clearbit > fallback).\n\nDetermines industry (Technology, Engineering, Consulting, or default).\n\nAssigns brand colors based on industry.\n\nGenerates Notes (audit trail).\n\nFinal enriched JSON includes Lead Name, Email, Company, Industry, Logo, Brand Colors, Assigned Rep, Notes, Status, Meeting Date, Verified Domain.",
+        "height": 496
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        0,
+        80
+      ],
+      "typeVersion": 1,
+      "id": "739019a3-ef09-44d4-8d58-3aa1ed8ba4a1",
+      "name": "Sticky Note8"
+    },
+    {
+      "parameters": {
+        "content": "Create a database page (Notion)\n\nCreates a Notion page in your database (test db).\n\nStores enriched lead details (name, email, company, industry, logo, colors, notes, etc.).",
+        "height": 208,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        304,
+        -464
+      ],
+      "typeVersion": 1,
+      "id": "8cc172f4-530f-4355-9480-9a01365f6c2d",
+      "name": "Sticky Note9"
+    },
+    {
+      "parameters": {
+        "content": "Create a task (ClickUp)\n\nCreates a ClickUp task for the lead.\n\nAssigns it to a rep.\n\nAdds notes and due date (from meeting date).",
+        "height": 192,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        336,
+        208
+      ],
+      "typeVersion": 1,
+      "id": "09544996-9c73-4695-8214-9e213a4cf299",
+      "name": "Sticky Note10"
+    },
+    {
+      "parameters": {
+        "content": "Append to Enriched Leads Sheet (Google Sheets)\n\nAppends the enriched lead data into a separate Google Sheet (Lead Profile Enrichment).\n\nActs as a backup or master log.",
+        "height": 176,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        832,
+        -272
+      ],
+      "typeVersion": 1,
+      "id": "999336a9-ae3a-480c-8b48-568d2782f894",
+      "name": "Sticky Note12"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "17rcNd_ZpUQLm0uWEVbD-NY6GyFUkrD4BglvawlyBygM",
+          "mode": "list",
+          "cachedResultName": "sample_leads_50",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/17rcNd_ZpUQLm0uWEVbD-NY6GyFUkrD4BglvawlyBygM/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 540316831,
+          "mode": "list",
+          "cachedResultName": "sample_leads_50",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/17rcNd_ZpUQLm0uWEVbD-NY6GyFUkrD4BglvawlyBygM/edit#gid=540316831"
+        },
+        "options": {}
+      },
+      "id": "8557aea3-35f2-4664-85c8-fac0248c1173",
+      "name": "Getting leads data",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [
+        -1200,
+        -80
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "s4dP1fNuVZ2gWvs3",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        -192,
+        -80
+      ],
+      "id": "5a802822-cdde-401f-82a3-522e3ca98a76",
+      "name": "Combining data"
     }
   ],
   "connections": {
-    "Process and Identify Top Topics": {
+    "Extract Domain from Email": {
       "main": [
         [
           {
-            "node": "Send Daily Report Email",
+            "node": "Get Company Logo",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Clearbit Company Enrichment",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Azure OpenAI Chat Model": {
-      "ai_languageModel": [
+    "Get Company Logo": {
+      "main": [
         [
           {
-            "node": "Basic LLM Chain",
-            "type": "ai_languageModel",
+            "node": "Combining data",
+            "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Basic LLM Chain": {
+    "Clearbit Company Enrichment": {
       "main": [
         [
           {
-            "node": "Process and Identify Top Topics",
+            "node": "Combining data",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge Enrichment Data": {
+      "main": [
+        [
+          {
+            "node": "Create a database page",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Create a task",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append to Enriched Leads Sheet": {
+      "main": [
+        []
+      ]
+    },
+    "Check If Unbooked": {
+      "main": [
+        [
+          {
+            "node": "Extract Domain from Email",
             "type": "main",
             "index": 0
           }
@@ -212,7 +585,40 @@
       "main": [
         [
           {
-            "node": "Basic LLM Chain",
+            "node": "Getting leads data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a database page": {
+      "main": [
+        [
+          {
+            "node": "Append to Enriched Leads Sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Getting leads data": {
+      "main": [
+        [
+          {
+            "node": "Check If Unbooked",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Combining data": {
+      "main": [
+        [
+          {
+            "node": "Merge Enrichment Data",
             "type": "main",
             "index": 0
           }
@@ -228,25 +634,31 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "8dde98b2-b0c3-4e23-b804-0bfc01af0933",
+  "versionId": "d1a4a810-4ac2-4cfe-982f-16d1f3e9ace0",
   "activeVersionId": null,
   "triggerCount": 0,
   "shared": [
     {
-      "updatedAt": "2025-08-07T11:52:23.767Z",
-      "createdAt": "2025-08-07T11:52:23.767Z",
+      "updatedAt": "2025-09-05T05:23:02.664Z",
+      "createdAt": "2025-09-05T05:23:02.664Z",
       "role": "workflow:owner",
-      "workflowId": "4Mr57mBTiQiphFDX",
+      "workflowId": "9KRdh9YURctQ9kIo",
       "projectId": "iXigq15mRQoAAIrt"
     }
   ],
   "activeVersion": null,
   "tags": [
     {
-      "updatedAt": "2025-08-07T12:32:17.084Z",
-      "createdAt": "2025-08-07T12:32:17.084Z",
-      "id": "HE1ilnFaryfUZjCN",
-      "name": "LinkedIn Automation"
+      "updatedAt": "2025-09-05T05:36:01.501Z",
+      "createdAt": "2025-09-05T05:36:01.501Z",
+      "id": "VT2auW6qa9EXhGrO",
+      "name": "sales"
+    },
+    {
+      "updatedAt": "2025-09-05T05:36:01.542Z",
+      "createdAt": "2025-09-05T05:36:01.542Z",
+      "id": "3LcAgx74tbyro0Qm",
+      "name": "lead-enrichment"
     }
   ]
 }
