@@ -1,749 +1,483 @@
 {
-  "updatedAt": "2025-08-06T05:58:16.679Z",
-  "createdAt": "2025-08-06T05:58:16.679Z",
-  "id": "9rpCsZOqTnNl5baz",
-  "name": "My workflow 5",
+  "updatedAt": "2026-01-02T11:23:59.630Z",
+  "createdAt": "2025-12-30T11:26:57.062Z",
+  "id": "CFZorDjjDt71C7o2",
+  "name": "Analyze Stock Market Social Media Sentiment using GPT-4o and Create Asana Tasks with Slack Alerts",
   "active": false,
   "isArchived": false,
   "nodes": [
     {
-      "parameters": {
-        "model": "gpt-4.1",
-        "options": {}
-      },
-      "id": "a5f0288e-7f6e-4194-a051-073a15f812c9",
-      "name": "Azure OpenAI Chat Model",
-      "type": "@n8n/n8n-nodes-langchain.lmChatAzureOpenAi",
-      "position": [
-        2128,
-        400
-      ],
+      "parameters": {},
+      "type": "n8n-nodes-base.errorTrigger",
       "typeVersion": 1,
+      "position": [
+        -192,
+        880
+      ],
+      "id": "464f4c27-e49e-4889-a107-432abcf7adba",
+      "name": "Error Handler Trigger"
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "C09GNB90TED",
+          "mode": "list",
+          "cachedResultName": "general-information"
+        },
+        "text": "=❌ *Error in API Error Catalog Workflow* *Node:* {{ $json.node.name }} *Message:* {{ $json.error.message }} *Time:* {{ $json.timestamp }}",
+        "otherOptions": {}
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.3,
+      "position": [
+        176,
+        880
+      ],
+      "id": "634c192a-9e01-4f66-a371-a07e37284a9d",
+      "name": "Slack: Send Error Alert",
+      "webhookId": "d5eff2c3-ff6e-4116-bdda-59455acd861b",
       "credentials": {
-        "azureOpenAiApi": {
-          "id": "C3WzT18XqF8OdVM6",
-          "name": "Azure Open AI account"
+        "slackApi": {
+          "id": "rNqvWj9TfChPVRYY",
+          "name": "Slack account vivek"
         }
       }
     },
     {
       "parameters": {
-        "jsonSchemaExample": "{\n  \"csvUrl\": \"https://phantombuster.s3.amazonaws.com/...\",\n  \"jsonUrl\": \"https://phantombuster.s3.amazonaws.com/...\"\n}\n"
+        "content": "## 🚨 Error Handling \n\n \nCatches any workflow failure and posts an alert to Slack.  \nIncludes node name, error message, and timestamp for quick debugging.\n",
+        "height": 336,
+        "width": 672,
+        "color": 7
       },
-      "id": "67600714-4650-457d-bec8-857527ab2104",
-      "name": "Structured Output Parser",
-      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
-      "position": [
-        2256,
-        400
-      ],
-      "typeVersion": 1.2
-    },
-    {
-      "parameters": {
-        "amount": 45
-      },
-      "id": "6269576d-7906-461e-9dba-c7dd93a6a988",
-      "name": "Wait",
-      "type": "n8n-nodes-base.wait",
-      "position": [
-        1664,
-        192
-      ],
-      "webhookId": "e9f0b9cc-f051-49fb-95bb-c20b9ef762f9",
-      "typeVersion": 1.1
-    },
-    {
-      "parameters": {
-        "model": "gpt-4.1",
-        "options": {}
-      },
-      "id": "5b9ae1a4-88db-4294-9e52-506a131ac55a",
-      "name": "Azure OpenAI Chat Model1",
-      "type": "@n8n/n8n-nodes-langchain.lmChatAzureOpenAi",
-      "position": [
-        2736,
-        400
-      ],
-      "typeVersion": 1,
-      "credentials": {
-        "azureOpenAiApi": {
-          "id": "C3WzT18XqF8OdVM6",
-          "name": "Azure Open AI account"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "jsonSchemaExample": "{\n  \"Initial_message\": \"Hi Mandy,\\n\\nI came across your work at BDO USA leading data analytics and was really impressed by your experience with large-scale data validation and compliance monitoring across complex industries.\\n\\nAt Sparrow, we’re building a dev-friendly API testing platform that could genuinely complement your efforts around data quality and assurance.\\n\\nWould love to get your take on what we’re building and explore ways we can learn from each other.\\n\\nAre you open to a quick chat this week?\\n\\nRahul\\nCo-Founder & CEO, Sparrow\",\n  \n  \"Follow_up_message\": \"Hi Mandy,\\n\\nJust checking in to see if you had a chance to read my earlier note. I’d genuinely value your thoughts — especially given your work at BDO USA.\\n\\nHappy to work around your schedule if you’re open to a short call!\\n\\nBest,\\nRahul\"\n}\n"
-      },
-      "id": "63290f1f-fa4a-483d-849b-9700c7223019",
-      "name": "Structured Output Parser1",
-      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
-      "position": [
-        2848,
-        400
-      ],
-      "typeVersion": 1.2,
-      "notes": "\\n\\n should break line "
-    },
-    {
-      "parameters": {
-        "rule": {
-          "interval": [
-            {
-              "field": "minutes"
-            }
-          ]
-        }
-      },
-      "id": "3989e337-051b-425c-be18-fddf65a6c23b",
-      "name": "Schedule Trigger",
-      "type": "n8n-nodes-base.scheduleTrigger",
-      "position": [
-        784,
-        192
-      ],
-      "typeVersion": 1.2
-    },
-    {
-      "parameters": {
-        "documentId": {
-          "__rl": true,
-          "mode": "id",
-          "value": "=1kZWj0gUoXz818FWGG8UTV4kJWgHa-rmEbyOHO2auWfY"
-        },
-        "sheetName": {
-          "__rl": true,
-          "mode": "list",
-          "value": 1872017542,
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1kZWj0gUoXz818FWGG8UTV4kJWgHa-rmEbyOHO2auWfY/edit#gid=1872017542",
-          "cachedResultName": "Rahul"
-        },
-        "filtersUI": {
-          "values": [
-            {
-              "lookupColumn": "Send Approval - Rahul",
-              "lookupValue": "Yes"
-            },
-            {
-              "lookupColumn": "Send Approval - Rahul",
-              "lookupValue": "Yes"
-            },
-            {
-              "lookupColumn": "Outreach Status",
-              "lookupValue": "Queued"
-            }
-          ]
-        },
-        "options": {
-          "returnFirstMatch": true
-        }
-      },
-      "id": "aaed896d-afe8-4c84-815c-8bbf4178578a",
-      "name": "Fetch URL from Spreadsheet",
-      "type": "n8n-nodes-base.googleSheets",
-      "position": [
-        1008,
-        192
-      ],
-      "typeVersion": 4.5,
-      "credentials": {
-        "googleSheetsOAuth2Api": {
-          "id": "sOplQNr4zvwQul4A",
-          "name": "jyothi"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "operation": "appendOrUpdate",
-        "documentId": {
-          "__rl": true,
-          "mode": "list",
-          "value": "1VmtCoEaOz1uqiloJAFAOfbhUmGxuMQAudwNiVG7kQ1U",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1VmtCoEaOz1uqiloJAFAOfbhUmGxuMQAudwNiVG7kQ1U/edit?usp=drivesdk",
-          "cachedResultName": "LinkedIn URL"
-        },
-        "sheetName": {
-          "__rl": true,
-          "mode": "list",
-          "value": "gid=0",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1VmtCoEaOz1uqiloJAFAOfbhUmGxuMQAudwNiVG7kQ1U/edit#gid=0",
-          "cachedResultName": "Sheet1"
-        },
-        "columns": {
-          "value": {
-            "URL": "={{ $json.URL }}"
-          },
-          "schema": [
-            {
-              "id": "URL",
-              "type": "string",
-              "display": true,
-              "removed": false,
-              "required": false,
-              "displayName": "URL",
-              "defaultMatch": false,
-              "canBeUsedToMatch": true
-            }
-          ],
-          "mappingMode": "defineBelow",
-          "matchingColumns": [
-            "URL"
-          ],
-          "attemptToConvertTypes": false,
-          "convertFieldsToString": false
-        },
-        "options": {}
-      },
-      "id": "1cc0e5e5-ed22-4a58-9a80-fe1a2fdf2fb1",
-      "name": "Temp URL Storage",
-      "type": "n8n-nodes-base.googleSheets",
-      "position": [
-        1232,
-        192
-      ],
-      "typeVersion": 4.5,
-      "credentials": {
-        "googleSheetsOAuth2Api": {
-          "id": "sOplQNr4zvwQul4A",
-          "name": "jyothi"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "method": "POST",
-        "url": "https://api.phantombuster.com/api/v2/agents/launch",
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
-            {
-              "name": "x-phantombuster-key",
-              "value": "your_api_key_here"
-            }
-          ]
-        },
-        "sendBody": true,
-        "specifyBody": "json",
-        "jsonBody": "={\n  \"id\": \"your_id_here\",\n  \"argument\": {\n    \"profileUrl\":[ \"{{ $json.URL }}\"],\n    \"sessionCookie\": \"linkedin li_at cookie here\",\n  \"spreadsheetUrl\": \"temp url storage spreadsheet link here\",\n  \"columnName\": \"URL\",\n\"numberOfProfilesPerLaunch\": \"1\"\n  }\n}\n",
-        "options": {}
-      },
-      "id": "5b8249bf-0d9a-48c7-aa3c-ff11613b4eae",
-      "name": "POST to Phantombuster API",
-      "type": "n8n-nodes-base.httpRequest",
-      "position": [
-        1440,
-        192
-      ],
-      "typeVersion": 4.2
-    },
-    {
-      "parameters": {
-        "url": "=https://api.phantombuster.com/api/v2/containers/fetch-output?id={{ $json.containerId }}",
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
-            {
-              "name": "x-phantombuster-key",
-              "value": "your_api_key_here"
-            },
-            {
-              "name": "Content-Type",
-              "value": "application/json"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "id": "742f1926-f65a-4683-b8b6-a0b7eedcf1fb",
-      "name": "GET from Phantombuster API",
-      "type": "n8n-nodes-base.httpRequest",
-      "position": [
-        1888,
-        192
-      ],
-      "typeVersion": 4.2
-    },
-    {
-      "parameters": {
-        "promptType": "define",
-        "text": "={{ $json.output }}",
-        "hasOutputParser": true,
-        "options": {}
-      },
-      "id": "653c29b1-7138-4c64-ac0a-131f53cd1134",
-      "name": "Extract URL from Output using GPT-4",
-      "type": "@n8n/n8n-nodes-langchain.agent",
-      "position": [
-        2112,
-        192
-      ],
-      "typeVersion": 1.9
-    },
-    {
-      "parameters": {
-        "url": "={{ $json.output.jsonUrl }}",
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
-            {}
-          ]
-        },
-        "sendBody": true,
-        "bodyParameters": {
-          "parameters": [
-            {}
-          ]
-        },
-        "options": {
-          "response": {
-            "response": {
-              "responseFormat": "json"
-            }
-          }
-        }
-      },
-      "id": "c5d6ec8d-15a1-49c0-89dc-e51fef8b0f03",
-      "name": "GET LinkedIn Data from URL",
-      "type": "n8n-nodes-base.httpRequest",
-      "position": [
-        2480,
-        192
-      ],
-      "retryOnFail": true,
-      "typeVersion": 4.2
-    },
-    {
-      "parameters": {
-        "promptType": "define",
-        "text": "=You are an outreach message generator for Sparrow, an API testing platform. Your task is to take structured input  and generate:\n\n1. A personalized outreach message. The goal of the message if to get a meeting with this lead. Potentially an online call.\n2. A follow-up message (in case they don’t reply to the first one)\n\nHere is the information you will need and use to personalise the message:\nCompany Industry: {{ $json.companyIndustry }}\nCompany Name: {{ $json.companyName }}\nFirst Name: {{ $json.firstName }}\nLast Name: {{ $json.lastName }}\nLinkedIn Description: {{ $json.linkedinDescription }}\nLinkedIn HeadLine: {{ $json.linkedinHeadline }}\nLinkedIn Job Date Range: {{ $json.linkedinJobDateRange }}\nRemarks(this decides what the goal os the message should be):{{ $('Rahul\\'s LinkedIn').item.json['Comments - Rahul'] }}\nBy default, if there is no value for remarks, it should be assumed that the goal of the message is to get in touch with them.\nIf the remarks are \"informational\" it means the goal of the message is to spread awareness about sparrow. This includes sending them a link for sparrow's website: https://sparrowapp.dev/?utm_source=organic&utm_medium=linkedin&utm_campaign=SM+Posts (always return this link as text)\nIf remarks says something related to \"VC\" or \"VC Sparrow\". It means the goals of the messsage if to get in touch with them.\n\n\nIf any of the provided information is null, just move onto the next provided information.\n---\n**about your company**\n\n---\n\nOutreach Message Template\n\nUse this structure to create the first message:\n\nHi [Name],\n\nI came across your work with [Company / Project / Area of expertise] and was impressed by your approach to [specific detail about their work].\n\n*A little introduction of your company*\n\nI would love to get in touch and exchange ideas!\n\nYour name,\nYour title \n\n---\n\nFollow-Up Message Template:\n\nHi [Name],\n\nJust checking in to see if you had a chance to read my earlier note.  \nI’d genuinely value your thoughts — especially given your work at [Company / Project].\n\nHappy to work around your schedule if you’re open to a short call!\n\nBest,  \nYour name\n\n---\n\n🛡️ Rules & Guidelines (Do NOT break these):\n\n1.Always personalize the message using the info provided.\n2. NEVER make up facts or flattery — only refer to information provided or easily verified.\n3. DO NOT be overly salesy — this is a friendly, respectful invitation to chat and exchange ideas.\n4. Keep the tone professional, warm, and concise (under 100 words for the first message, and under 70 words for the second message).\n5. Never reuse exact phrasing for multiple recipients unless explicitly requested.\n6. If info is missing (like company or expertise), you may generalize slightly, but keep it relevant to developers, engineers, or API users.\n7. The follow-up should be polite, non-pushy, and helpful — assume they’re busy, not disinterested.\n8. Do not give any descriptions, double quotes, bold text,or any other formating.\n\n---",
-        "hasOutputParser": true
-      },
-      "id": "c54bafbc-20c9-47ea-97b0-d90c40a34c35",
-      "name": "Create Personalised Messages using a Template",
-      "type": "@n8n/n8n-nodes-langchain.chainLlm",
-      "position": [
-        2704,
-        192
-      ],
-      "typeVersion": 1.6
-    },
-    {
-      "parameters": {
-        "operation": "appendOrUpdate",
-        "documentId": {
-          "__rl": true,
-          "mode": "list",
-          "value": "1kZWj0gUoXz818FWGG8UTV4kJWgHa-rmEbyOHO2auWfY",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1kZWj0gUoXz818FWGG8UTV4kJWgHa-rmEbyOHO2auWfY/edit?usp=drivesdk",
-          "cachedResultName": "Rahul's LinkedIn Connection"
-        },
-        "sheetName": {
-          "__rl": true,
-          "mode": "list",
-          "value": 1872017542,
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1kZWj0gUoXz818FWGG8UTV4kJWgHa-rmEbyOHO2auWfY/edit#gid=1872017542",
-          "cachedResultName": "Rahul"
-        },
-        "columns": {
-          "value": {
-            "URL": "={{ $('Rahul\\'s LinkedIn').item.json.URL }}",
-            "Initial Message": "={{ $json.output.Initial_message }}",
-            "Outreach Status": "Updated",
-            "Follow-up Message": "={{ $json.output.Follow_up_message }}"
-          },
-          "schema": [
-            {
-              "id": "First Name",
-              "type": "string",
-              "display": true,
-              "required": false,
-              "displayName": "First Name",
-              "defaultMatch": false,
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "Last Name",
-              "type": "string",
-              "display": true,
-              "required": false,
-              "displayName": "Last Name",
-              "defaultMatch": false,
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "URL",
-              "type": "string",
-              "display": true,
-              "removed": false,
-              "required": false,
-              "displayName": "URL",
-              "defaultMatch": false,
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "Company",
-              "type": "string",
-              "display": true,
-              "required": false,
-              "displayName": "Company",
-              "defaultMatch": false,
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "Position",
-              "type": "string",
-              "display": true,
-              "required": false,
-              "displayName": "Position",
-              "defaultMatch": false,
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "Connected On",
-              "type": "string",
-              "display": true,
-              "required": false,
-              "displayName": "Connected On",
-              "defaultMatch": false,
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "Company's description",
-              "type": "string",
-              "display": true,
-              "required": false,
-              "displayName": "Company's description",
-              "defaultMatch": false,
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "Product we can pitch",
-              "type": "string",
-              "display": true,
-              "required": false,
-              "displayName": "Product we can pitch",
-              "defaultMatch": false,
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "Reason",
-              "type": "string",
-              "display": true,
-              "required": false,
-              "displayName": "Reason",
-              "defaultMatch": false,
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "Case Study",
-              "type": "string",
-              "display": true,
-              "required": false,
-              "displayName": "Case Study",
-              "defaultMatch": false,
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "Send Approval - Rahul",
-              "type": "string",
-              "display": true,
-              "required": false,
-              "displayName": "Send Approval - Rahul",
-              "defaultMatch": false,
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "Comments - Rahul",
-              "type": "string",
-              "display": true,
-              "required": false,
-              "displayName": "Comments - Rahul",
-              "defaultMatch": false,
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "Initial Message",
-              "type": "string",
-              "display": true,
-              "required": false,
-              "displayName": "Initial Message",
-              "defaultMatch": false,
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "Follow-up Message",
-              "type": "string",
-              "display": true,
-              "required": false,
-              "displayName": "Follow-up Message",
-              "defaultMatch": false,
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "Type of Message",
-              "type": "string",
-              "display": true,
-              "required": false,
-              "displayName": "Type of Message",
-              "defaultMatch": false,
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "Outreach Status",
-              "type": "string",
-              "display": true,
-              "required": false,
-              "displayName": "Outreach Status",
-              "defaultMatch": false,
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "CRM Upload Status",
-              "type": "string",
-              "display": true,
-              "required": false,
-              "displayName": "CRM Upload Status",
-              "defaultMatch": false,
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "Lead Status",
-              "type": "string",
-              "display": true,
-              "required": false,
-              "displayName": "Lead Status",
-              "defaultMatch": false,
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "Date",
-              "type": "string",
-              "display": true,
-              "required": false,
-              "displayName": "Date",
-              "defaultMatch": false,
-              "canBeUsedToMatch": true
-            }
-          ],
-          "mappingMode": "defineBelow",
-          "matchingColumns": [
-            "URL"
-          ],
-          "attemptToConvertTypes": false,
-          "convertFieldsToString": false
-        },
-        "options": {}
-      },
-      "id": "cdc0117a-127d-443f-adc7-90f24df7b9f2",
-      "name": "Update Personalised Messages to Spreadsheet",
-      "type": "n8n-nodes-base.googleSheets",
-      "position": [
-        3072,
-        192
-      ],
-      "retryOnFail": true,
-      "typeVersion": 4.5
-    },
-    {
-      "parameters": {
-        "operation": "delete",
-        "documentId": {
-          "__rl": true,
-          "mode": "list",
-          "value": "1VmtCoEaOz1uqiloJAFAOfbhUmGxuMQAudwNiVG7kQ1U",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1VmtCoEaOz1uqiloJAFAOfbhUmGxuMQAudwNiVG7kQ1U/edit?usp=drivesdk",
-          "cachedResultName": "LinkedIn URL"
-        },
-        "sheetName": {
-          "__rl": true,
-          "mode": "list",
-          "value": "gid=0",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1VmtCoEaOz1uqiloJAFAOfbhUmGxuMQAudwNiVG7kQ1U/edit#gid=0",
-          "cachedResultName": "Sheet1"
-        },
-        "numberToDelete": 10
-      },
-      "id": "cca3f8ed-1681-40f0-a886-af282827acdc",
-      "name": "Delete Temp URL Storage",
-      "type": "n8n-nodes-base.googleSheets",
-      "position": [
-        3296,
-        192
-      ],
-      "typeVersion": 4.5
-    },
-    {
-      "parameters": {
-        "content": "## LinkedIn Profile Scraping & Structured Data Extraction with PhantomBuster & GPT-4\n\nThis n8n workflow automates the end-to-end process of extracting LinkedIn profile data, organizing it, and generating personalized messages—all powered by PhantomBuster and GPT-4. Perfect for recruiters, sales teams, and marketers, it streamlines outreach by combining data collection and message personalization within a single workflow. Key features include:\n\t•\tSeamless Integration: Links PhantomBuster’s scraping technology with Azure OpenAI’s GPT-4 for advanced data parsing and message creation.\n\t•\tAutomated Data Pipeline: Fetches LinkedIn URLs from a spreadsheet, extracts and processes profile data, and stores results efficiently.\n\t•\tPersonalized Messaging: Uses extracted profile data to automatically generate and update tailored messages for each contact.\n\t•\tStructured Output: Organizes raw data into actionable formats, ready for outreach or further automation.\n\t•\tCustomizable & Scalable: Easily adapts to specific campaign needs or scales up for bulk operations.\n\t•\tTime-Saving: Eliminates repetitive manual tasks, allowing users to focus on engagement and strategy.\n\nThis workflow empowers users to efficiently collect LinkedIn data and deliver customized communications for impactful business and research outcomes.",
-        "height": 500,
-        "width": 600
-      },
-      "id": "d1809014-f7f2-43c9-ade6-8b2d9222ad9b",
-      "name": "Sticky Note",
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        0,
-        0
+        -288,
+        720
       ],
-      "typeVersion": 1
+      "typeVersion": 1,
+      "id": "123fe0f4-1aa1-4f8f-b8fb-7fb57221a94e",
+      "name": "Sticky Note8"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "167f8f95-d055-4d26-9dcb-0a3fee135556",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -160,
+        96
+      ],
+      "id": "9758a165-8f13-4ceb-a5f7-7b12aaf9c62e",
+      "name": "Receive Stock Market Query Request (Webhook Trigger)",
+      "webhookId": "167f8f95-d055-4d26-9dcb-0a3fee135556"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "80c843aa-4a0c-4917-abf3-984ea9a6b7a7",
+              "name": "body.query",
+              "value": "={{ $json.body.query }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        128,
+        96
+      ],
+      "id": "4dc58082-4b13-4bf3-9d76-fe19aacf1d8e",
+      "name": "Extract Stock Market Query from Request Payload"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Analyze public social media discussions related to the following query:\n\n\"{{ $json.body.query }}\"\n\nFocus on understanding the current stock market sentiment and intent behind user discussions.\n\nReturn only actionable stock market intent signals based on public posts.\n",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "You are a Stock Market Social Media Intent Analysis Agent.\n\nYour role is to analyze public social media content using connected social intelligence tools and extract meaningful stock market intent.\n\nSCOPE:\n- Platforms: Twitter/X and Instagram (public posts only)\n- Domain: Stock market, trading, investing, indices, sectors, stocks\n- Timeframe: Recent / current discussions only\n\nWHAT TO ANALYZE:\nIdentify posts where users:\n1. Ask about current market status or sentiment\n2. Discuss buying or selling stocks\n3. Express fear, panic, losses, or uncertainty\n4. Look for opportunities, rallies, or reversals\n5. React to market news, events, or price movement\n6. Ask for opinions or guidance on stocks or indices\n\nIGNORE:\n- Pure news headlines without opinion\n- Educational or tutorial posts\n- Promotions, ads, or influencer marketing\n- Generic motivational or meme content\n- Self-promotion or referral links\n\nINTENT CLASSIFICATION:\n- HIGH: Clear buy/sell intent, urgency, fear, or capital at risk\n- MEDIUM: Researching, asking opinions, comparing views\n- LOW: General discussion or curiosity\n\nOUTPUT RULES:\n- Use only publicly available data\n- Do NOT invent private or personal data\n- Do NOT include explanations outside JSON\n- Return a maximum of 10 results\n- If no meaningful signals exist, return an empty array []\n\nOUTPUT FORMAT (STRICT JSON ONLY):\n[\n  {\n    \"platform\": \"Twitter|Instagram\",\n    \"username\": \"public_handle\",\n    \"post_text\": \"exact post excerpt (max 200 chars)\",\n    \"market_context\": \"stock, index, sector, or event mentioned\",\n    \"intent_type\": \"Buy|Sell|Fear|Opportunity|Research\",\n    \"sentiment\": \"Bullish|Bearish|Neutral|Confused\",\n    \"intent_strength\": \"High|Medium|Low\",\n    \"urgency\": \"Yes|No\",\n    \"key_insight\": \"why this post matters for market analysis\"\n  }\n]\n",
+          "maxIterations": 30
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        432,
+        96
+      ],
+      "id": "90a43bc7-399f-41c6-bbab-6e4d8068f1db",
+      "name": "Analyze Social Media for Stock Market Intent Signals (AI)"
+    },
+    {
+      "parameters": {
+        "endpointUrl": "https://mcp.xpoz.ai/mcp",
+        "authentication": "bearerAuth",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpClientTool",
+      "typeVersion": 1.2,
+      "position": [
+        592,
+        352
+      ],
+      "id": "403f1bf2-f508-4b62-a5d9-ca46f2ebe9e9",
+      "name": "Social Intelligence Data Fetch Tool (MCP Client)",
+      "rewireOutputLogTo": "ai_tool",
+      "credentials": {
+        "httpBearerAuth": {
+          "id": "t7ezbRpBs11G61N9",
+          "name": "saurabh xpoz"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o",
+          "mode": "list",
+          "cachedResultName": "gpt-4o"
+        },
+        "responsesApiEnabled": false,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        368,
+        352
+      ],
+      "id": "45dab2d6-f890-499c-b3ee-e8874a3a8648",
+      "name": "OpenAI Reasoning Engine for Market Intent Analysis",
+      "credentials": {
+        "openAiApi": {
+          "id": "5Kzt6hGSZ1JHZqWN",
+          "name": "OpenAi account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Convert the following stock market social media insights into:\n\n1. An Asana task payload\n2. A concise email summary for managers\n\nINPUT DATA:\n{{ $json.output }}\n\nSTRUCTURE THE OUTPUT IN THIS EXACT FORMAT:\n\n{\n  \"asana_task\": {\n    \"title\": \"\",\n    \"description\": \"\",\n    \"priority\": \"High|Medium|Low\",\n    \"recommended_owner\": \"Market Research Team\",\n    \"due_in_days\": 0\n  },\n  \"email_summary\": {\n    \"subject\": \"\",\n    \"body\": \"\"\n  },\n  \"key_signals\": [\n    {\n      \"market_context\": \"\",\n      \"intent_type\": \"\",\n      \"sentiment\": \"\",\n      \"urgency\": \"Yes|No\",\n      \"why_it_matters\": \"\"\n    }\n  ],\n  \"overall_market_sentiment\": \"Bullish|Bearish|Mixed|Uncertain\"\n}\n",
+        "options": {
+          "systemMessage": "You are a data structuring and operations assistant.\n\nYour task is to transform unstructured or narrative stock market social media insights into structured, machine-readable data for operations teams.\n\nYou MUST:\n- Extract actionable insights only\n- Normalize intent, sentiment, and urgency\n- Prepare content suitable for task creation and executive reporting\n\nOUTPUT REQUIREMENTS:\n- Output ONLY valid JSON\n- No markdown\n- No explanations\n- No extra text\n\nLOGIC RULES:\n1. Aggregate similar insights where possible\n2. Determine overall market sentiment\n3. Identify high-priority actions\n4. Keep wording professional and concise\n5. Optimize content for managers (not traders)\n\nPRIORITY RULES:\n- If any insight has intent_strength = High AND urgency = Yes → Priority = High\n- Else if mixed signals → Priority = Medium\n- Else → Priority = Low\n",
+          "maxIterations": 30
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        912,
+        96
+      ],
+      "id": "0a9950bc-6daa-4e5a-badb-23c25578ef40",
+      "name": "Transform Market Intent Signals into Ops-Ready Actions (AI)"
+    },
+    {
+      "parameters": {
+        "model": "gpt-4o-mini",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatAzureOpenAi",
+      "typeVersion": 1,
+      "position": [
+        880,
+        352
+      ],
+      "id": "86c6d0bc-8b74-4af4-bc7f-8e7f0976d98b",
+      "name": "Azure OpenAI Reasoning Engine for Ops Structuring",
+      "credentials": {
+        "azureOpenAiApi": {
+          "id": "C3WzT18XqF8OdVM6",
+          "name": "Azure Open AI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get the first input item\nconst item = $input.first();\n\n// Ensure output exists\nif (!item.json.output) {\n  throw new Error(\"No 'output' field found to parse\");\n}\n\n// Parse the JSON string inside `output`\nlet parsed;\ntry {\n  parsed = JSON.parse(item.json.output);\n} catch (e) {\n  throw new Error(\"Failed to parse output JSON: \" + e.message);\n}\n\n// Return parsed object as normal n8n output\nreturn [\n  {\n    json: parsed\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1328,
+        96
+      ],
+      "id": "d113c362-1c25-4800-b45a-c3dfb33601af",
+      "name": "Parse Structured Ops Payload from AI Output"
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "workspace": "1212551193156936",
+        "name": "={{ $json.asana_task.title }}",
+        "otherProperties": {
+          "due_on": "={{ $now.plus({ days: 1 }).toISODate() }}\n",
+          "notes": "=Market Sentiment Overview:\nOverall market sentiment is {{$json.overall_market_sentiment}}.\n\nKey Highlights:\n• {{$json.key_signals[0].market_context}}\n• {{$json.key_signals[1].market_context}}\n\nKey Signals:\n{{ $json.key_signals.map((s, i) => \n`${i+1}. ${s.intent_type} | ${s.sentiment} | Urgency: ${s.urgency}\nContext: ${s.market_context}\nWhy it matters: ${s.why_it_matters}`\n).join('\\n\\n') }}\n\nRecommended Action:\n• Review high-opportunity sectors highlighted above\n• Assess risks in bearish or research-driven signals\n• Prepare actionable insights for leadership\n\nOwner: {{$json.asana_task.recommended_owner}}\nPriority: {{$json.asana_task.priority}}\nTimeline: {{$json.asana_task.due_in_days}} days\n",
+          "projects": [
+            "1212565062132347"
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.asana",
+      "typeVersion": 1,
+      "position": [
+        1712,
+        -96
+      ],
+      "id": "80ce2754-1b4c-4824-92d2-828b9ddf19e4",
+      "name": "Create Asana Task for Market Signal Review",
+      "credentials": {
+        "asanaOAuth2Api": {
+          "id": "9Jp2gIIAp5UAgrHO",
+          "name": "saurabh Asana account 4"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "C09GNB90TED",
+          "mode": "list",
+          "cachedResultName": "general-information"
+        },
+        "text": "={{ $json.email_summary.subject }}\n\n{{ $json.email_summary.body }}",
+        "otherOptions": {}
+      },
+      "id": "3ac0f292-6197-48c1-9430-8809328d1b57",
+      "name": "Send Market Risk & Sentiment Alert to Slack",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.1,
+      "position": [
+        1712,
+        256
+      ],
+      "webhookId": "c15b6935-ed1d-4d93-9e8d-27d1b67d29f0",
+      "credentials": {
+        "slackApi": {
+          "id": "rNqvWj9TfChPVRYY",
+          "name": "Slack account vivek"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## 📊 Analyze Stock Market Social Media Sentiment using GPT-4o and Create Asana Tasks with Slack Alerts\n\n### How it works\nThis workflow exposes a webhook endpoint that accepts a stock market–related query and analyzes real-time public social media discussions to identify meaningful market intent signals. Once triggered, the query is extracted and passed to an AI agent that scans Twitter/X and Instagram using connected social intelligence tools.\n\nThe AI identifies actionable signals such as buying interest, selling pressure, fear, uncertainty, or opportunity sentiment across stocks, indices, sectors, or market events. Each signal is classified by intent type, sentiment, urgency, and strength.\n\nThe extracted insights are then transformed into operations-ready outputs. A second AI agent structures the findings into a prioritized Asana task for the market research team and a concise executive-style alert for Slack. This enables fast awareness of emerging market risks or opportunities without manual monitoring.\n\n### Setup steps\n1. Configure the webhook URL as an input source.\n2. Connect OpenAI and Azure OpenAI credentials.\n3. Add MCP (Xpoz) social intelligence credentials.\n4. Set the Asana workspace and project ID.\n5. Select the Slack channel for alerts.\n6. Test the webhook with a sample market query.\n\n### Customization\n- Adjust intent classification rules in the AI prompts.\n- Change task priority logic or due dates.\n- Extend outputs to email or dashboards if needed.\n",
+        "height": 704,
+        "width": 672
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1136,
+        -704
+      ],
+      "typeVersion": 1,
+      "id": "e226b219-9311-4943-aa32-7b16b5c33a1a",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## Webhook Intake & Query Preparation\nReceives external stock market queries and normalizes input for analysis.\n",
+        "height": 496,
+        "width": 496,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -224,
+        -64
+      ],
+      "typeVersion": 1,
+      "id": "6f009911-223b-4f61-98ea-fed7107f53d6",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "## Social Market Signal Discovery\nAnalyzes public social media discussions to extract stock market intent, sentiment, and urgency signals.\n",
+        "height": 640,
+        "width": 400,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        320,
+        -80
+      ],
+      "typeVersion": 1,
+      "id": "a4d273a2-c283-4d77-a8c5-4b603411af0e",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "## Ops-Ready Insight Transformation\nConverts raw market signals into structured actions, priorities, and summaries for operations teams.\n",
+        "height": 640,
+        "width": 416,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        768,
+        -112
+      ],
+      "typeVersion": 1,
+      "id": "18ec7713-dc65-4db0-9bca-a8e12aa9909e",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "## Output Parsing & Validation\nSafely parses and validates AI-generated structured JSON for downstream use.\n",
+        "height": 352,
+        "width": 304,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1216,
+        -64
+      ],
+      "typeVersion": 1,
+      "id": "a2b884c2-d5ed-42b7-ad5f-316ec50d6f31",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "## Distribution & Task Execution\nCreates actionable Asana tasks and sends executive alerts to Slack.\n",
+        "height": 800,
+        "width": 448,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1568,
+        -304
+      ],
+      "typeVersion": 1,
+      "id": "8a36c100-d340-41b4-a061-0a9b33e82e1a",
+      "name": "Sticky Note5"
     }
   ],
   "connections": {
-    "Wait": {
+    "Error Handler Trigger": {
       "main": [
         [
           {
-            "node": "GET from Phantombuster API",
+            "node": "Slack: Send Error Alert",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Schedule Trigger": {
+    "Receive Stock Market Query Request (Webhook Trigger)": {
       "main": [
         [
           {
-            "node": "Fetch URL from Spreadsheet",
+            "node": "Extract Stock Market Query from Request Payload",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Temp URL Storage": {
+    "Extract Stock Market Query from Request Payload": {
       "main": [
         [
           {
-            "node": "POST to Phantombuster API",
+            "node": "Analyze Social Media for Stock Market Intent Signals (AI)",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Azure OpenAI Chat Model": {
+    "Analyze Social Media for Stock Market Intent Signals (AI)": {
+      "main": [
+        [
+          {
+            "node": "Transform Market Intent Signals into Ops-Ready Actions (AI)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Social Intelligence Data Fetch Tool (MCP Client)": {
+      "ai_tool": [
+        [
+          {
+            "node": "Analyze Social Media for Stock Market Intent Signals (AI)",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Reasoning Engine for Market Intent Analysis": {
       "ai_languageModel": [
         [
           {
-            "node": "Extract URL from Output using GPT-4",
+            "node": "Analyze Social Media for Stock Market Intent Signals (AI)",
             "type": "ai_languageModel",
             "index": 0
           }
         ]
       ]
     },
-    "Azure OpenAI Chat Model1": {
+    "Transform Market Intent Signals into Ops-Ready Actions (AI)": {
+      "main": [
+        [
+          {
+            "node": "Parse Structured Ops Payload from AI Output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Azure OpenAI Reasoning Engine for Ops Structuring": {
       "ai_languageModel": [
         [
           {
-            "node": "Create Personalised Messages using a Template",
+            "node": "Transform Market Intent Signals into Ops-Ready Actions (AI)",
             "type": "ai_languageModel",
             "index": 0
           }
         ]
       ]
     },
-    "Structured Output Parser": {
-      "ai_outputParser": [
-        [
-          {
-            "node": "Extract URL from Output using GPT-4",
-            "type": "ai_outputParser",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "POST to Phantombuster API": {
+    "Parse Structured Ops Payload from AI Output": {
       "main": [
         [
           {
-            "node": "Wait",
+            "node": "Create Asana Task for Market Signal Review",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Send Market Risk & Sentiment Alert to Slack",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Structured Output Parser1": {
-      "ai_outputParser": [
-        [
-          {
-            "node": "Create Personalised Messages using a Template",
-            "type": "ai_outputParser",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Fetch URL from Spreadsheet": {
+    "Create Asana Task for Market Signal Review": {
       "main": [
-        [
-          {
-            "node": "Temp URL Storage",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "GET LinkedIn Data from URL": {
-      "main": [
-        [
-          {
-            "node": "Create Personalised Messages using a Template",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "GET from Phantombuster API": {
-      "main": [
-        [
-          {
-            "node": "Extract URL from Output using GPT-4",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Extract URL from Output using GPT-4": {
-      "main": [
-        [
-          {
-            "node": "GET LinkedIn Data from URL",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Update Personalised Messages to Spreadsheet": {
-      "main": [
-        [
-          {
-            "node": "Delete Temp URL Storage",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Create Personalised Messages using a Template": {
-      "main": [
-        [
-          {
-            "node": "Update Personalised Messages to Spreadsheet",
-            "type": "main",
-            "index": 0
-          }
-        ]
+        []
       ]
     }
   },
@@ -751,17 +485,19 @@
     "executionOrder": "v1"
   },
   "staticData": null,
-  "meta": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
   "pinData": {},
-  "versionId": "abc12f83-4750-44a9-b4d1-efa74ed0a8f8",
+  "versionId": "0fb25ab8-2461-47ed-a818-11d23fd862e2",
   "activeVersionId": null,
   "triggerCount": 0,
   "shared": [
     {
-      "updatedAt": "2025-08-06T05:58:16.682Z",
-      "createdAt": "2025-08-06T05:58:16.682Z",
+      "updatedAt": "2025-12-30T11:26:57.062Z",
+      "createdAt": "2025-12-30T11:26:57.062Z",
       "role": "workflow:owner",
-      "workflowId": "9rpCsZOqTnNl5baz",
+      "workflowId": "CFZorDjjDt71C7o2",
       "projectId": "iXigq15mRQoAAIrt"
     }
   ],
