@@ -1,243 +1,265 @@
 {
-  "updatedAt": "2025-12-05T10:13:25.000Z",
-  "createdAt": "2025-12-05T09:14:24.007Z",
-  "id": "2wrmA5MkR2yiQzcS",
-  "name": "Document Preparedness Tracking",
+  "updatedAt": "2025-07-21T05:58:06.000Z",
+  "createdAt": "2025-07-15T07:04:25.356Z",
+  "id": "3ArOXy46ZaOfvhtc",
+  "name": "New_CTO_and_Updating_1v1",
   "active": false,
   "isArchived": false,
   "nodes": [
     {
-      "parameters": {},
-      "type": "n8n-nodes-base.manualTrigger",
-      "typeVersion": 1,
-      "position": [
-        -1152,
-        896
-      ],
-      "id": "650fe1aa-ab14-4db8-acaa-e52ce255891d",
-      "name": "When clicking ‘Execute workflow’"
-    },
-    {
       "parameters": {
-        "content": "## 📋 Document Preparedness Tracker\n\n### How it works\nThis workflow monitors tender documents in Airtable and sends Slack notifications when preparation status changes. It checks if documents are marked as completed, then notifies the team and logs the notification delivery back to Airtable for tracking.\n\n### Setup steps\n1. Connect your Airtable account with Personal Access Token\n2. Link Slack workspace via OAuth2\n3. Update the Slack channel ID to your preferred notification channel\n4. Configure Airtable base and table IDs to match your setup\n5. Test with a manual trigger to verify notifications",
-        "height": 472,
-        "width": 389,
-        "color": 4
-      },
-      "id": "ee4d7886-f889-41ba-b88a-44f5e014c042",
-      "name": "Sticky Note",
-      "type": "n8n-nodes-base.stickyNote",
-      "typeVersion": 1,
-      "position": [
-        -1584,
-        784
-      ]
-    },
-    {
-      "parameters": {
-        "content": "## 🔍 Data Retrieval\nFetches all tender records from Airtable to check their document preparation status.",
-        "height": 594,
-        "width": 253,
-        "color": 5
-      },
-      "id": "1e21c247-4f12-4791-8f9d-abfd9696b775",
-      "name": "Sticky Note1",
-      "type": "n8n-nodes-base.stickyNote",
-      "typeVersion": 1,
-      "position": [
-        -1040,
-        624
-      ]
-    },
-    {
-      "parameters": {
-        "content": "## ✅ Status Validation\nFilters records to identify completed documents ready for team review.",
-        "height": 594,
-        "width": 253,
-        "color": 5
-      },
-      "id": "63e90060-929a-4121-82ba-5f7f8dd56258",
-      "name": "Sticky Note2",
-      "type": "n8n-nodes-base.stickyNote",
-      "typeVersion": 1,
-      "position": [
-        -768,
-        624
-      ]
-    },
-    {
-      "parameters": {
-        "content": "## 🔔 Team Notifications\nSends completion alerts to Slack and logs notification metadata back to Airtable for audit trails.",
-        "height": 604,
-        "width": 473,
-        "color": 5
-      },
-      "id": "e65d89be-8a5a-4ef7-8133-808d661a5366",
-      "name": "Sticky Note3",
-      "type": "n8n-nodes-base.stickyNote",
-      "typeVersion": 1,
-      "position": [
-        -496,
-        624
-      ]
-    },
-    {
-      "parameters": {
-        "content": "## 🔐 Credentials Setup\nUse OAuth2 for Slack and Personal Access Token for Airtable. Replace all base and table IDs with your workspace values.",
-        "height": 190,
-        "width": 253,
-        "color": 6
-      },
-      "id": "179a5ac5-f427-456c-b496-a2a27809805e",
-      "name": "Sticky Note4",
-      "type": "n8n-nodes-base.stickyNote",
-      "typeVersion": 1,
-      "position": [
-        -1536,
-        576
-      ]
-    },
-    {
-      "parameters": {
-        "operation": "search",
-        "base": {
-          "__rl": true,
-          "value": "appJvCVz7mUkqNQwx",
-          "mode": "list",
-          "cachedResultName": "Tender Info",
-          "cachedResultUrl": "https://airtable.com/appJvCVz7mUkqNQwx"
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
         },
-        "table": {
+        "triggerOn": "specificFolder",
+        "folderToWatch": {
           "__rl": true,
-          "value": "tblEX8rbZIv5xYAwb",
+          "value": "1B9yosad00W2--07XOa8BC_JzsoaskELK",
           "mode": "list",
-          "cachedResultName": "Tender Details",
-          "cachedResultUrl": "https://airtable.com/appJvCVz7mUkqNQwx/tblEX8rbZIv5xYAwb"
+          "cachedResultName": "n8n-test",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1B9yosad00W2--07XOa8BC_JzsoaskELK"
+        },
+        "event": "fileCreated",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDriveTrigger",
+      "typeVersion": 1,
+      "position": [
+        -1632,
+        512
+      ],
+      "id": "a3b5696e-e1df-4d86-b509-bf3d56b8cd4f",
+      "name": "Google Drive Trigger"
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
         },
         "options": {}
       },
-      "type": "n8n-nodes-base.airtable",
-      "typeVersion": 2.1,
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
       "position": [
-        -928,
-        896
+        -1408,
+        512
       ],
-      "id": "73b8519e-a9e3-42ec-af53-b0e70e2d5adc",
-      "name": "Fetch Tender Records",
-      "credentials": {
-        "airtableTokenApi": {
-          "id": "nWc9JHR6t25WPWVV",
-          "name": "Airtable Personal Access Token account"
-        }
-      }
+      "id": "777ee3ce-7944-4bd0-8d57-99b69def76a0",
+      "name": "Download file"
     },
     {
       "parameters": {
-        "authentication": "oAuth2",
+        "mode": "insert",
+        "pineconeIndex": {
+          "__rl": true,
+          "value": "n8n",
+          "mode": "list",
+          "cachedResultName": "n8n"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStorePinecone",
+      "typeVersion": 1.3,
+      "position": [
+        0,
+        0
+      ],
+      "id": "84e7b928-ecca-4925-a1c7-15dda7043a06",
+      "name": "Pinecone Vector Store"
+    },
+    {
+      "parameters": {
+        "model": "text-embedding-3-large",
+        "options": {
+          "dimensions": 512
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsAzureOpenAi",
+      "typeVersion": 1,
+      "position": [
+        -16,
+        224
+      ],
+      "id": "eaf19a5d-7598-4528-b4cf-1fcd16c7be2d",
+      "name": "Embeddings Azure OpenAI"
+    },
+    {
+      "parameters": {
+        "dataType": "binary",
+        "textSplittingMode": "custom",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "typeVersion": 1.1,
+      "position": [
+        112,
+        224
+      ],
+      "id": "fdb6a789-152f-48fa-8eae-bb5b4f96e5be",
+      "name": "Default Data Loader"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
+      "typeVersion": 1,
+      "position": [
+        192,
+        432
+      ],
+      "id": "b3b4007a-04e3-40e0-876d-867808b32a6e",
+      "name": "Recursive Character Text Splitter"
+    },
+    {
+      "parameters": {
         "select": "channel",
         "channelId": {
           "__rl": true,
-          "value": "C09LDA9C88J",
+          "value": "C0948932B36",
           "mode": "list",
-          "cachedResultName": "social"
+          "cachedResultName": "n8n-test"
         },
-        "text": "=Status is not approved for \nid :  {{ $json.id }}\nTender ref no : {{ $json.TenderRefNo }}\n\nPlease check the Airtable.",
+        "text": "={{ $('AI Agent').item.json.output.slack_message }}",
         "otherOptions": {}
       },
       "type": "n8n-nodes-base.slack",
       "typeVersion": 2.3,
       "position": [
-        -480,
-        992
+        1680,
+        208
       ],
-      "id": "19e07d69-8d8b-4802-ba31-1a31a40cd003",
-      "name": "Alert Incomplete Status",
-      "webhookId": "3de00b64-ef45-4d38-ba15-04f5a4d75463",
-      "credentials": {
-        "slackOAuth2Api": {
-          "id": "5G5jP9B8MQgtNUqp",
-          "name": "Slack account 5"
-        }
-      }
+      "id": "71125a64-497c-4dd1-a254-279c5d6499ed",
+      "name": "Send a message1",
+      "webhookId": "5beba43e-5c34-4fa4-8dd2-51cc6c863e1a"
     },
     {
       "parameters": {
-        "conditions": {
-          "string": [
-            {
-              "value1": "={{ $json[\"Document Prepared\"] }}",
-              "value2": "Yes"
-            }
-          ]
+        "promptType": "define",
+        "text": "=Generate a brief, professional Slack message to confirm that a user profile has been updated.\nYou will receive structured data that has just been inserted to pinecode database.  \n\nYou must use the tools you have to retreive the ID of the insertion made  \n\nThen you must generate a clear and consise message stating that the database has been update. This message should include the name of the person whose information has been updated to the database.\n\nInput:\n{{ $json.pageContent }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=You are an AI assistant integrated into an automated workflow.\n\nYour role is to acknowledge profile updates by composing confirmation messages for Slack.\n\nWhen provided with structured data about a user you should:\n • Craft a concise, positive confirmation message\n • You will use the tools at your disposal to get the ID of the insertion that has just been made and which is most similar to the input you are given.\n • Ensure the message mentions both the user’s name and the ID.\n • Maintain a professional and friendly tone suitable for internal team communication"
         }
       },
-      "id": "2cc40b12-d514-4f40-9465-0fcbeb8d8f8a",
-      "name": "Check if Completed1",
-      "type": "n8n-nodes-base.if",
-      "typeVersion": 1,
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
       "position": [
-        -704,
-        896
-      ]
-    },
-    {
-      "parameters": {
-        "authentication": "oAuth2",
-        "channel": "Social",
-        "text": "=📄 {{ $json.Name }} {{ $json.TenderRefNo }} has been Completed🚀\nReady for review!",
-        "otherOptions": {},
-        "attachments": []
-      },
-      "id": "914dabfc-7a31-4fb9-8166-6950c9f66506",
-      "name": "Notify on Slack1",
-      "type": "n8n-nodes-base.slack",
-      "typeVersion": 1,
-      "position": [
-        -480,
-        800
+        720,
+        0
       ],
-      "credentials": {
-        "slackOAuth2Api": {
-          "id": "5G5jP9B8MQgtNUqp",
-          "name": "Slack account 5"
-        }
-      }
+      "id": "e10df56c-6f82-4c05-a4e9-135d420ff346",
+      "name": "AI Agent"
     },
     {
       "parameters": {
-        "operation": "upsert",
-        "base": {
+        "model": "gpt-4o",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatAzureOpenAi",
+      "typeVersion": 1,
+      "position": [
+        608,
+        224
+      ],
+      "id": "c60b0b5a-b08a-4ce7-b9b8-299f30a7bbdc",
+      "name": "Azure OpenAI Chat Model"
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n\t\"slack_message\": \"Jane Smith's profile has been successfully updated. 🎉 Everything is set for the next steps in her onboarding journey.\",\n\t\"Name\": \"Jane Smith\",\n    \"id\": \"39e6589b-8b9e-4044-af20-166fce879536\"\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        1024,
+        224
+      ],
+      "id": "cd5d3c5e-97c7-42c6-97a0-62941a2acb90",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "mode": "retrieve-as-tool",
+        "toolDescription": "Use this tool whenever needed to get the ID. ",
+        "pineconeIndex": {
           "__rl": true,
-          "value": "appJvCVz7mUkqNQwx",
+          "value": "n8n",
           "mode": "list",
-          "cachedResultName": "Tender Info",
-          "cachedResultUrl": "https://airtable.com/appJvCVz7mUkqNQwx"
+          "cachedResultName": "n8n"
         },
-        "table": {
+        "topK": 5,
+        "useReranker": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStorePinecone",
+      "typeVersion": 1.3,
+      "position": [
+        720,
+        224
+      ],
+      "id": "4ac58b0b-f26b-4261-8121-caf917df334b",
+      "name": "Pinecone Vector Store1"
+    },
+    {
+      "parameters": {
+        "model": "text-embedding-3-large",
+        "options": {
+          "dimensions": 512
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsAzureOpenAi",
+      "typeVersion": 1,
+      "position": [
+        752,
+        432
+      ],
+      "id": "3488bd66-7c1a-4645-a0ae-0125cf2cd1c9",
+      "name": "Embeddings Azure OpenAI1"
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
           "__rl": true,
-          "value": "tblEX8rbZIv5xYAwb",
+          "value": "1bzwO3G10fL4yxlyF4415WO80QHPhEAflHEI1gm4pGc0",
           "mode": "list",
-          "cachedResultName": "Tender Details",
-          "cachedResultUrl": "https://airtable.com/appJvCVz7mUkqNQwx/tblEX8rbZIv5xYAwb"
+          "cachedResultName": "Tracking sheet",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1bzwO3G10fL4yxlyF4415WO80QHPhEAflHEI1gm4pGc0/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1bzwO3G10fL4yxlyF4415WO80QHPhEAflHEI1gm4pGc0/edit#gid=0"
         },
         "columns": {
           "mappingMode": "defineBelow",
           "value": {
-            "id": "={{ $('Check if Completed1').item.json.id }}",
-            "Slack id": "={{ $json.channel }}"
+            "ID": "={{ $json.output.id }}",
+            "Name": "={{ $json.output.Name }}",
+            "Last Update": "={{ $now.format('yyyy/LL/dd') }}"
           },
           "matchingColumns": [
-            "id"
+            "ID"
           ],
           "schema": [
             {
-              "id": "id",
-              "displayName": "id",
+              "id": "ID",
+              "displayName": "ID",
               "required": false,
-              "defaultMatch": true,
+              "defaultMatch": false,
               "display": true,
               "type": "string",
-              "readOnly": true,
+              "canBeUsedToMatch": true,
               "removed": false
             },
             {
@@ -245,279 +267,18 @@
               "displayName": "Name",
               "required": false,
               "defaultMatch": false,
-              "canBeUsedToMatch": true,
               "display": true,
               "type": "string",
-              "readOnly": false,
-              "removed": true
+              "canBeUsedToMatch": true
             },
             {
-              "id": "TenderRefNo",
-              "displayName": "TenderRefNo",
+              "id": "Last Update",
+              "displayName": "Last Update",
               "required": false,
               "defaultMatch": false,
-              "canBeUsedToMatch": true,
               "display": true,
               "type": "string",
-              "readOnly": false,
-              "removed": true
-            },
-            {
-              "id": "TcNo",
-              "displayName": "TcNo",
-              "required": false,
-              "defaultMatch": false,
-              "canBeUsedToMatch": true,
-              "display": true,
-              "type": "string",
-              "readOnly": false,
-              "removed": true
-            },
-            {
-              "id": "TenderProcId",
-              "displayName": "TenderProcId",
-              "required": false,
-              "defaultMatch": false,
-              "canBeUsedToMatch": true,
-              "display": true,
-              "type": "string",
-              "readOnly": false,
-              "removed": true
-            },
-            {
-              "id": "Country",
-              "displayName": "Country",
-              "required": false,
-              "defaultMatch": false,
-              "canBeUsedToMatch": true,
-              "display": true,
-              "type": "string",
-              "readOnly": false,
-              "removed": true
-            },
-            {
-              "id": "State",
-              "displayName": "State",
-              "required": false,
-              "defaultMatch": false,
-              "canBeUsedToMatch": true,
-              "display": true,
-              "type": "string",
-              "readOnly": false,
-              "removed": true
-            },
-            {
-              "id": "City",
-              "displayName": "City",
-              "required": false,
-              "defaultMatch": false,
-              "canBeUsedToMatch": true,
-              "display": true,
-              "type": "string",
-              "readOnly": false,
-              "removed": true
-            },
-            {
-              "id": "TenderBrief",
-              "displayName": "TenderBrief",
-              "required": false,
-              "defaultMatch": false,
-              "canBeUsedToMatch": true,
-              "display": true,
-              "type": "string",
-              "readOnly": false,
-              "removed": true
-            },
-            {
-              "id": "Company Name",
-              "displayName": "Company Name",
-              "required": false,
-              "defaultMatch": false,
-              "canBeUsedToMatch": true,
-              "display": true,
-              "type": "string",
-              "readOnly": false,
-              "removed": true
-            },
-            {
-              "id": "Tender Date",
-              "displayName": "Tender Date",
-              "required": false,
-              "defaultMatch": false,
-              "canBeUsedToMatch": true,
-              "display": true,
-              "type": "string",
-              "readOnly": false,
-              "removed": true
-            },
-            {
-              "id": "Opening Date",
-              "displayName": "Opening Date",
-              "required": false,
-              "defaultMatch": false,
-              "canBeUsedToMatch": true,
-              "display": true,
-              "type": "string",
-              "readOnly": false,
-              "removed": true
-            },
-            {
-              "id": "Closing Date",
-              "displayName": "Closing Date",
-              "required": false,
-              "defaultMatch": false,
-              "canBeUsedToMatch": true,
-              "display": true,
-              "type": "string",
-              "readOnly": false,
-              "removed": true
-            },
-            {
-              "id": "Original_Source",
-              "displayName": "Original_Source",
-              "required": false,
-              "defaultMatch": false,
-              "canBeUsedToMatch": true,
-              "display": true,
-              "type": "string",
-              "readOnly": false,
-              "removed": true
-            },
-            {
-              "id": "Description Link",
-              "displayName": "Description Link",
-              "required": false,
-              "defaultMatch": false,
-              "canBeUsedToMatch": true,
-              "display": true,
-              "type": "string",
-              "readOnly": false,
-              "removed": true
-            },
-            {
-              "id": "Priority",
-              "displayName": "Priority",
-              "required": false,
-              "defaultMatch": false,
-              "canBeUsedToMatch": true,
-              "display": true,
-              "type": "options",
-              "options": [
-                {
-                  "name": "Low",
-                  "value": "Low"
-                },
-                {
-                  "name": "Medium",
-                  "value": "Medium"
-                },
-                {
-                  "name": "High",
-                  "value": "High"
-                }
-              ],
-              "readOnly": false,
-              "removed": true
-            },
-            {
-              "id": "AI Summary",
-              "displayName": "AI Summary",
-              "required": false,
-              "defaultMatch": false,
-              "canBeUsedToMatch": true,
-              "display": true,
-              "type": "string",
-              "readOnly": false,
-              "removed": true
-            },
-            {
-              "id": "AI Reason",
-              "displayName": "AI Reason",
-              "required": false,
-              "defaultMatch": false,
-              "canBeUsedToMatch": true,
-              "display": true,
-              "type": "string",
-              "readOnly": false,
-              "removed": true
-            },
-            {
-              "id": "Status",
-              "displayName": "Status",
-              "required": false,
-              "defaultMatch": false,
-              "canBeUsedToMatch": true,
-              "display": true,
-              "type": "options",
-              "options": [
-                {
-                  "name": "Pending",
-                  "value": "Pending"
-                },
-                {
-                  "name": "Approved",
-                  "value": "Approved"
-                },
-                {
-                  "name": "Rejected",
-                  "value": "Rejected"
-                }
-              ],
-              "readOnly": false,
-              "removed": true
-            },
-            {
-              "id": "Document Prepared",
-              "displayName": "Document Prepared",
-              "required": false,
-              "defaultMatch": false,
-              "canBeUsedToMatch": true,
-              "display": true,
-              "type": "options",
-              "options": [
-                {
-                  "name": "Yes",
-                  "value": "Yes"
-                },
-                {
-                  "name": "No",
-                  "value": "No"
-                }
-              ],
-              "readOnly": false,
-              "removed": true
-            },
-            {
-              "id": "Alert sent to stake holders",
-              "displayName": "Alert sent to stake holders",
-              "required": false,
-              "defaultMatch": false,
-              "canBeUsedToMatch": true,
-              "display": true,
-              "type": "options",
-              "options": [
-                {
-                  "name": "Yes",
-                  "value": "Yes"
-                },
-                {
-                  "name": "No",
-                  "value": "No"
-                }
-              ],
-              "readOnly": false,
-              "removed": true
-            },
-            {
-              "id": "Slack id",
-              "displayName": "Slack id",
-              "required": false,
-              "defaultMatch": false,
-              "canBeUsedToMatch": true,
-              "display": true,
-              "type": "string",
-              "readOnly": false,
-              "removed": false
+              "canBeUsedToMatch": true
             }
           ],
           "attemptToConvertTypes": false,
@@ -525,68 +286,1052 @@
         },
         "options": {}
       },
-      "id": "08bb12d9-c1e1-4118-b47a-61ce3e99ce38",
-      "name": "Log Notification Status1",
-      "type": "n8n-nodes-base.airtable",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        1344,
+        208
+      ],
+      "id": "f1a63d86-1155-475c-ad50-dfc0f343a9b7",
+      "name": "Append or update row in sheet"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.rerankerCohere",
+      "typeVersion": 1,
+      "position": [
+        880,
+        432
+      ],
+      "id": "a5124073-7438-4645-89d6-46c0288e9903",
+      "name": "Reranker Cohere"
+    },
+    {
+      "parameters": {
+        "operation": "pdf",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        -1200,
+        512
+      ],
+      "id": "cbb51fcc-f18d-46db-91e2-a0eb0ffc45d5",
+      "name": "Extract from File"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=The information you will need is:  {{ $json.text }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=You are an AI agent responsible for determining whether a person is already present in the Pinecone vector database or if they are a new user. You will be provided with identifying information for a person (such as name, email, or other unique details). Your task is to use the Pinecone tool to check for the existence of this person in the database and return a clear, unambiguous result.\n\nFollow these rules strictly:\n\n1. Always use the provided identifying information to perform the lookup in Pinecone.\n2. Consider a person to be \"existing\" if you find any document or record in Pinecone with a matching unique identifier or sufficient matching details (such as exact name or email).\n3. If no such record is found, consider the person to be \"new.\"\n4. Your output must be either \"existing user\" or \"new\"—do not return any other text, commentary, or explanation regarding this.\n5. You will also output the entire input you are given.You must do this as is, no changes to the input you are being can be made.\n5. If multiple records match, treat the person as \"existing user.\"\n6. If the provided information is incomplete or ambiguous, attempt the lookup with the available data and still output only \"existing user\" or \"new\" based on the result.\n7. Do not attempt to infer, guess, or create a user profile; rely solely on the results from the Pinecone tool.\n8. Do not include any metadata, JSON, or formatting—return only the required output string.\n\nBe precise and deterministic in your response. Your only responsibility is to return \"existing user\" or \"new\" based on the Pinecone database search result."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 2,
       "position": [
-        -256,
-        800
+        -848,
+        512
       ],
+      "id": "b3b18942-527d-4eec-8cd6-dc17af7d8bd1",
+      "name": "AI Agent4"
+    },
+    {
+      "parameters": {
+        "model": "gpt-4o",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatAzureOpenAi",
+      "typeVersion": 1,
+      "position": [
+        -976,
+        720
+      ],
+      "id": "ddc9814e-fc6f-404e-86f3-c0902c8ce34f",
+      "name": "Azure OpenAI Chat Model4",
       "credentials": {
-        "airtableTokenApi": {
-          "id": "nWc9JHR6t25WPWVV",
-          "name": "Airtable Personal Access Token account"
+        "azureOpenAiApi": {
+          "id": "C3WzT18XqF8OdVM6",
+          "name": "Azure Open AI account"
         }
       }
+    },
+    {
+      "parameters": {
+        "mode": "retrieve-as-tool",
+        "toolDescription": "Use this tool when needed to check whether or not the user exists in the databse. ",
+        "pineconeIndex": {
+          "__rl": true,
+          "value": "n8n",
+          "mode": "list",
+          "cachedResultName": "n8n"
+        },
+        "topK": 1,
+        "useReranker": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStorePinecone",
+      "typeVersion": 1.3,
+      "position": [
+        -848,
+        736
+      ],
+      "id": "451c3971-a7bc-4aac-83bd-f61135de2d0d",
+      "name": "Pinecone Vector Store6"
+    },
+    {
+      "parameters": {
+        "model": "text-embedding-3-large",
+        "options": {
+          "dimensions": 512
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsAzureOpenAi",
+      "typeVersion": 1,
+      "position": [
+        -832,
+        928
+      ],
+      "id": "25997347-3368-44fd-86ed-a3d2e547ace2",
+      "name": "Embeddings Azure OpenAI6",
+      "credentials": {
+        "azureOpenAiApi": {
+          "id": "C3WzT18XqF8OdVM6",
+          "name": "Azure Open AI account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.rerankerCohere",
+      "typeVersion": 1,
+      "position": [
+        -704,
+        928
+      ],
+      "id": "9231bcac-e048-4069-999d-8fe750c81252",
+      "name": "Reranker Cohere4"
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n\t\"output\": \" \",\n    \"input\": \" \"\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        -560,
+        720
+      ],
+      "id": "18d522a3-b3bf-47d4-9ef4-14e44de3eb2b",
+      "name": "Structured Output Parser3"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "b4dd7614-f306-40d9-a03c-e4c29a4c0751",
+              "leftValue": "={{ $json.output.output }}",
+              "rightValue": "new",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            },
+            {
+              "id": "bc6af8de-9898-4fd1-8040-2f4bc3111983",
+              "leftValue": "={{ $json.output.input }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -352,
+        512
+      ],
+      "id": "1e1dd5b2-7a63-4b36-92c1-395f3982cfa2",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=The information you will need is: {{ $json.output.input }}\n",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=You are an AI agent in an automated workflow.\n1. Your task is to use the information given to you and retrieve the value stored in the “ID” field for a given person.\n • First, use the Google Sheets tool to look up the person and obtain their “ID”.\n • Next, use the Pinecone retrieve document tool to look up the same person and obtain their “ID”.\n • Return only the “ID” value from each tool, with no additional information or commentary.\n\nIf either tool does not return an “ID”, leave that result blank.\n\n2. You will retrieve the name of the person.\n• First, use the Google Sheets tool to look up the person and obtain their “Name”.\n • Next, use the Pinecone retrieve document tool to look up the same person and obtain their “Name”.\n • Return only the entire “Name” value from each tool, with no additional information or commentary."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        96,
+        800
+      ],
+      "id": "73e2b87e-0a08-42cf-a988-5e3c8bf24f24",
+      "name": "AI Agent5"
+    },
+    {
+      "parameters": {
+        "model": "gpt-4o",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatAzureOpenAi",
+      "typeVersion": 1,
+      "position": [
+        -144,
+        1024
+      ],
+      "id": "76e2e1b6-c50f-45fe-8609-31db4680510f",
+      "name": "Azure OpenAI Chat Model5"
+    },
+    {
+      "parameters": {
+        "mode": "retrieve-as-tool",
+        "toolDescription": "Use this tool when needed to retrieve ID of the person. ",
+        "pineconeIndex": {
+          "__rl": true,
+          "value": "n8n",
+          "mode": "list",
+          "cachedResultName": "n8n"
+        },
+        "useReranker": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStorePinecone",
+      "typeVersion": 1.3,
+      "position": [
+        -16,
+        1024
+      ],
+      "id": "07060298-a363-4711-b50c-d2e1d9798395",
+      "name": "Pinecone Vector Store7"
+    },
+    {
+      "parameters": {
+        "model": "text-embedding-3-large",
+        "options": {
+          "dimensions": 512
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsAzureOpenAi",
+      "typeVersion": 1,
+      "position": [
+        16,
+        1232
+      ],
+      "id": "5b6df735-aad0-44e6-850e-42a975ec804c",
+      "name": "Embeddings Azure OpenAI7"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1bzwO3G10fL4yxlyF4415WO80QHPhEAflHEI1gm4pGc0",
+          "mode": "list",
+          "cachedResultName": "Tracking sheet",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1bzwO3G10fL4yxlyF4415WO80QHPhEAflHEI1gm4pGc0/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1bzwO3G10fL4yxlyF4415WO80QHPhEAflHEI1gm4pGc0/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.6,
+      "position": [
+        288,
+        1024
+      ],
+      "id": "62ea6c15-47b1-4af0-a3ba-9c9db0299afb",
+      "name": "Get row(s) in sheet in Google Sheets1"
+    },
+    {
+      "parameters": {
+        "mode": "update",
+        "pineconeIndex": {
+          "__rl": true,
+          "value": "n8n",
+          "mode": "list",
+          "cachedResultName": "n8n"
+        },
+        "id": "={{ $('AI Agent5').item.json.output.id }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStorePinecone",
+      "typeVersion": 1.3,
+      "position": [
+        1904,
+        800
+      ],
+      "id": "6432add3-ea61-412e-9df6-095fbebf6158",
+      "name": "Pinecone Vector Store8"
+    },
+    {
+      "parameters": {
+        "model": "text-embedding-3-large",
+        "options": {
+          "dimensions": 512
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsAzureOpenAi",
+      "typeVersion": 1,
+      "position": [
+        1984,
+        1024
+      ],
+      "id": "861bb506-52fa-4018-903d-c47b78982ec9",
+      "name": "Embeddings Azure OpenAI8"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.rerankerCohere",
+      "typeVersion": 1,
+      "position": [
+        144,
+        1232
+      ],
+      "id": "8de6cedf-30cb-4ddf-8fe9-9889d5c0f669",
+      "name": "Reranker Cohere5"
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n\t    \"id\": \"39e6589b-8b9e-4044-af20-166fce879536\",\n        \"name\": \" \"\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        400,
+        1024
+      ],
+      "id": "43ff9194-51f5-45e0-aebf-28c183d62683",
+      "name": "Structured Output Parser4"
+    },
+    {
+      "parameters": {
+        "mode": "load",
+        "pineconeIndex": {
+          "__rl": true,
+          "value": "n8n",
+          "mode": "list",
+          "cachedResultName": "n8n"
+        },
+        "prompt": "=Give me all the information stored under these credentials:\nID: {{ $json.output.id }}\nName: {{ $json.output.name }}",
+        "topK": 1,
+        "useReranker": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStorePinecone",
+      "typeVersion": 1.3,
+      "position": [
+        720,
+        800
+      ],
+      "id": "1f384659-5d70-4281-aeb2-22d016bede61",
+      "name": "Pinecone Vector Store9"
+    },
+    {
+      "parameters": {
+        "model": "text-embedding-3-large",
+        "options": {
+          "dimensions": 512
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsAzureOpenAi",
+      "typeVersion": 1,
+      "position": [
+        752,
+        1024
+      ],
+      "id": "08aa9b17-bad9-4c4a-81b2-839a67c3e359",
+      "name": "Embeddings Azure OpenAI9"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.rerankerCohere",
+      "typeVersion": 1,
+      "position": [
+        880,
+        1024
+      ],
+      "id": "9d0fd8c0-e736-4e6f-aefc-a99da429dc8a",
+      "name": "Reranker Cohere6"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=The previously updated file of the person:  {{ $json.document.pageContent }}\n\nLatest Update from the person: {{ $('AI Agent4').item.json.output.input }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=You are an AI agent tasked with generating comprehensive status reports for individual users based on file updates. For each request, you will receive two inputs:\n 1. The previous version of a person’s status file, containing detailed information about their progress, events, action items, and any other relevant fields.\n 2. The latest update from the person, which may include new information, changed details, or additional notes.\n\nYour responsibilities are as follows:\n • Carefully review both the previous file and the latest update.\n • Construct a new report that mirrors the structure, format, and level of detail present in the initial file, ensuring that every piece of information and every line from both inputs is included in the final output.\n • Integrate all new or updated information from the latest update into the report, while preserving all details from the previous version.\n • Do not omit or summarize any lines; every detail and field from both inputs must be present in the final report, unless there is a clear conflict or redundancy, in which case the most recent information should take precedence.\n • The resulting report should be clear, well-organized, and suitable for sharing internally or with the person themselves.\n • You shall update fields like \"Churn Rate\" and Dates while adding the new information  \n • It is very important that there is no loss of data.\n • You are essentially going to assosiate the new information with the old file of the person.\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        1216,
+        800
+      ],
+      "id": "1b45830a-20c9-4b47-81fb-a9a63f67b28a",
+      "name": "AI Agent6"
+    },
+    {
+      "parameters": {
+        "model": "gpt-4o",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatAzureOpenAi",
+      "typeVersion": 1,
+      "position": [
+        1248,
+        1216
+      ],
+      "id": "e284424c-a221-4fa1-a2e7-4c614fa8e959",
+      "name": "Azure OpenAI Chat Model6"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserAutofixing",
+      "typeVersion": 1,
+      "position": [
+        1312,
+        1024
+      ],
+      "id": "e7d1e2a4-cdbe-4474-a1ee-157df733f15d",
+      "name": "Auto-fixing Output Parser1"
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"output\":{\n  \"name\": \"Jyothi Swarup\",\n  \"stage\": \"Onboarding\",\n  \"goal\": \"Complete first project\",\n  \"email\": \"jyothi.swarup@example.com\",\n  \"slack_id\": \"U094UASF7NC\",\n  \"last_events\": [\n    {\n      \"type\": \"slack_message\",\n      \"timestamp\": \"2025-07-01T10:00:00Z\",\n      \"content\": \"Introduced myself to the team.\"\n    },\n    {\n      \"type\": \"meeting_transcript\",\n      \"timestamp\": \"2025-07-01T15:00:00Z\",\n      \"content\": \"Attended onboarding session.\"\n    }\n  ],\n  \"latest_events\": [\n    {\n      \"type\": \"slack_message\",\n      \"timestamp\": \"2025-07-03T11:00:00Z\",\n      \"content\": \"Looking forward to contributing! My immediate goal is to successfully complete my first assigned project.\"\n    },\n    {\n      \"type\": \"meeting_transcript\",\n      \"timestamp\": \"2025-07-02T15:30:00Z\",\n      \"content\": \"Reviewed project requirements and set up necessary tools. Next step: outline the project plan.\"\n    }\n  ],\n  \"suggested_action\": \"Draft project plan\",\n  \"churn_risk\": \"Low\",\n  \"notes\": \"Schedule follow-up to review progress in next 1:1\"}\n}\n"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        1408,
+        1216
+      ],
+      "id": "b66a4092-11c3-434d-95fd-d63fac1520e4",
+      "name": "Structured Output Parser5"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "09509bd4-882c-4f77-9371-5d7b79f4d5d7",
+              "name": "document",
+              "value": "={{ $json.output }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1680,
+        800
+      ],
+      "id": "f2691129-78b8-430a-977c-8a2b7a03031d",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "content": "## File Detection & Download\n ▫ When a new file (like a meeting transcript) is added to Google Drive, the workflow is triggered and the file is downloaded.\n",
+        "height": 256,
+        "width": 304
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1616,
+        208
+      ],
+      "typeVersion": 1,
+      "id": "3f84d260-4e35-46a2-8008-43933064eeb2",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": " ## Customer Status Check\n ▫ The workflow analyzes the file to determine if the person is already onboarded.\n ▫ This is done using an “If” node:\n ⁃ If the person is a new customer, the workflow continues to the next steps.\n ⁃ If not, the workflow can end or take a different path.\n",
+        "height": 256,
+        "width": 480,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -944,
+        208
+      ],
+      "typeVersion": 1,
+      "id": "0e841263-bbe8-4512-bce0-4ac1dace417d",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "## Vector Database Entry\n ▫ For new customers, the workflow extracts relevant information from the file.\n ▫ This information is used to create a new entry in a vector database (like Pinecone), storing all details for future reference and retrieval.\n",
+        "height": 256,
+        "width": 480,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -112,
+        -288
+      ],
+      "typeVersion": 1,
+      "id": "24c1a5bd-cab6-4b5d-a93d-5ec41275bc67",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "## AI Agent Message Creation\n ▫ An AI agent generates a custom message (e.g., “John Doe has been onboarded”) using the extracted information.\n ▫ This message is posted in the appropriate Slack thread to notify your team.\n",
+        "height": 256,
+        "width": 480,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        576,
+        -288
+      ],
+      "typeVersion": 1,
+      "id": "38a8d1c1-4801-4a74-aead-5c8246d12864",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "## Sheet Update\n ▫ The workflow also updates a Google Sheet (or similar) with the new customer’s details, ensuring your records are current.\n\n",
+        "height": 208,
+        "width": 208,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1264,
+        -32
+      ],
+      "typeVersion": 1,
+      "id": "e6a879f4-dc1e-4f17-ac4f-0f758d8bda83",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "## Slack Message\n ▫ The generated message is posted in the appropriate Slack thread to notify your team.\n",
+        "height": 208,
+        "width": 208,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1616,
+        -32
+      ],
+      "typeVersion": 1,
+      "id": "67d28c67-45d0-4093-905d-e7f3fc23e6e4",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "content": "## Retrieve User ID from Pinecone with GPT-4o\n\nLeverages advanced AI capabilities with GPT-4o to intelligently query the Pinecone vector database and extract the unique identifier (ID) for the specified user. This step enables precise, context-aware data retrieval and powers smarter automation.",
+        "height": 196,
+        "width": 456,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        0,
+        592
+      ],
+      "typeVersion": 1,
+      "id": "a1d3829d-28b4-4acd-a892-deecd7493bfd",
+      "name": "Sticky Note6"
+    },
+    {
+      "parameters": {
+        "content": "## Fetch Complete User Data from Pinecone\n\nUtilizes the user ID to pull all historical information and activity records from the Pinecone database. This ensures the workflow has access to a full, up-to-date knowledge base, enabling hyper-personalized Slack responses and recommendations.",
+        "height": 196,
+        "width": 472,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        608,
+        592
+      ],
+      "typeVersion": 1,
+      "id": "4702ad1e-4ef5-430f-8231-8df824d7084d",
+      "name": "Sticky Note7"
+    },
+    {
+      "parameters": {
+        "content": "## Update User Information with New Message Using GPT-4o\n\nHarnesses GPT-4o to seamlessly merge the latest message from the user with their existing Pinecone data, generating an enriched, real-time user profile. This step empowers your Slack bot to provide contextually relevant, AI-generated answers and suggestions.",
+        "height": 180,
+        "width": 488,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1136,
+        592
+      ],
+      "typeVersion": 1,
+      "id": "d51279f0-2ef3-4273-ac71-ad5e772b5394",
+      "name": "Sticky Note8"
+    },
+    {
+      "parameters": {
+        "content": "## Upload Updated User Data to Pinecone\n\nAutomatically uploads the newly updated and AI-enhanced user profile back into the Pinecone vector store. This ensures your knowledge base is always current, supporting continuous learning and smarter future interactions in Slack.",
+        "height": 180,
+        "width": 504,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1744,
+        592
+      ],
+      "typeVersion": 1,
+      "id": "f55edb5e-6568-4e81-bffe-53f60aee4c15",
+      "name": "Sticky Note9"
     }
   ],
   "connections": {
-    "When clicking ‘Execute workflow’": {
+    "Google Drive Trigger": {
       "main": [
         [
           {
-            "node": "Fetch Tender Records",
+            "node": "Download file",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Fetch Tender Records": {
+    "Download file": {
       "main": [
         [
           {
-            "node": "Check if Completed1",
+            "node": "Extract from File",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Check if Completed1": {
+    "Pinecone Vector Store": {
       "main": [
         [
           {
-            "node": "Notify on Slack1",
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings Azure OpenAI": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Pinecone Vector Store",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Default Data Loader": {
+      "ai_document": [
+        [
+          {
+            "node": "Pinecone Vector Store",
+            "type": "ai_document",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Recursive Character Text Splitter": {
+      "ai_textSplitter": [
+        [
+          {
+            "node": "Default Data Loader",
+            "type": "ai_textSplitter",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Append or update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Azure OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pinecone Vector Store1": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings Azure OpenAI1": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Pinecone Vector Store1",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append or update row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Send a message1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reranker Cohere": {
+      "ai_reranker": [
+        [
+          {
+            "node": "Pinecone Vector Store1",
+            "type": "ai_reranker",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File": {
+      "main": [
+        [
+          {
+            "node": "AI Agent4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Azure OpenAI Chat Model4": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent4",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pinecone Vector Store6": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent4",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings Azure OpenAI6": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Pinecone Vector Store6",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reranker Cohere4": {
+      "ai_reranker": [
+        [
+          {
+            "node": "Pinecone Vector Store6",
+            "type": "ai_reranker",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent4": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser3": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI Agent4",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Pinecone Vector Store",
             "type": "main",
             "index": 0
           }
         ],
         [
           {
-            "node": "Alert Incomplete Status",
+            "node": "AI Agent5",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Notify on Slack1": {
+    "AI Agent5": {
       "main": [
         [
           {
-            "node": "Log Notification Status1",
+            "node": "Pinecone Vector Store9",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Azure OpenAI Chat Model5": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent5",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pinecone Vector Store7": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent5",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings Azure OpenAI7": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Pinecone Vector Store7",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet in Google Sheets1": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent5",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings Azure OpenAI8": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Pinecone Vector Store8",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reranker Cohere5": {
+      "ai_reranker": [
+        [
+          {
+            "node": "Pinecone Vector Store7",
+            "type": "ai_reranker",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser4": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI Agent5",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pinecone Vector Store9": {
+      "main": [
+        [
+          {
+            "node": "AI Agent6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings Azure OpenAI9": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Pinecone Vector Store9",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reranker Cohere6": {
+      "ai_reranker": [
+        [
+          {
+            "node": "Pinecone Vector Store9",
+            "type": "ai_reranker",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent6": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Azure OpenAI Chat Model6": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent6",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "Auto-fixing Output Parser1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Auto-fixing Output Parser1": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI Agent6",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser5": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Auto-fixing Output Parser1",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Pinecone Vector Store8",
             "type": "main",
             "index": 0
           }
@@ -598,19 +1343,17 @@
     "executionOrder": "v1"
   },
   "staticData": null,
-  "meta": {
-    "templateCredsSetupCompleted": true
-  },
+  "meta": null,
   "pinData": {},
-  "versionId": "f6769aec-21d3-4290-970e-4d319fc6ce14",
+  "versionId": "54b34012-fb6c-4abd-9943-ed564d244c5c",
   "activeVersionId": null,
   "triggerCount": 0,
   "shared": [
     {
-      "updatedAt": "2025-12-05T09:14:24.012Z",
-      "createdAt": "2025-12-05T09:14:24.012Z",
+      "updatedAt": "2025-07-15T07:04:25.363Z",
+      "createdAt": "2025-07-15T07:04:25.363Z",
       "role": "workflow:owner",
-      "workflowId": "2wrmA5MkR2yiQzcS",
+      "workflowId": "3ArOXy46ZaOfvhtc",
       "projectId": "iXigq15mRQoAAIrt"
     }
   ],
