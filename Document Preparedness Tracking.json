@@ -1,0 +1,619 @@
+{
+  "updatedAt": "2025-12-05T10:13:25.000Z",
+  "createdAt": "2025-12-05T09:14:24.007Z",
+  "id": "2wrmA5MkR2yiQzcS",
+  "name": "Document Preparedness Tracking",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -1152,
+        896
+      ],
+      "id": "650fe1aa-ab14-4db8-acaa-e52ce255891d",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "content": "## 📋 Document Preparedness Tracker\n\n### How it works\nThis workflow monitors tender documents in Airtable and sends Slack notifications when preparation status changes. It checks if documents are marked as completed, then notifies the team and logs the notification delivery back to Airtable for tracking.\n\n### Setup steps\n1. Connect your Airtable account with Personal Access Token\n2. Link Slack workspace via OAuth2\n3. Update the Slack channel ID to your preferred notification channel\n4. Configure Airtable base and table IDs to match your setup\n5. Test with a manual trigger to verify notifications",
+        "height": 472,
+        "width": 389,
+        "color": 4
+      },
+      "id": "ee4d7886-f889-41ba-b88a-44f5e014c042",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -1584,
+        784
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## 🔍 Data Retrieval\nFetches all tender records from Airtable to check their document preparation status.",
+        "height": 594,
+        "width": 253,
+        "color": 5
+      },
+      "id": "1e21c247-4f12-4791-8f9d-abfd9696b775",
+      "name": "Sticky Note1",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -1040,
+        624
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## ✅ Status Validation\nFilters records to identify completed documents ready for team review.",
+        "height": 594,
+        "width": 253,
+        "color": 5
+      },
+      "id": "63e90060-929a-4121-82ba-5f7f8dd56258",
+      "name": "Sticky Note2",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -768,
+        624
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## 🔔 Team Notifications\nSends completion alerts to Slack and logs notification metadata back to Airtable for audit trails.",
+        "height": 604,
+        "width": 473,
+        "color": 5
+      },
+      "id": "e65d89be-8a5a-4ef7-8133-808d661a5366",
+      "name": "Sticky Note3",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -496,
+        624
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## 🔐 Credentials Setup\nUse OAuth2 for Slack and Personal Access Token for Airtable. Replace all base and table IDs with your workspace values.",
+        "height": 190,
+        "width": 253,
+        "color": 6
+      },
+      "id": "179a5ac5-f427-456c-b496-a2a27809805e",
+      "name": "Sticky Note4",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -1536,
+        576
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "search",
+        "base": {
+          "__rl": true,
+          "value": "appJvCVz7mUkqNQwx",
+          "mode": "list",
+          "cachedResultName": "Tender Info",
+          "cachedResultUrl": "https://airtable.com/appJvCVz7mUkqNQwx"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblEX8rbZIv5xYAwb",
+          "mode": "list",
+          "cachedResultName": "Tender Details",
+          "cachedResultUrl": "https://airtable.com/appJvCVz7mUkqNQwx/tblEX8rbZIv5xYAwb"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        -928,
+        896
+      ],
+      "id": "73b8519e-a9e3-42ec-af53-b0e70e2d5adc",
+      "name": "Fetch Tender Records",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "nWc9JHR6t25WPWVV",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "C09LDA9C88J",
+          "mode": "list",
+          "cachedResultName": "social"
+        },
+        "text": "=Status is not approved for \nid :  {{ $json.id }}\nTender ref no : {{ $json.TenderRefNo }}\n\nPlease check the Airtable.",
+        "otherOptions": {}
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.3,
+      "position": [
+        -480,
+        992
+      ],
+      "id": "19e07d69-8d8b-4802-ba31-1a31a40cd003",
+      "name": "Alert Incomplete Status",
+      "webhookId": "3de00b64-ef45-4d38-ba15-04f5a4d75463",
+      "credentials": {
+        "slackOAuth2Api": {
+          "id": "5G5jP9B8MQgtNUqp",
+          "name": "Slack account 5"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json[\"Document Prepared\"] }}",
+              "value2": "Yes"
+            }
+          ]
+        }
+      },
+      "id": "2cc40b12-d514-4f40-9465-0fcbeb8d8f8a",
+      "name": "Check if Completed1",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        -704,
+        896
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "channel": "Social",
+        "text": "=📄 {{ $json.Name }} {{ $json.TenderRefNo }} has been Completed🚀\nReady for review!",
+        "otherOptions": {},
+        "attachments": []
+      },
+      "id": "914dabfc-7a31-4fb9-8166-6950c9f66506",
+      "name": "Notify on Slack1",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 1,
+      "position": [
+        -480,
+        800
+      ],
+      "credentials": {
+        "slackOAuth2Api": {
+          "id": "5G5jP9B8MQgtNUqp",
+          "name": "Slack account 5"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "upsert",
+        "base": {
+          "__rl": true,
+          "value": "appJvCVz7mUkqNQwx",
+          "mode": "list",
+          "cachedResultName": "Tender Info",
+          "cachedResultUrl": "https://airtable.com/appJvCVz7mUkqNQwx"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblEX8rbZIv5xYAwb",
+          "mode": "list",
+          "cachedResultName": "Tender Details",
+          "cachedResultUrl": "https://airtable.com/appJvCVz7mUkqNQwx/tblEX8rbZIv5xYAwb"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ $('Check if Completed1').item.json.id }}",
+            "Slack id": "={{ $json.channel }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": false
+            },
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "TenderRefNo",
+              "displayName": "TenderRefNo",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "TcNo",
+              "displayName": "TcNo",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "TenderProcId",
+              "displayName": "TenderProcId",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Country",
+              "displayName": "Country",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "State",
+              "displayName": "State",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "City",
+              "displayName": "City",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "TenderBrief",
+              "displayName": "TenderBrief",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Company Name",
+              "displayName": "Company Name",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Tender Date",
+              "displayName": "Tender Date",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Opening Date",
+              "displayName": "Opening Date",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Closing Date",
+              "displayName": "Closing Date",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Original_Source",
+              "displayName": "Original_Source",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Description Link",
+              "displayName": "Description Link",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Priority",
+              "displayName": "Priority",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Low",
+                  "value": "Low"
+                },
+                {
+                  "name": "Medium",
+                  "value": "Medium"
+                },
+                {
+                  "name": "High",
+                  "value": "High"
+                }
+              ],
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "AI Summary",
+              "displayName": "AI Summary",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "AI Reason",
+              "displayName": "AI Reason",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Pending",
+                  "value": "Pending"
+                },
+                {
+                  "name": "Approved",
+                  "value": "Approved"
+                },
+                {
+                  "name": "Rejected",
+                  "value": "Rejected"
+                }
+              ],
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Document Prepared",
+              "displayName": "Document Prepared",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Yes",
+                  "value": "Yes"
+                },
+                {
+                  "name": "No",
+                  "value": "No"
+                }
+              ],
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Alert sent to stake holders",
+              "displayName": "Alert sent to stake holders",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Yes",
+                  "value": "Yes"
+                },
+                {
+                  "name": "No",
+                  "value": "No"
+                }
+              ],
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Slack id",
+              "displayName": "Slack id",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "08bb12d9-c1e1-4118-b47a-61ce3e99ce38",
+      "name": "Log Notification Status1",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2,
+      "position": [
+        -256,
+        800
+      ],
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "nWc9JHR6t25WPWVV",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Fetch Tender Records",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Tender Records": {
+      "main": [
+        [
+          {
+            "node": "Check if Completed1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check if Completed1": {
+      "main": [
+        [
+          {
+            "node": "Notify on Slack1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Alert Incomplete Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notify on Slack1": {
+      "main": [
+        [
+          {
+            "node": "Log Notification Status1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "f6769aec-21d3-4290-970e-4d319fc6ce14",
+  "activeVersionId": null,
+  "triggerCount": 0,
+  "shared": [
+    {
+      "updatedAt": "2025-12-05T09:14:24.012Z",
+      "createdAt": "2025-12-05T09:14:24.012Z",
+      "role": "workflow:owner",
+      "workflowId": "2wrmA5MkR2yiQzcS",
+      "projectId": "iXigq15mRQoAAIrt"
+    }
+  ],
+  "activeVersion": null,
+  "tags": []
+}
