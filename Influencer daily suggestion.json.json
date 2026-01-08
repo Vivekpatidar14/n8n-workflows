@@ -1,170 +1,171 @@
 {
-  "updatedAt": "2025-12-27T15:16:49.000Z",
-  "createdAt": "2025-12-11T09:11:08.391Z",
-  "id": "4ITR4MrDy48KTQTq",
-  "name": "Generate HeyGen onboarding videos from HR PDFs to Google Drive for Base 44",
+  "updatedAt": "2025-12-31T13:47:46.440Z",
+  "createdAt": "2025-10-13T06:59:58.764Z",
+  "id": "9CwyEVbg21ZQratp",
+  "name": "Automate Template Delivery to Customers from Stripe Payments",
   "active": true,
   "isArchived": false,
   "nodes": [
     {
       "parameters": {
-        "content": "## Credentials & Security\nConfigure OAuth and API keys securely. Replace all placeholder IDs before running the workflow.\n",
-        "width": 368,
-        "color": 3
+        "model": "gpt-4o-mini",
+        "options": {}
       },
-      "type": "n8n-nodes-base.stickyNote",
-      "position": [
-        672,
-        560
-      ],
+      "type": "@n8n/n8n-nodes-langchain.lmChatAzureOpenAi",
       "typeVersion": 1,
-      "id": "8d75dd12-2423-4fe2-a48c-825ad03da21e",
-      "name": "Sticky Note6"
+      "position": [
+        2512,
+        1472
+      ],
+      "id": "efc2eba5-5d82-44f0-812c-706e23a06b30",
+      "name": "Azure OpenAI Chat Model",
+      "credentials": {
+        "azureOpenAiApi": {
+          "id": "C3WzT18XqF8OdVM6",
+          "name": "Azure Open AI account"
+        }
+      }
     },
     {
       "parameters": {
-        "content": "## Video Delivery\nDownloads the completed video, stores it in Google Drive, and returns the result via webhook response.\n",
-        "height": 352,
-        "width": 928,
-        "color": 2
+        "jsonSchemaExample": "{\n\t\"Subject\": \"\",\n\t\"Body\": \"\"\n}"
       },
-      "type": "n8n-nodes-base.stickyNote",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
       "position": [
-        -272,
-        384
+        2672,
+        1472
       ],
+      "id": "9ea2dde1-5ace-4dbb-8e9c-6303f05fee4b",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "model": "gpt-4o-mini",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatAzureOpenAi",
       "typeVersion": 1,
-      "id": "30a2b3bd-2335-4e58-bfd0-3942a9e1bcd8",
-      "name": "Sticky Note5"
-    },
-    {
-      "parameters": {
-        "content": "## Video Creation & Status\nSubmits the script to HeyGen and polls the API until the video generation is complete.\n",
-        "height": 352,
-        "width": 1104,
-        "color": 3
-      },
-      "type": "n8n-nodes-base.stickyNote",
       "position": [
-        -1392,
-        384
+        688,
+        1472
       ],
-      "typeVersion": 1,
-      "id": "121026eb-7619-47a5-9f68-77f279e51c5e",
-      "name": "Sticky Note4"
+      "id": "c32e339f-f9f6-4d9a-bce0-dff7d4d9f07f",
+      "name": "Azure OpenAI Chat Model1",
+      "credentials": {
+        "azureOpenAiApi": {
+          "id": "C3WzT18XqF8OdVM6",
+          "name": "Azure Open AI account"
+        }
+      }
     },
     {
       "parameters": {
-        "content": "## Script Generation\nTransforms simplified policy data into a natural, conversational video script optimized for HeyGen avatars.\n",
-        "height": 528,
-        "width": 416,
-        "color": 2
+        "jsonSchemaExample": "{\n   \"row_number\":\"\",\n   \"Name\":\"\",\n   \"Google Drive Link\":\"\",\n   \"Password\":\"\"\n}\n"
       },
-      "type": "n8n-nodes-base.stickyNote",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
       "position": [
-        -1824,
-        368
+        944,
+        1472
       ],
-      "typeVersion": 1,
-      "id": "787daf1a-095b-447f-8c90-ed6dc07438d2",
-      "name": "Sticky Note3"
+      "id": "10aa26f0-0725-495f-89bc-2a10da48df23",
+      "name": "Structured Output Parser1"
     },
     {
       "parameters": {
-        "content": "## Policy Simplification\nUses AI to convert raw policy text into clear, structured onboarding guidance in JSON format.\n",
-        "height": 528,
-        "width": 464,
-        "color": 3
-      },
-      "type": "n8n-nodes-base.stickyNote",
-      "position": [
-        -2320,
-        384
-      ],
-      "typeVersion": 1,
-      "id": "1de15ad1-9777-4dd6-8e64-e5bfd8b1b168",
-      "name": "Sticky Note2"
-    },
-    {
-      "parameters": {
-        "content": "## 🧩 HR Onboarding Video Generator (HeyGen + Google Drive)\n\n### How it works\nThis workflow turns an HR policy PDF into a complete onboarding video automatically. It starts when a policy document is uploaded via a webhook. The text is extracted from the PDF and simplified using AI into clear, employee-friendly onboarding content. That content is then converted into a natural, conversational video script designed specifically for a HeyGen avatar.\n\nOnce the script is ready, the workflow creates a HeyGen video generation task and periodically checks the video status until it is complete. After the video is finished, it is downloaded and securely stored in Google Drive. The final video file is then returned as part of the webhook response, making it easy to integrate with external apps or internal tools.\n\nThis automation helps HR teams save time, ensure consistency, and quickly create professional onboarding videos without manual scripting or video editing.\n\n### Setup steps\n1. Connect your credentials for Google Drive, OpenAI, and HeyGen.\n2. Replace placeholder values such as API keys, avatar ID, and voice ID in the HeyGen nodes.\n3. Configure the webhook endpoint and test the workflow by uploading a sample HR policy PDF.\n",
-        "height": 688,
-        "width": 432
-      },
-      "type": "n8n-nodes-base.stickyNote",
-      "position": [
-        -2976,
-        -352
-      ],
-      "typeVersion": 1,
-      "id": "36b85cd1-43c0-48f3-a7ba-767906a5a6dc",
-      "name": "Sticky Note"
-    },
-    {
-      "parameters": {
-        "content": "## PDF Intake & Extraction\nReceives the HR policy PDF via webhook and extracts readable text for downstream AI processing.\n",
-        "height": 336,
-        "width": 624,
-        "color": 2
-      },
-      "type": "n8n-nodes-base.stickyNote",
-      "position": [
-        -2960,
-        384
-      ],
-      "typeVersion": 1,
-      "id": "9e2ad384-72ac-4100-87e9-12650d62c807",
-      "name": "Sticky Note1"
-    },
-    {
-      "parameters": {
-        "amount": 1
-      },
-      "id": "6f1dd664-fa22-41d6-879c-380e5bde5dcb",
-      "name": "Wait 10 Seconds",
-      "type": "n8n-nodes-base.wait",
-      "typeVersion": 1.1,
-      "position": [
-        -1120,
-        528
-      ],
-      "webhookId": "wait-webhook-id"
-    },
-    {
-      "parameters": {
-        "url": "https://api.heygen.com/v1/video_status.get",
-        "sendQuery": true,
-        "queryParameters": {
-          "parameters": [
-            {
-              "name": "video_id",
-              "value": "=d438315e5eac48d8adf3a2424beaf3da"
-            }
-          ]
+        "documentId": {
+          "__rl": true,
+          "value": "16RTZT1Hp7CW_kK455DZz1EtGjZ1aDNmOVmIo2jKrlrg",
+          "mode": "list",
+          "cachedResultName": "n8n Automations - Zip Files",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/16RTZT1Hp7CW_kK455DZz1EtGjZ1aDNmOVmIo2jKrlrg/edit?usp=drivesdk"
         },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/16RTZT1Hp7CW_kK455DZz1EtGjZ1aDNmOVmIo2jKrlrg/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.6,
+      "position": [
+        816,
+        1472
+      ],
+      "id": "a4c6fb7f-36b1-4d8d-b6dc-008f806306a9",
+      "name": "Get row(s) in sheet in Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "s4dP1fNuVZ2gWvs3",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "=https://api.stripe.com/v1/payment_intents/{{ $json[\"payment_intent\"] }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "stripeApi",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
             {
-              "name": "accept",
-              "value": "application/json"
-            },
-            {
-              "name": "x-api-key",
-              "value": "sk_V2_hgu_kQpjxYBiwRQ_jPIkB6THHvIhXs18SR63LNoiOhVfwuE3"
+              "name": "Content-Type",
+              "value": "application/x-www-form-urlencoded"
             }
           ]
         },
         "options": {}
       },
-      "id": "2e188f40-9840-45c0-aa21-a72e2ad0f40a",
-      "name": "Check HeyGen Video Status",
+      "id": "9152cb4e-8636-4313-aa52-f551c8a9d42b",
+      "name": "Get Payment Intent (From Charge)",
       "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
+      "typeVersion": 4.1,
       "position": [
-        -896,
-        448
-      ]
+        -656,
+        1296
+      ],
+      "credentials": {
+        "stripeApi": {
+          "id": "nsMKPaLthyR80OZO",
+          "name": "Stripe account Techdome"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "=https://api.stripe.com/v1/products/{{ $json[\"payment_details\"][\"order_reference\"] }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "stripeApi",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/x-www-form-urlencoded"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "32405012-4ca8-496c-89ea-086c3f980e21",
+      "name": "Get Product Details (from Payment Intent)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        -208,
+        1216
+      ],
+      "credentials": {
+        "stripeApi": {
+          "id": "nsMKPaLthyR80OZO",
+          "name": "Stripe account Techdome"
+        }
+      }
     },
     {
       "parameters": {
@@ -173,16 +174,26 @@
             "caseSensitive": true,
             "leftValue": "",
             "typeValidation": "strict",
-            "version": 1
+            "version": 2
           },
           "conditions": [
             {
-              "id": "0bffc679-63bf-4395-b2b6-8d072cee6484",
-              "leftValue": "={{ $json.data.status }}",
-              "rightValue": "completed",
+              "id": "7fe75739-2112-47bb-80b0-e6559db651af",
+              "leftValue": "={{ $json[\"payment_details\"][\"order_reference\"] }}",
+              "rightValue": "",
               "operator": {
                 "type": "string",
-                "operation": "equals"
+                "operation": "exists",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "cee01069-8b81-4cbd-bb44-afcf44076f26",
+              "leftValue": "={{ $json[\"payment_details\"][\"order_reference\"] }}",
+              "rightValue": "prod",
+              "operator": {
+                "type": "string",
+                "operation": "startsWith"
               }
             }
           ],
@@ -190,419 +201,781 @@
         },
         "options": {}
       },
-      "id": "5c0e92dd-5134-4b8d-a7f7-f3cc9237d284",
-      "name": "Check If Video Completed",
       "type": "n8n-nodes-base.if",
-      "typeVersion": 2,
+      "typeVersion": 2.2,
       "position": [
-        -448,
-        528
-      ]
+        -432,
+        1216
+      ],
+      "id": "67670bdd-0ca6-404e-9127-d57d3d44f606",
+      "name": "If1"
     },
     {
       "parameters": {
-        "url": "={{ $json.data.video_url }}",
-        "options": {
-          "response": {
-            "response": {
-              "responseFormat": "file"
+        "jsCode": "// For n8n Code Node\n// This matches automations with charges based on product name\ntry {\n  // Get all input items\n  const items = $input.all();\n  \n  // Initialize arrays\n  let automationsList = [];\n  let chargesList = [];\n  \n  // Separate automations and charges from all items\n  items.forEach(item => {\n    const data = item.json;\n    \n    // Check if it's an automation (has output with Name)\n    if (data.output && data.output.Name) {\n      automationsList.push(data.output);\n    }\n    // Check if it's a charge (has customer_name and payment_intent)\n    else if (data.customer_name && data.payment_intent) {\n      chargesList.push(data);\n    }\n  });\n  \n  // Filter successful charges only\n  const successfulCharges = chargesList.filter(charge => {\n    return charge && charge.status === \"succeeded\";\n  });\n  \n  // Match automations with charges based on product name\n  const matchedResults = [];\n  \n  successfulCharges.forEach(charge => {\n    // Find matching automation by comparing names\n    // Remove [n8n] suffix and trim for comparison\n    const chargeProdName = (charge.product_name || \"\").replace(/\\s*\\[n8n\\]\\s*$/i, \"\").trim();\n    \n    const matchingAutomation = automationsList.find(automation => {\n      const autoName = (automation.Name || \"\").replace(/\\s*\\[n8n\\]\\s*$/i, \"\").trim();\n      return autoName === chargeProdName;\n    });\n    \n    if (matchingAutomation) {\n      matchedResults.push({\n        // Automation Info\n        automationName: matchingAutomation.Name || \"Unknown\",\n        automationRow: matchingAutomation.row_number || \"\",\n        googleDriveLink: matchingAutomation[\"Google Drive Link\"] || \"\",\n        password: matchingAutomation.Password || \"\",\n        \n        // Customer Info\n        customerName: charge.customer_name || \"Unknown\",\n        customerEmail: charge.email || \"\",\n        \n        // Payment Info\n        amount: charge.amount ? (charge.amount / 100).toFixed(2) : \"0.00\",\n        currency: (charge.currency || \"usd\").toUpperCase(),\n        paymentIntent: charge.payment_intent || \"\",\n        orderReference: charge.order_reference || \"\",\n        productName: charge.product_name || \"\",\n        purchaseDate: charge.created ? \n          new Date(charge.created * 1000).toLocaleDateString() : \"\",\n        status: charge.status || \"unknown\",\n        receiptUrl: charge.receipt_url || \"\"\n      });\n    }\n  });\n  \n  // Return results\n  if (matchedResults.length > 0) {\n    return matchedResults;\n  } else {\n    return [{\n      error: \"No matching data found\",\n      automations_found: automationsList.length,\n      charges_found: successfulCharges.length,\n      automation_names: automationsList.map(a => a.Name),\n      charge_product_names: successfulCharges.map(c => c.product_name)\n    }];\n  }\n  \n} catch (error) {\n  return [{\n    error: error.message,\n    stack: error.stack\n  }];\n}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1600,
+        1264
+      ],
+      "id": "fdcc6c45-3d67-4e21-8c3b-dbcafe8ff891",
+      "name": "Customer matching"
+    },
+    {
+      "parameters": {
+        "content": "## Stripe Data Collection\n\n💳 Get many charges (Stripe)\nFetches all charge data from Stripe; later filtered to keep only completed payments.",
+        "height": 192
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1200,
+        1520
+      ],
+      "typeVersion": 1,
+      "id": "5f3a1fc9-950c-430a-adbb-c52c3cf09001",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "## Filter – Successful Charges\n\n🔍 Status check = succeeded\nRemoves failed/pending charges so only paid orders continue.",
+        "height": 176
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -992,
+        1168
+      ],
+      "typeVersion": 1,
+      "id": "5490051b-e8df-49df-b7ba-2c08a1f61fd4",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "## Send a message (Gmail)\n\n📨 Email dispatch\nSends the AI-generated subject and HTML body to the customer’s email.",
+        "height": 192
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2832,
+        1040
+      ],
+      "typeVersion": 1,
+      "id": "67c268a3-8f66-440a-9f0b-b1aa78dc9b37",
+      "name": "Sticky Note8"
+    },
+    {
+      "parameters": {
+        "content": "## AI Agent – Email Composer\n\n🧩 Personalized HTML email\nUses Azure OpenAI (GPT-4o-mini) to craft thank-you emails with access link, password, onboarding tip, and sign-off.",
+        "height": 208
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2464,
+        1008
+      ],
+      "typeVersion": 1,
+      "id": "d54a6b39-c931-4b53-96b4-b34583c9bd77",
+      "name": "Sticky Note9"
+    },
+    {
+      "parameters": {
+        "content": "## Loop Over Items of New Purchases\n\n🔁 Batch sender\nIterates through each new purchase record for email generation & delivery.",
+        "height": 208
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2224,
+        1568
+      ],
+      "typeVersion": 1,
+      "id": "d4e83f8c-097e-4ed7-8e71-a5a6a461064d",
+      "name": "Sticky Note10"
+    },
+    {
+      "parameters": {
+        "content": "##  Check Automation Exists\n\n⚡ Final guard\nVerifies automation data is present before generating and sending emails.",
+        "height": 192
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2048,
+        1136
+      ],
+      "typeVersion": 1,
+      "id": "4856afcc-8641-441e-92f1-57116d973120",
+      "name": "Sticky Note11"
+    },
+    {
+      "parameters": {
+        "content": "## SQL Combine\n\n🧮 Exclude already-logged customers\nSQL logic filters out rows already present in the purchase sheet.",
+        "height": 208
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1872,
+        1520
+      ],
+      "typeVersion": 1,
+      "id": "33dfa14b-73b4-4318-8d03-9befa25b9aff",
+      "name": "Sticky Note12"
+    },
+    {
+      "parameters": {
+        "content": "## Customer Matching \n\n🧠 Product-name matcher\nMatches successful Stripe charges to automation rows (handles “[n8n]” suffix and trims). Outputs final, ready-to-email JSON.",
+        "height": 256
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1600,
+        992
+      ],
+      "typeVersion": 1,
+      "id": "c319fec4-bf8d-41fc-86e4-07382ff176f3",
+      "name": "Sticky Note13"
+    },
+    {
+      "parameters": {
+        "content": "## Get row(s) in sheet – Purchase Sheet Lookup\n\n🧾 De-dup check\nReads existing entries in “Automation Purchase Sheet” to avoid logging duplicates.",
+        "height": 224
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1552,
+        1632
+      ],
+      "typeVersion": 1,
+      "id": "b85be8c6-11f0-4505-b9a7-9a32fa6f65f4",
+      "name": "Sticky Note14"
+    },
+    {
+      "parameters": {
+        "content": "##  Combine Stripe + Sheet Data\n\n🔄 Stripe × Sheet join\nBrings together payment info and automation metadata for a complete record.",
+        "height": 224
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1264,
+        1536
+      ],
+      "typeVersion": 1,
+      "id": "d179d8ba-eef0-44fa-aedf-ccf3b33a9c01",
+      "name": "Sticky Note15"
+    },
+    {
+      "parameters": {
+        "content": "## Check Match Found\n\n🧮 Sheet match gate\nOnly proceeds when a valid row is found for the purchased automation.",
+        "height": 192
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1056,
+        1040
+      ],
+      "typeVersion": 1,
+      "id": "c9b30bd0-9bbd-4b47-baca-cac27d5325a5",
+      "name": "Sticky Note16"
+    },
+    {
+      "parameters": {
+        "content": "## AI Agent  → Google Sheets Lookup\n\n🔍 Automation metadata lookup\nFinds matching automation by product/Name in “n8n Automations – Zip Files” sheet.",
+        "height": 224
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        688,
+        992
+      ],
+      "typeVersion": 1,
+      "id": "cde55b8d-7bcd-47ba-8dbe-951379b80421",
+      "name": "Sticky Note17"
+    },
+    {
+      "parameters": {
+        "content": "##  Check Required Fields\n\n🚦 Field validation\nEnsures order_reference, product_name, customer_name, and email are present before moving on.",
+        "height": 224
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        384,
+        1520
+      ],
+      "typeVersion": 1,
+      "id": "fcae0ff6-e228-4d88-8542-0f5744b565bd",
+      "name": "Sticky Note18"
+    },
+    {
+      "parameters": {
+        "content": "## Merge Logic Format Data\n\n🧠 Normalize fields\nBuilds clean JSON (customer_name, email, product_name, amount, currency, status, receipt_url, created).",
+        "height": 240
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        176,
+        1104
+      ],
+      "typeVersion": 1,
+      "id": "b1d8bcf2-3dd1-4a4d-8c22-dbfb9134432e",
+      "name": "Sticky Note19"
+    },
+    {
+      "parameters": {
+        "content": "## Merge Charge + PaymentIntent + Product\n\n🔄 Data merge hub\nCombines charge + payment_intent + product into one unified record per purchase.",
+        "height": 240
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -48,
+        1568
+      ],
+      "typeVersion": 1,
+      "id": "df357cd7-5b94-4e8c-a92d-2d9193ff996a",
+      "name": "Sticky Note20"
+    },
+    {
+      "parameters": {
+        "content": "## Get Product Details (from Payment Intent)\n\n🧾 Stripe Product fetch\nUses order reference from payment_intent to get product name/description/image.",
+        "height": 224
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -304,
+        976
+      ],
+      "typeVersion": 1,
+      "id": "301434a7-ad34-4353-8c80-cc20088faa1c",
+      "name": "Sticky Note21"
+    },
+    {
+      "parameters": {
+        "content": "## Get Payment Intent (from Charge)\n\n🔗 Stripe Payment Intent lookup\nExpands each charge with its payment_intent details for richer context.",
+        "height": 224
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -704,
+        1488
+      ],
+      "typeVersion": 1,
+      "id": "28243790-72e7-4d5b-aca5-874656f8d28f",
+      "name": "Sticky Note23"
+    },
+    {
+      "parameters": {
+        "content": "## Trigger & Data Fetch\n\n🟢 Schedule Trigger\nTriggers every morning (7 AM IST) to fetch latest successful Stripe purchases.",
+        "height": 208
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1568,
+        1136
+      ],
+      "typeVersion": 1,
+      "id": "4a998670-3a1e-4b28-8455-3dca5114db76",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "resource": "charge",
+        "operation": "getAll",
+        "returnAll": true
+      },
+      "type": "n8n-nodes-base.stripe",
+      "typeVersion": 1,
+      "position": [
+        -1104,
+        1360
+      ],
+      "id": "c9c2f539-2480-443b-abaa-51a6702d8002",
+      "name": "Stripe Data Collection",
+      "credentials": {
+        "stripeApi": {
+          "id": "nsMKPaLthyR80OZO",
+          "name": "Stripe account Techdome"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "e593f4e0-b1e2-4e6b-b4d0-9a1a6e6495bd",
+              "leftValue": "={{ $json.status }}",
+              "rightValue": "succeeded",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
             }
-          }
-        }
-      },
-      "id": "a183bda0-76b5-4bd4-aa86-29ddb38a168b",
-      "name": "Download Completed Video",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [
-        -224,
-        528
-      ]
-    },
-    {
-      "parameters": {
-        "name": "=HR_Onboarding_Video_{{ $now.format('yyyy-MM-dd_HHmmss') }}.mp4",
-        "driveId": {
-          "__rl": true,
-          "mode": "list",
-          "value": "My Drive"
-        },
-        "folderId": {
-          "__rl": true,
-          "value": "1zm4CTaf9mcX34-Bsk9dzQ7r02BROObOO",
-          "mode": "list",
-          "cachedResultName": "Sample Dummy Company Document",
-          "cachedResultUrl": "https://drive.google.com/drive/folders/1zm4CTaf9mcX34-Bsk9dzQ7r02BROObOO"
+          ],
+          "combinator": "and"
         },
         "options": {}
       },
-      "id": "7ec99e29-9ccf-4100-ba45-9e325f2f36f7",
-      "name": "Upload Video to Google Drive",
-      "type": "n8n-nodes-base.googleDrive",
-      "typeVersion": 3,
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
       "position": [
-        0,
-        528
+        -896,
+        1392
       ],
-      "credentials": {
-        "googleDriveOAuth2Api": {
-          "id": "E7nEqUL27GUx1xHa",
-          "name": "Techdome Account"
-        }
-      }
+      "id": "07376dc3-6cc0-4d66-9642-a014a71288a7",
+      "name": "Filter – Successful Charges"
     },
     {
       "parameters": {
         "promptType": "define",
-        "text": "=Simplify the following company policy text into clear onboarding instructions for a new employee.\n\nMake the content:\n- easy to understand\n- friendly and conversational\n- accurate and compliant\n- structured by sections\n\nHere is the extracted policy text:\n{{ $json.text }}\n\nFollow the structure defined in the Output Parser and return ONLY valid JSON.\n",
+        "text": "=This is the input:{{ $json.product_name }}",
         "hasOutputParser": true,
         "options": {
-          "systemMessage": "=You are an expert HR policy analyst who specializes in simplifying complex company policies into clear, concise, employee-friendly onboarding content.\n\nYour responsibilities:\n- Remove legal jargon and unnecessary complexity.\n- Maintain accuracy while making content easy to understand.\n- Convert policy text into structured, step-by-step onboarding guidance.\n- Produce a friendly and welcoming tone suitable for new employees.\n- Preserve important rules, compliance points, and safety guidelines.\n- Avoid adding information that does not exist in the original document.\n\nYou must always produce output ONLY in the structured JSON format defined in the Output Parser.\nDo NOT include explanations, markdown, or additional commentary.\n"
+          "systemMessage": "=You are an AI assistant with access to a Google Sheets tool. Your task is as follows:\n\n- You will receive an input phrase. This phrase represents a name.\n- Use the Google Sheets tool to search for a row in the spreadsheet where the value in the \"Name\" column matches the input phrase with at least 80% similarity (fuzzy matching).\n- First, try to find an exact match. If no exact match exists, find the closest matching name that has at least 80% similarity to the input.\n- Consider variations in spelling, spacing, capitalization, and minor differences when matching names.\n- If a matching row is found (either exact or fuzzy match), return the entire row as a JSON object, including all columns and their values.\n- If no matching row is found with at least 80% similarity, respond with: \"No matching row found for the provided name.\"\n- If there are multiple matches with similar similarity scores (within 5% of each other), return the match with the highest similarity score.\n- Do not return any extra commentary or explanation—only the result.\n- If there is an error accessing the spreadsheet, respond with: \"Error accessing the spreadsheet.\"\n\nReturn ONLY a single JSON object with this exact structure:\n{\n  \"row_number\": \"\",\n  \"Name\": \"\",\n  \"Google Drive Link\": \"\",\n  \"Password\": \"\"\n}\n\nNo additional keys such as \"response\", \"action\", \"output\", or text outside the JSON.\n```\n\n## Key Changes Made:\n\n1. **Fuzzy Matching**: Changed from \"exactly matches\" to \"matches with at least 80% similarity\"\n2. **Matching Strategy**: Added instruction to try exact match first, then fuzzy match\n3. **Flexibility**: Added consideration for spelling variations, spacing, and capitalization\n4. **Best Match Selection**: If multiple similar matches exist, return the one with highest similarity"
         }
       },
       "type": "@n8n/n8n-nodes-langchain.agent",
-      "typeVersion": 2,
+      "typeVersion": 2.1,
       "position": [
-        -2224,
-        528
+        752,
+        1248
       ],
-      "id": "8cd022b5-89a2-4712-8ada-f50ae866e1d9",
-      "name": "AI Agent"
-    },
-    {
-      "parameters": {
-        "jsonSchemaExample": "{\n  \"summary\": \"A short 3–4 sentence summary of the entire policy in simple language.\",\n  \"key_points\": [\n    \"A list of all major rules and policies rewritten in easy language.\",\n    \"One point per rule or policy section.\",\n    \"No legal terminology.\"\n  ],\n  \"onboarding_instructions\": [\n    \"Practical steps new employees should follow based on the policy.\",\n    \"Written as actionable, friendly instructions.\"\n  ],\n  \"compliance_requirements\": [\n    \"Clear, simple statements about what employees must legally or formally comply with.\",\n    \"Examples: data security, confidentiality, behavior expectations.\"\n  ]\n}\n"
-      },
-      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
-      "typeVersion": 1.3,
-      "position": [
-        -2016,
-        752
-      ],
-      "id": "908422ae-e9ae-4ab6-be18-6c5702c903b1",
-      "name": "Structured Output Parser"
-    },
-    {
-      "parameters": {
-        "sessionIdType": "customKey",
-        "sessionKey": "\"description writer\""
-      },
-      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
-      "typeVersion": 1.3,
-      "position": [
-        -2144,
-        752
-      ],
-      "id": "5099525e-b7ab-4736-89de-a676f658259a",
-      "name": "Simple Memory1"
-    },
-    {
-      "parameters": {
-        "operation": "pdf",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.extractFromFile",
-      "typeVersion": 1.1,
-      "position": [
-        -2496,
-        512
-      ],
-      "id": "a7c6b8fe-6254-40d1-b20a-7f936bfbfc50",
-      "name": "Extract from File"
-    },
-    {
-      "parameters": {
-        "model": {
-          "__rl": true,
-          "value": "gpt-4.1-mini",
-          "mode": "list",
-          "cachedResultName": "gpt-4.1-mini"
-        },
-        "responsesApiEnabled": false,
-        "options": {}
-      },
-      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
-      "typeVersion": 1.3,
-      "position": [
-        -2272,
-        752
-      ],
-      "id": "5d7aa27d-c5ea-47e5-8a22-b239ffdbe21e",
-      "name": "OpenAI Chat Model",
-      "credentials": {
-        "openAiApi": {
-          "id": "5Kzt6hGSZ1JHZqWN",
-          "name": "OpenAi account 2"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "jsonSchemaExample": "{\n  \"video_title\": \"A short, friendly title for the onboarding video.\",\n  \"intro\": \"A warm onboarding introduction, 2–4 sentences.\",\n  \"script_sections\": [\n    {\n      \"section_title\": \"Title for this script section.\",\n      \"narration\": \"Natural, flowing narration text for this section. Should sound like a real presenter speaking.\"\n    }\n  ],\n  \"closing\": \"A friendly closing message for the end of the video.\",\n  \"full_script\": \"A single combined narration script with all sections merged into one continuous flow, fully suitable for HeyGen.\"\n}\n"
-      },
-      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
-      "typeVersion": 1.3,
-      "position": [
-        -1552,
-        752
-      ],
-      "id": "406b3173-0db8-485f-881a-798f61666155",
-      "name": "Structured Output Parser1"
-    },
-    {
-      "parameters": {
-        "sessionIdType": "customKey",
-        "sessionKey": "\"description writer\""
-      },
-      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
-      "typeVersion": 1.3,
-      "position": [
-        -1680,
-        752
-      ],
-      "id": "0a655c3a-f199-4aaa-8502-84d3f267adad",
-      "name": "Simple Memory"
-    },
-    {
-      "parameters": {
-        "promptType": "define",
-        "text": "=Using the simplified policy details below, create a professional onboarding video narration script suitable for a HeyGen avatar.\n\nThe final script must:\n- Be conversational, friendly, and natural.\n- Introduce the topic warmly (e.g., “Welcome to the team!”).\n- Break the narration into clear sections or scenes.\n- Include subtle pause markers (like “[pause]” where appropriate).\n- Avoid bullet points inside the narration; write in full flowing sentences.\n- Keep all information accurate to the provided content.\n\nHere is the structured policy information:\n\nSummary:\n{{ $json.output.summary }}\n\nKey Points:\n{{ $json.output.key_points }}\n\nOnboarding Instructions:\n{{ $json.output.onboarding_instructions }}\n\nCompliance Requirements:\n{{ $json.output.compliance_requirements }}\n\nFollow the Output Parser JSON schema exactly and return ONLY valid JSON.\n",
-        "hasOutputParser": true,
-        "options": {
-          "systemMessage": "=You are an expert instructional scriptwriter who specializes in creating professional onboarding video scripts for HR training.\n\nYour responsibilities:\n- Convert structured HR policy content into a natural, friendly, conversational narration suitable for a HeyGen avatar.\n- Ensure the script flows logically, with a warm and welcoming tone.\n- Maintain accuracy while simplifying complex concepts.\n- Avoid robotic or overly formal language.\n- Add natural transitions, pauses, emphasis, and scene suggestions.\n- Do NOT invent new policies; stay faithful to the provided content.\n- Produce output ONLY in the JSON format defined in the Output Parser. \n- Generate the full_script which is easily acceptable by the generate video api.\n\n\n Strict Output Format:\n\n{\n  \"video_title\": \"\",\n  \"intro\": \"\",\n  \"script_sections\": [\n    {\n      \"section_title\": \"\",\n      \"narration\": \"\"\n    }\n  ],\n  \"closing\": \"\",\n  \"full_script\": \"\"\n}\n"
-        }
-      },
-      "type": "@n8n/n8n-nodes-langchain.agent",
-      "typeVersion": 2,
-      "position": [
-        -1744,
-        528
-      ],
-      "id": "f2a8a469-7afd-4c82-9e72-47ebc2d3c7f6",
-      "name": "Generate Script With AI",
+      "id": "c72504e0-b292-4a92-9a8f-27c58fe3f525",
+      "name": "AI Agent  → Google Sheets Lookup",
       "retryOnFail": true
     },
     {
       "parameters": {
-        "method": "POST",
-        "url": "https://api.heygen.com/v2/video/generate",
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
+        "content": "## Append or update row in sheet  For  Tracking\n\n📊 Audit & reporting\nLogs each processed purchase and email outcome into “Automation Purchase Sheet”.",
+        "height": 224
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3184,
+        1152
+      ],
+      "typeVersion": 1,
+      "id": "0e2b02cc-42da-464c-9d18-4423587bc95a",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
             {
-              "name": "accept",
-              "value": "application/json"
-            },
-            {
-              "name": "x-api-key",
-              "value": "sk_V2_hgu_kQpjxYBiwRQ_jPIkB6THHvIhXs18SR63LNoiOhVfwuE3"
+              "triggerAtHour": 7
             }
           ]
-        },
-        "sendBody": true,
-        "specifyBody": "json",
-        "jsonBody": "={\n  \"caption\": false,\n  \"title\": \"Welcome to Sample Company Onboarding\",\n  \"video_inputs\": [\n    {\n      \"character\": {\n        \"type\": \"avatar\",\n        \"avatar_id\": \"a19c6b2f4d814539a6dcc86ea5a2e5bd\"\n      },\n      \"voice\": {\n        \"type\": \"text\",\n        \"voice_id\": \"e0cc82c22f414c95b1f25696c732f058\",\n        \"input_text\": \"hey i am saurabh garg i used to work on the n8n automation\"\n      },\n      \"background\": {\n        \"type\": \"color\",\n        \"value\": \"#FFFFFF\"\n      }\n    }\n  ],\n  \"dimension\": {\n    \"width\": 1280,\n    \"height\": 720\n  }\n}\n",
-        "options": {}
+        }
       },
-      "id": "0c874be8-4db7-451d-8085-22184aae3771",
-      "name": "Create HeyGen Video Task1",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
       "position": [
-        -1344,
-        528
+        -1328,
+        1360
+      ],
+      "id": "7e940abd-2bb0-495a-9f34-85705154e90b",
+      "name": "Schedule Trigger Daily"
+    },
+    {
+      "parameters": {
+        "numberInputs": 3
+      },
+      "id": "b8b682e2-af1a-42cc-b373-cadcb5bf46eb",
+      "name": "Merge Charge + PaymentIntent + Product",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        16,
+        1344
       ]
     },
     {
       "parameters": {
-        "amount": 1
+        "jsCode": "// Get all combined items\nconst all = $input.all().map(i => i.json);\n\n// Separate by type\nconst charges = all.filter(i => i.object === 'charge');\nconst intents = all.filter(i => i.object === 'payment_intent');\nconst products = all.filter(i => i.object === 'product');\n\n// Merge logic\nconst merged = [];\n\nfor (const charge of charges) {\n  const intent = intents.find(i => i.id === charge.payment_intent);\n  if (!intent) continue;\n\n  const orderRef = intent?.payment_details?.order_reference;\n  const product = products.find(p => p.id === orderRef);\n\n  merged.push({\n    customer_name: charge.billing_details?.name || null,\n    email: charge.billing_details?.email || intent.receipt_email || null,\n    amount: charge.amount / 100,\n    currency: charge.currency,\n    status: charge.status,\n    payment_intent: charge.payment_intent,\n    order_reference: orderRef,\n    product_name: product?.name || null,\n    product_description: product?.description || null,\n    product_image: product?.images?.[0] || null,\n    receipt_url: charge.receipt_url,\n    created: charge.created\n  });\n}\n\nreturn merged.map(item => ({ json: item }));\n"
       },
-      "type": "n8n-nodes-base.wait",
-      "typeVersion": 1.1,
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
       "position": [
-        -672,
-        448
+        240,
+        1360
       ],
-      "id": "16c0a2c7-936f-4e8d-bfb2-6b9b4886d418",
-      "name": "Wait",
-      "webhookId": "31362452-a44a-4076-b831-dbefa74f7db1"
+      "id": "63679dc6-60d4-4057-bd67-01d64787284e",
+      "name": "Merge Logic Format Data"
     },
     {
       "parameters": {
-        "model": {
-          "__rl": true,
-          "value": "gpt-4.1-mini",
-          "mode": "list",
-          "cachedResultName": "gpt-4.1-mini"
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "f75a52cc-4555-429f-9edb-f363857eb379",
+              "leftValue": "={{ $json.order_reference }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "19d2ffe7-b8f7-45db-aa88-ad2aa3124f1c",
+              "leftValue": "={{ $json.product_name }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "a57d1ffe-7f55-4dee-add1-f314a6cc7dcd",
+              "leftValue": "={{ $json.customer_name }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "f57743ac-2dd9-44bf-911b-0b1f1e63c17a",
+              "leftValue": "={{ $json.email }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
         },
-        "responsesApiEnabled": false,
         "options": {}
       },
-      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
-      "typeVersion": 1.3,
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
       "position": [
-        -1808,
-        752
+        464,
+        1360
       ],
-      "id": "71d9f6ca-3b1f-4357-b3ef-d6e7cfc50f75",
-      "name": "OpenAI Chat Model1",
+      "id": "4a9a5f11-44f9-4d5a-b66c-68689384f15d",
+      "name": "Check Required Fields"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "5d49d25f-c987-41c6-bfcb-1eca70253a85",
+              "leftValue": "={{ $json.output.Name }}",
+              "rightValue": "=",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1152,
+        1248
+      ],
+      "id": "a5a425d6-8c3c-4a2d-a51d-bcfe75706097",
+      "name": "Check Match Found"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        1376,
+        1360
+      ],
+      "id": "f2983b5e-2896-4cd4-867a-04a328d4f797",
+      "name": "Combine Stripe + Sheet Data"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "142qqLXiISod9EzNvulhTOD1eQNOvRw85MtRHP8xcVD4",
+          "mode": "list",
+          "cachedResultName": "BDE Team Assignee",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/142qqLXiISod9EzNvulhTOD1eQNOvRw85MtRHP8xcVD4/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1978602406,
+          "mode": "list",
+          "cachedResultName": "Automation purchase sheet",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/142qqLXiISod9EzNvulhTOD1eQNOvRw85MtRHP8xcVD4/edit#gid=1978602406"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1600,
+        1456
+      ],
+      "id": "533a5564-3e14-4c3f-9f1f-47b13141b6d9",
+      "name": "Get row(s) in sheet – Purchase Sheet Lookup",
+      "executeOnce": true,
       "credentials": {
-        "openAiApi": {
-          "id": "5Kzt6hGSZ1JHZqWN",
-          "name": "OpenAi account 2"
+        "googleSheetsOAuth2Api": {
+          "id": "kpPEOLCGn963qpoh",
+          "name": "automations@techdome.ai"
         }
       }
     },
     {
       "parameters": {
-        "respondWith": "binary",
-        "responseDataSource": "set",
+        "mode": "combineBySql",
+        "query": "SELECT input1.*\nFROM input1\nLEFT JOIN input2\n  ON LOWER(TRIM(input1.customerEmail)) = LOWER(TRIM(input2.email))\n     OR LOWER(TRIM(input1.customerName)) = LOWER(TRIM(input2.name))\nWHERE input2.email IS NULL\n",
         "options": {}
       },
-      "type": "n8n-nodes-base.respondToWebhook",
-      "typeVersion": 1.4,
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
       "position": [
-        432,
-        528
+        1824,
+        1360
       ],
-      "id": "2be97da7-3b90-47bf-a9e2-aa758b863f14",
-      "name": "Respond to Webhook"
+      "id": "8a9d79a9-e004-4fba-b4fa-f12dc5da1d6b",
+      "name": "SQL Combine"
     },
     {
       "parameters": {
-        "httpMethod": "POST",
-        "path": "hr-onboarding-upload",
-        "responseMode": "responseNode",
-        "options": {
-          "binaryPropertyName": "data",
-          "rawBody": false
-        }
-      },
-      "id": "089aac03-c2dc-449c-929d-f123cbf32476",
-      "name": "Webhook - Receive Policy PDF",
-      "type": "n8n-nodes-base.webhook",
-      "typeVersion": 1.1,
-      "position": [
-        -2928,
-        512
-      ],
-      "webhookId": "hr-policy-upload"
-    },
-    {
-      "parameters": {
-        "url": "={{ $json.body.file_url }}",
-        "options": {
-          "response": {
-            "response": {
-              "responseFormat": "file"
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "c882466b-ec98-4ab4-be9e-851cf99a81a7",
+              "leftValue": "={{ $json.automationName }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "8dedcc5f-6228-4e8d-94eb-43a8b8d07daa",
+              "leftValue": "",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
             }
-          }
-        }
-      },
-      "id": "b2772bdb-0f2a-4e04-a9a0-2f7858ec3546",
-      "name": "Dowload file",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [
-        -2688,
-        464
-      ]
-    },
-    {
-      "parameters": {
-        "operation": "download",
-        "fileId": {
-          "__rl": true,
-          "value": "={{ $json.id }}",
-          "mode": "id"
+          ],
+          "combinator": "and"
         },
         "options": {}
       },
-      "type": "n8n-nodes-base.googleDrive",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        2048,
+        1360
+      ],
+      "id": "06de9fee-3f8e-4941-ad12-ddf8f862b9ff",
+      "name": "Check Automation Exists"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
       "typeVersion": 3,
       "position": [
-        208,
-        528
+        2272,
+        1360
       ],
-      "id": "2957ff95-6de6-47b2-9acb-32b13bba4cde",
-      "name": "Download file1",
+      "id": "92464fd8-4bda-4c18-a04d-543eb5fd3e72",
+      "name": "Loop Over Items of New Purchases"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Customer Details: \nName of customer: {{ $json.customerName }}\nEmail of the customer: {{ $json.customerEmail }}\n\nName of the Automation:{{ $json.automationName }}\nGoogle Drive Link: {{ $json.googleDriveLink }}\nPassword: {{ $json.password }} \nPurchase Date:{{ $json.purchaseDate }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=You are an AI email writing assistant specialized in crafting personalized, professional, and heartfelt thank-you emails for customers who have purchased automation templates from Techdome.\n\nYou will receive structured input with the following details:\n- Customer name\n- Customer email\n- Name of the automation purchased\n- Google Drive link to the files\n- Password to access the files\n- Date of purchase\n\nYour goal is to create a beautifully formatted HTML email that:\n1. **Feels human and genuine** — use warm, conversational, and appreciative language.\n2. **Highlights the automation name naturally** — make it feel special, not mechanical.\n3. **Shows gratitude clearly** — thank the customer sincerely for trusting Techdome.\n4. **Includes clear access details**:\n   - Add a visible and styled hyperlink to the Google Drive link.\n   - Display the password prominently but professionally (bold or highlighted).\n   - Add a note to keep it confidential.\n5. **Gives a short onboarding tip** — 1–2 lines about importing or using the automation.\n6. **Encourages further engagement** — invite them to explore other automations or reach out for help.\n7. **Signs off gracefully** from Rahul Joshi (CEO & Co-Founder, Techdome) — include his name and title at the end.\n\n**Tone:** Friendly, confident, and professional — sounding like Rahul personally wrote it.\n\n**Formatting Rules (HTML)**:\n- Use `<p>` for paragraphs, `<b>` for bold, `<a>` for links.\n- Avoid unnecessary line breaks or raw URLs.\n- Keep spacing clean and make it easy to read.\n- Do not use Markdown — only valid HTML.\n\n**Example style:**\n```html\n<p>Dear <b>{{ $json.customerName }}</b>,</p>\n<p>Thank you so much for purchasing the <b>{{ $json.automationName }}</b> automation! We truly appreciate your trust in Techdome.</p>\n<p>You can access your automation files here: <a href=\"{{ $json.googleDriveLink }}\">Access Your Automation Files</a></p>\n<p>Use the password <b>{{ $json.password }} </b> to open the files. Please keep it confidential for your security.</p>\n<p>Once you open the folder, follow the included documentation to import and start using your automation instantly.</p>\n<p>If you need help or wish to explore other automations, feel free to reply to this email — we’d love to assist.</p>\n<p>Warm regards,<br>\n<b>Rahul Joshi</b><br>\nCEO & Co-Founder, Techdome</p>\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        2496,
+        1248
+      ],
+      "id": "64adf0d3-1460-4848-90ee-81684b24d7ef",
+      "name": "AI Agent – Email Composer"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Loop Over Items of New Purchases').item.json.customerEmail }}",
+        "subject": "={{ $json.output.Subject }}",
+        "message": "={{ $json.output.Body }}",
+        "options": {
+          "appendAttribution": false,
+          "ccList": "anmol.kushwah@techdome.net.in,rahul.joshi@techdome.net.in,gaurav.chouhan@techdome.net.in"
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        2848,
+        1248
+      ],
+      "id": "d5d8b09a-306f-4fe1-9773-182f9d62136e",
+      "name": "Send a message (Gmail)",
+      "webhookId": "b5df4377-15a0-44ba-a55c-92eac22b7a0b",
       "credentials": {
-        "googleDriveOAuth2Api": {
-          "id": "E7nEqUL27GUx1xHa",
-          "name": "Techdome Account"
+        "gmailOAuth2": {
+          "id": "gEIaWCTvGfYjMSb3",
+          "name": "Gmail credentials"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "142qqLXiISod9EzNvulhTOD1eQNOvRw85MtRHP8xcVD4",
+          "mode": "list",
+          "cachedResultName": "BDE Team Assignee",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/142qqLXiISod9EzNvulhTOD1eQNOvRw85MtRHP8xcVD4/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1978602406,
+          "mode": "list",
+          "cachedResultName": "Automation purchase sheet",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/142qqLXiISod9EzNvulhTOD1eQNOvRw85MtRHP8xcVD4/edit#gid=1978602406"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "name": "={{ $('Loop Over Items of New Purchases').item.json.customerName }}",
+            "email": "={{ $('Loop Over Items of New Purchases').item.json.customerEmail }}",
+            "template purchased": "={{ $('Loop Over Items of New Purchases').item.json.automationName }}",
+            "status": "={{ $('Loop Over Items of New Purchases').item.json.status }}",
+            "price": "={{ $('Loop Over Items of New Purchases').item.json.amount }}"
+          },
+          "matchingColumns": [
+            "name"
+          ],
+          "schema": [
+            {
+              "id": "name",
+              "displayName": "name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "email",
+              "displayName": "email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "template purchased",
+              "displayName": "template purchased",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "price",
+              "displayName": "price",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        3072,
+        1360
+      ],
+      "id": "1fa862b0-51be-4abb-ac4b-12a6a0ab4000",
+      "name": "Append or update row in sheet  For  Tracking",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "kpPEOLCGn963qpoh",
+          "name": "automations@techdome.ai"
         }
       }
     }
   ],
   "connections": {
-    "Wait 10 Seconds": {
-      "main": [
+    "Azure OpenAI Chat Model": {
+      "ai_languageModel": [
         [
           {
-            "node": "Check HeyGen Video Status",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Check HeyGen Video Status": {
-      "main": [
-        [
-          {
-            "node": "Wait",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Check If Video Completed": {
-      "main": [
-        [
-          {
-            "node": "Download Completed Video",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "Wait 10 Seconds",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Download Completed Video": {
-      "main": [
-        [
-          {
-            "node": "Upload Video to Google Drive",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Upload Video to Google Drive": {
-      "main": [
-        [
-          {
-            "node": "Download file1",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "AI Agent": {
-      "main": [
-        [
-          {
-            "node": "Generate Script With AI",
-            "type": "main",
+            "node": "AI Agent – Email Composer",
+            "type": "ai_languageModel",
             "index": 0
           }
         ]
@@ -612,40 +985,18 @@
       "ai_outputParser": [
         [
           {
-            "node": "AI Agent",
+            "node": "AI Agent – Email Composer",
             "type": "ai_outputParser",
             "index": 0
           }
         ]
       ]
     },
-    "Simple Memory1": {
-      "ai_memory": [
-        [
-          {
-            "node": "AI Agent",
-            "type": "ai_memory",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Extract from File": {
-      "main": [
-        [
-          {
-            "node": "AI Agent",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "OpenAI Chat Model": {
+    "Azure OpenAI Chat Model1": {
       "ai_languageModel": [
         [
           {
-            "node": "AI Agent",
+            "node": "AI Agent  → Google Sheets Lookup",
             "type": "ai_languageModel",
             "index": 0
           }
@@ -656,95 +1007,259 @@
       "ai_outputParser": [
         [
           {
-            "node": "Generate Script With AI",
+            "node": "AI Agent  → Google Sheets Lookup",
             "type": "ai_outputParser",
             "index": 0
           }
         ]
       ]
     },
-    "Simple Memory": {
-      "ai_memory": [
+    "Get row(s) in sheet in Google Sheets": {
+      "ai_tool": [
         [
           {
-            "node": "Generate Script With AI",
-            "type": "ai_memory",
+            "node": "AI Agent  → Google Sheets Lookup",
+            "type": "ai_tool",
             "index": 0
           }
         ]
       ]
     },
-    "Generate Script With AI": {
+    "Get Payment Intent (From Charge)": {
       "main": [
         [
           {
-            "node": "Create HeyGen Video Task1",
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge Charge + PaymentIntent + Product",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Create HeyGen Video Task1": {
+    "If1": {
       "main": [
         [
           {
-            "node": "Wait 10 Seconds",
+            "node": "Get Product Details (from Payment Intent)",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Wait": {
+    "Get Product Details (from Payment Intent)": {
       "main": [
         [
           {
-            "node": "Check If Video Completed",
+            "node": "Merge Charge + PaymentIntent + Product",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "Customer matching": {
+      "main": [
+        [
+          {
+            "node": "SQL Combine",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "OpenAI Chat Model1": {
-      "ai_languageModel": [
-        [
-          {
-            "node": "Generate Script With AI",
-            "type": "ai_languageModel",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Webhook - Receive Policy PDF": {
+    "Stripe Data Collection": {
       "main": [
         [
           {
-            "node": "Dowload file",
+            "node": "Filter – Successful Charges",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Dowload file": {
+    "Filter – Successful Charges": {
       "main": [
         [
           {
-            "node": "Extract from File",
+            "node": "Get Payment Intent (From Charge)",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge Charge + PaymentIntent + Product",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "AI Agent  → Google Sheets Lookup": {
+      "main": [
+        [
+          {
+            "node": "Check Match Found",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Download file1": {
+    "Schedule Trigger Daily": {
       "main": [
         [
           {
-            "node": "Respond to Webhook",
+            "node": "Stripe Data Collection",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge Charge + PaymentIntent + Product": {
+      "main": [
+        [
+          {
+            "node": "Merge Logic Format Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge Logic Format Data": {
+      "main": [
+        [
+          {
+            "node": "Check Required Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Required Fields": {
+      "main": [
+        [
+          {
+            "node": "AI Agent  → Google Sheets Lookup",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Combine Stripe + Sheet Data",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Check Match Found": {
+      "main": [
+        [
+          {
+            "node": "Combine Stripe + Sheet Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Combine Stripe + Sheet Data": {
+      "main": [
+        [
+          {
+            "node": "Customer matching",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Get row(s) in sheet – Purchase Sheet Lookup",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet – Purchase Sheet Lookup": {
+      "main": [
+        [
+          {
+            "node": "SQL Combine",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "SQL Combine": {
+      "main": [
+        [
+          {
+            "node": "Check Automation Exists",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Automation Exists": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items of New Purchases",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items of New Purchases": {
+      "main": [
+        [],
+        [
+          {
+            "node": "AI Agent – Email Composer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent – Email Composer": {
+      "main": [
+        [
+          {
+            "node": "Send a message (Gmail)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message (Gmail)": {
+      "main": [
+        [
+          {
+            "node": "Append or update row in sheet  For  Tracking",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append or update row in sheet  For  Tracking": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items of New Purchases",
             "type": "main",
             "index": 0
           }
@@ -755,188 +1270,196 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "staticData": null,
+  "staticData": {
+    "node:Schedule Trigger": {
+      "recurrenceRules": []
+    },
+    "node:Schedule Trigger Daily": {
+      "recurrenceRules": []
+    }
+  },
   "meta": {
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "1a5d238c-82f4-474e-a9a9-0ba5fdbf0493",
-  "activeVersionId": "1a5d238c-82f4-474e-a9a9-0ba5fdbf0493",
+  "versionId": "d0b15520-986b-406c-a3fa-af99fa94bb55",
+  "activeVersionId": "d0b15520-986b-406c-a3fa-af99fa94bb55",
   "triggerCount": 1,
   "shared": [
     {
-      "updatedAt": "2025-12-11T09:11:08.396Z",
-      "createdAt": "2025-12-11T09:11:08.396Z",
+      "updatedAt": "2025-10-13T06:59:58.766Z",
+      "createdAt": "2025-10-13T06:59:58.766Z",
       "role": "workflow:owner",
-      "workflowId": "4ITR4MrDy48KTQTq",
+      "workflowId": "9CwyEVbg21ZQratp",
       "projectId": "iXigq15mRQoAAIrt"
     }
   ],
   "activeVersion": {
-    "updatedAt": "2025-12-18T09:59:22.976Z",
-    "createdAt": "2025-12-18T09:59:22.976Z",
-    "versionId": "1a5d238c-82f4-474e-a9a9-0ba5fdbf0493",
-    "workflowId": "4ITR4MrDy48KTQTq",
+    "updatedAt": "2025-12-31T13:48:22.991Z",
+    "createdAt": "2025-12-31T13:47:46.441Z",
+    "versionId": "d0b15520-986b-406c-a3fa-af99fa94bb55",
+    "workflowId": "9CwyEVbg21ZQratp",
     "nodes": [
       {
         "parameters": {
-          "content": "## Credentials & Security\nConfigure OAuth and API keys securely. Replace all placeholder IDs before running the workflow.\n",
-          "width": 368,
-          "color": 3
+          "model": "gpt-4o-mini",
+          "options": {}
         },
-        "type": "n8n-nodes-base.stickyNote",
-        "position": [
-          672,
-          560
-        ],
+        "type": "@n8n/n8n-nodes-langchain.lmChatAzureOpenAi",
         "typeVersion": 1,
-        "id": "8d75dd12-2423-4fe2-a48c-825ad03da21e",
-        "name": "Sticky Note6"
+        "position": [
+          2512,
+          1472
+        ],
+        "id": "efc2eba5-5d82-44f0-812c-706e23a06b30",
+        "name": "Azure OpenAI Chat Model",
+        "credentials": {
+          "azureOpenAiApi": {
+            "id": "C3WzT18XqF8OdVM6",
+            "name": "Azure Open AI account"
+          }
+        }
       },
       {
         "parameters": {
-          "content": "## Video Delivery\nDownloads the completed video, stores it in Google Drive, and returns the result via webhook response.\n",
-          "height": 352,
-          "width": 928,
-          "color": 2
+          "jsonSchemaExample": "{\n\t\"Subject\": \"\",\n\t\"Body\": \"\"\n}"
         },
-        "type": "n8n-nodes-base.stickyNote",
+        "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+        "typeVersion": 1.3,
         "position": [
-          -272,
-          384
+          2672,
+          1472
         ],
+        "id": "9ea2dde1-5ace-4dbb-8e9c-6303f05fee4b",
+        "name": "Structured Output Parser"
+      },
+      {
+        "parameters": {
+          "model": "gpt-4o-mini",
+          "options": {}
+        },
+        "type": "@n8n/n8n-nodes-langchain.lmChatAzureOpenAi",
         "typeVersion": 1,
-        "id": "30a2b3bd-2335-4e58-bfd0-3942a9e1bcd8",
-        "name": "Sticky Note5"
-      },
-      {
-        "parameters": {
-          "content": "## Video Creation & Status\nSubmits the script to HeyGen and polls the API until the video generation is complete.\n",
-          "height": 352,
-          "width": 1104,
-          "color": 3
-        },
-        "type": "n8n-nodes-base.stickyNote",
         "position": [
-          -1392,
-          384
+          688,
+          1472
         ],
-        "typeVersion": 1,
-        "id": "121026eb-7619-47a5-9f68-77f279e51c5e",
-        "name": "Sticky Note4"
+        "id": "c32e339f-f9f6-4d9a-bce0-dff7d4d9f07f",
+        "name": "Azure OpenAI Chat Model1",
+        "credentials": {
+          "azureOpenAiApi": {
+            "id": "C3WzT18XqF8OdVM6",
+            "name": "Azure Open AI account"
+          }
+        }
       },
       {
         "parameters": {
-          "content": "## Script Generation\nTransforms simplified policy data into a natural, conversational video script optimized for HeyGen avatars.\n",
-          "height": 528,
-          "width": 416,
-          "color": 2
+          "jsonSchemaExample": "{\n   \"row_number\":\"\",\n   \"Name\":\"\",\n   \"Google Drive Link\":\"\",\n   \"Password\":\"\"\n}\n"
         },
-        "type": "n8n-nodes-base.stickyNote",
+        "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+        "typeVersion": 1.3,
         "position": [
-          -1824,
-          368
+          944,
+          1472
         ],
-        "typeVersion": 1,
-        "id": "787daf1a-095b-447f-8c90-ed6dc07438d2",
-        "name": "Sticky Note3"
+        "id": "10aa26f0-0725-495f-89bc-2a10da48df23",
+        "name": "Structured Output Parser1"
       },
       {
         "parameters": {
-          "content": "## Policy Simplification\nUses AI to convert raw policy text into clear, structured onboarding guidance in JSON format.\n",
-          "height": 528,
-          "width": 464,
-          "color": 3
-        },
-        "type": "n8n-nodes-base.stickyNote",
-        "position": [
-          -2320,
-          384
-        ],
-        "typeVersion": 1,
-        "id": "1de15ad1-9777-4dd6-8e64-e5bfd8b1b168",
-        "name": "Sticky Note2"
-      },
-      {
-        "parameters": {
-          "content": "## 🧩 HR Onboarding Video Generator (HeyGen + Google Drive)\n\n### How it works\nThis workflow turns an HR policy PDF into a complete onboarding video automatically. It starts when a policy document is uploaded via a webhook. The text is extracted from the PDF and simplified using AI into clear, employee-friendly onboarding content. That content is then converted into a natural, conversational video script designed specifically for a HeyGen avatar.\n\nOnce the script is ready, the workflow creates a HeyGen video generation task and periodically checks the video status until it is complete. After the video is finished, it is downloaded and securely stored in Google Drive. The final video file is then returned as part of the webhook response, making it easy to integrate with external apps or internal tools.\n\nThis automation helps HR teams save time, ensure consistency, and quickly create professional onboarding videos without manual scripting or video editing.\n\n### Setup steps\n1. Connect your credentials for Google Drive, OpenAI, and HeyGen.\n2. Replace placeholder values such as API keys, avatar ID, and voice ID in the HeyGen nodes.\n3. Configure the webhook endpoint and test the workflow by uploading a sample HR policy PDF.\n",
-          "height": 688,
-          "width": 432
-        },
-        "type": "n8n-nodes-base.stickyNote",
-        "position": [
-          -2976,
-          -352
-        ],
-        "typeVersion": 1,
-        "id": "36b85cd1-43c0-48f3-a7ba-767906a5a6dc",
-        "name": "Sticky Note"
-      },
-      {
-        "parameters": {
-          "content": "## PDF Intake & Extraction\nReceives the HR policy PDF via webhook and extracts readable text for downstream AI processing.\n",
-          "height": 336,
-          "width": 624,
-          "color": 2
-        },
-        "type": "n8n-nodes-base.stickyNote",
-        "position": [
-          -2960,
-          384
-        ],
-        "typeVersion": 1,
-        "id": "9e2ad384-72ac-4100-87e9-12650d62c807",
-        "name": "Sticky Note1"
-      },
-      {
-        "parameters": {
-          "amount": 1
-        },
-        "id": "6f1dd664-fa22-41d6-879c-380e5bde5dcb",
-        "name": "Wait 10 Seconds",
-        "type": "n8n-nodes-base.wait",
-        "typeVersion": 1.1,
-        "position": [
-          -1120,
-          528
-        ],
-        "webhookId": "wait-webhook-id"
-      },
-      {
-        "parameters": {
-          "url": "https://api.heygen.com/v1/video_status.get",
-          "sendQuery": true,
-          "queryParameters": {
-            "parameters": [
-              {
-                "name": "video_id",
-                "value": "=d438315e5eac48d8adf3a2424beaf3da"
-              }
-            ]
+          "documentId": {
+            "__rl": true,
+            "value": "16RTZT1Hp7CW_kK455DZz1EtGjZ1aDNmOVmIo2jKrlrg",
+            "mode": "list",
+            "cachedResultName": "n8n Automations - Zip Files",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/16RTZT1Hp7CW_kK455DZz1EtGjZ1aDNmOVmIo2jKrlrg/edit?usp=drivesdk"
           },
+          "sheetName": {
+            "__rl": true,
+            "value": "gid=0",
+            "mode": "list",
+            "cachedResultName": "Sheet1",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/16RTZT1Hp7CW_kK455DZz1EtGjZ1aDNmOVmIo2jKrlrg/edit#gid=0"
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.googleSheetsTool",
+        "typeVersion": 4.6,
+        "position": [
+          816,
+          1472
+        ],
+        "id": "a4c6fb7f-36b1-4d8d-b6dc-008f806306a9",
+        "name": "Get row(s) in sheet in Google Sheets",
+        "credentials": {
+          "googleSheetsOAuth2Api": {
+            "id": "s4dP1fNuVZ2gWvs3",
+            "name": "Google Sheets account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "url": "=https://api.stripe.com/v1/payment_intents/{{ $json[\"payment_intent\"] }}",
+          "authentication": "predefinedCredentialType",
+          "nodeCredentialType": "stripeApi",
           "sendHeaders": true,
           "headerParameters": {
             "parameters": [
               {
-                "name": "accept",
-                "value": "application/json"
-              },
-              {
-                "name": "x-api-key",
-                "value": "sk_V2_hgu_kQpjxYBiwRQ_jPIkB6THHvIhXs18SR63LNoiOhVfwuE3"
+                "name": "Content-Type",
+                "value": "application/x-www-form-urlencoded"
               }
             ]
           },
           "options": {}
         },
-        "id": "2e188f40-9840-45c0-aa21-a72e2ad0f40a",
-        "name": "Check HeyGen Video Status",
+        "id": "9152cb4e-8636-4313-aa52-f551c8a9d42b",
+        "name": "Get Payment Intent (From Charge)",
         "type": "n8n-nodes-base.httpRequest",
-        "typeVersion": 4.2,
+        "typeVersion": 4.1,
         "position": [
-          -896,
-          448
-        ]
+          -656,
+          1296
+        ],
+        "credentials": {
+          "stripeApi": {
+            "id": "nsMKPaLthyR80OZO",
+            "name": "Stripe account Techdome"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "url": "=https://api.stripe.com/v1/products/{{ $json[\"payment_details\"][\"order_reference\"] }}",
+          "authentication": "predefinedCredentialType",
+          "nodeCredentialType": "stripeApi",
+          "sendHeaders": true,
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "Content-Type",
+                "value": "application/x-www-form-urlencoded"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "id": "32405012-4ca8-496c-89ea-086c3f980e21",
+        "name": "Get Product Details (from Payment Intent)",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.1,
+        "position": [
+          -208,
+          1216
+        ],
+        "credentials": {
+          "stripeApi": {
+            "id": "nsMKPaLthyR80OZO",
+            "name": "Stripe account Techdome"
+          }
+        }
       },
       {
         "parameters": {
@@ -945,16 +1468,26 @@
               "caseSensitive": true,
               "leftValue": "",
               "typeValidation": "strict",
-              "version": 1
+              "version": 2
             },
             "conditions": [
               {
-                "id": "0bffc679-63bf-4395-b2b6-8d072cee6484",
-                "leftValue": "={{ $json.data.status }}",
-                "rightValue": "completed",
+                "id": "7fe75739-2112-47bb-80b0-e6559db651af",
+                "leftValue": "={{ $json[\"payment_details\"][\"order_reference\"] }}",
+                "rightValue": "",
                 "operator": {
                   "type": "string",
-                  "operation": "equals"
+                  "operation": "exists",
+                  "singleValue": true
+                }
+              },
+              {
+                "id": "cee01069-8b81-4cbd-bb44-afcf44076f26",
+                "leftValue": "={{ $json[\"payment_details\"][\"order_reference\"] }}",
+                "rightValue": "prod",
+                "operator": {
+                  "type": "string",
+                  "operation": "startsWith"
                 }
               }
             ],
@@ -962,419 +1495,781 @@
           },
           "options": {}
         },
-        "id": "5c0e92dd-5134-4b8d-a7f7-f3cc9237d284",
-        "name": "Check If Video Completed",
         "type": "n8n-nodes-base.if",
-        "typeVersion": 2,
+        "typeVersion": 2.2,
         "position": [
-          -448,
-          528
-        ]
+          -432,
+          1216
+        ],
+        "id": "67670bdd-0ca6-404e-9127-d57d3d44f606",
+        "name": "If1"
       },
       {
         "parameters": {
-          "url": "={{ $json.data.video_url }}",
-          "options": {
-            "response": {
-              "response": {
-                "responseFormat": "file"
+          "jsCode": "// For n8n Code Node\n// This matches automations with charges based on product name\ntry {\n  // Get all input items\n  const items = $input.all();\n  \n  // Initialize arrays\n  let automationsList = [];\n  let chargesList = [];\n  \n  // Separate automations and charges from all items\n  items.forEach(item => {\n    const data = item.json;\n    \n    // Check if it's an automation (has output with Name)\n    if (data.output && data.output.Name) {\n      automationsList.push(data.output);\n    }\n    // Check if it's a charge (has customer_name and payment_intent)\n    else if (data.customer_name && data.payment_intent) {\n      chargesList.push(data);\n    }\n  });\n  \n  // Filter successful charges only\n  const successfulCharges = chargesList.filter(charge => {\n    return charge && charge.status === \"succeeded\";\n  });\n  \n  // Match automations with charges based on product name\n  const matchedResults = [];\n  \n  successfulCharges.forEach(charge => {\n    // Find matching automation by comparing names\n    // Remove [n8n] suffix and trim for comparison\n    const chargeProdName = (charge.product_name || \"\").replace(/\\s*\\[n8n\\]\\s*$/i, \"\").trim();\n    \n    const matchingAutomation = automationsList.find(automation => {\n      const autoName = (automation.Name || \"\").replace(/\\s*\\[n8n\\]\\s*$/i, \"\").trim();\n      return autoName === chargeProdName;\n    });\n    \n    if (matchingAutomation) {\n      matchedResults.push({\n        // Automation Info\n        automationName: matchingAutomation.Name || \"Unknown\",\n        automationRow: matchingAutomation.row_number || \"\",\n        googleDriveLink: matchingAutomation[\"Google Drive Link\"] || \"\",\n        password: matchingAutomation.Password || \"\",\n        \n        // Customer Info\n        customerName: charge.customer_name || \"Unknown\",\n        customerEmail: charge.email || \"\",\n        \n        // Payment Info\n        amount: charge.amount ? (charge.amount / 100).toFixed(2) : \"0.00\",\n        currency: (charge.currency || \"usd\").toUpperCase(),\n        paymentIntent: charge.payment_intent || \"\",\n        orderReference: charge.order_reference || \"\",\n        productName: charge.product_name || \"\",\n        purchaseDate: charge.created ? \n          new Date(charge.created * 1000).toLocaleDateString() : \"\",\n        status: charge.status || \"unknown\",\n        receiptUrl: charge.receipt_url || \"\"\n      });\n    }\n  });\n  \n  // Return results\n  if (matchedResults.length > 0) {\n    return matchedResults;\n  } else {\n    return [{\n      error: \"No matching data found\",\n      automations_found: automationsList.length,\n      charges_found: successfulCharges.length,\n      automation_names: automationsList.map(a => a.Name),\n      charge_product_names: successfulCharges.map(c => c.product_name)\n    }];\n  }\n  \n} catch (error) {\n  return [{\n    error: error.message,\n    stack: error.stack\n  }];\n}"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          1600,
+          1264
+        ],
+        "id": "fdcc6c45-3d67-4e21-8c3b-dbcafe8ff891",
+        "name": "Customer matching"
+      },
+      {
+        "parameters": {
+          "content": "## Stripe Data Collection\n\n💳 Get many charges (Stripe)\nFetches all charge data from Stripe; later filtered to keep only completed payments.",
+          "height": 192
+        },
+        "type": "n8n-nodes-base.stickyNote",
+        "position": [
+          -1200,
+          1520
+        ],
+        "typeVersion": 1,
+        "id": "5f3a1fc9-950c-430a-adbb-c52c3cf09001",
+        "name": "Sticky Note1"
+      },
+      {
+        "parameters": {
+          "content": "## Filter – Successful Charges\n\n🔍 Status check = succeeded\nRemoves failed/pending charges so only paid orders continue.",
+          "height": 176
+        },
+        "type": "n8n-nodes-base.stickyNote",
+        "position": [
+          -992,
+          1168
+        ],
+        "typeVersion": 1,
+        "id": "5490051b-e8df-49df-b7ba-2c08a1f61fd4",
+        "name": "Sticky Note2"
+      },
+      {
+        "parameters": {
+          "content": "## Send a message (Gmail)\n\n📨 Email dispatch\nSends the AI-generated subject and HTML body to the customer’s email.",
+          "height": 192
+        },
+        "type": "n8n-nodes-base.stickyNote",
+        "position": [
+          2832,
+          1040
+        ],
+        "typeVersion": 1,
+        "id": "67c268a3-8f66-440a-9f0b-b1aa78dc9b37",
+        "name": "Sticky Note8"
+      },
+      {
+        "parameters": {
+          "content": "## AI Agent – Email Composer\n\n🧩 Personalized HTML email\nUses Azure OpenAI (GPT-4o-mini) to craft thank-you emails with access link, password, onboarding tip, and sign-off.",
+          "height": 208
+        },
+        "type": "n8n-nodes-base.stickyNote",
+        "position": [
+          2464,
+          1008
+        ],
+        "typeVersion": 1,
+        "id": "d54a6b39-c931-4b53-96b4-b34583c9bd77",
+        "name": "Sticky Note9"
+      },
+      {
+        "parameters": {
+          "content": "## Loop Over Items of New Purchases\n\n🔁 Batch sender\nIterates through each new purchase record for email generation & delivery.",
+          "height": 208
+        },
+        "type": "n8n-nodes-base.stickyNote",
+        "position": [
+          2224,
+          1568
+        ],
+        "typeVersion": 1,
+        "id": "d4e83f8c-097e-4ed7-8e71-a5a6a461064d",
+        "name": "Sticky Note10"
+      },
+      {
+        "parameters": {
+          "content": "##  Check Automation Exists\n\n⚡ Final guard\nVerifies automation data is present before generating and sending emails.",
+          "height": 192
+        },
+        "type": "n8n-nodes-base.stickyNote",
+        "position": [
+          2048,
+          1136
+        ],
+        "typeVersion": 1,
+        "id": "4856afcc-8641-441e-92f1-57116d973120",
+        "name": "Sticky Note11"
+      },
+      {
+        "parameters": {
+          "content": "## SQL Combine\n\n🧮 Exclude already-logged customers\nSQL logic filters out rows already present in the purchase sheet.",
+          "height": 208
+        },
+        "type": "n8n-nodes-base.stickyNote",
+        "position": [
+          1872,
+          1520
+        ],
+        "typeVersion": 1,
+        "id": "33dfa14b-73b4-4318-8d03-9befa25b9aff",
+        "name": "Sticky Note12"
+      },
+      {
+        "parameters": {
+          "content": "## Customer Matching \n\n🧠 Product-name matcher\nMatches successful Stripe charges to automation rows (handles “[n8n]” suffix and trims). Outputs final, ready-to-email JSON.",
+          "height": 256
+        },
+        "type": "n8n-nodes-base.stickyNote",
+        "position": [
+          1600,
+          992
+        ],
+        "typeVersion": 1,
+        "id": "c319fec4-bf8d-41fc-86e4-07382ff176f3",
+        "name": "Sticky Note13"
+      },
+      {
+        "parameters": {
+          "content": "## Get row(s) in sheet – Purchase Sheet Lookup\n\n🧾 De-dup check\nReads existing entries in “Automation Purchase Sheet” to avoid logging duplicates.",
+          "height": 224
+        },
+        "type": "n8n-nodes-base.stickyNote",
+        "position": [
+          1552,
+          1632
+        ],
+        "typeVersion": 1,
+        "id": "b85be8c6-11f0-4505-b9a7-9a32fa6f65f4",
+        "name": "Sticky Note14"
+      },
+      {
+        "parameters": {
+          "content": "##  Combine Stripe + Sheet Data\n\n🔄 Stripe × Sheet join\nBrings together payment info and automation metadata for a complete record.",
+          "height": 224
+        },
+        "type": "n8n-nodes-base.stickyNote",
+        "position": [
+          1264,
+          1536
+        ],
+        "typeVersion": 1,
+        "id": "d179d8ba-eef0-44fa-aedf-ccf3b33a9c01",
+        "name": "Sticky Note15"
+      },
+      {
+        "parameters": {
+          "content": "## Check Match Found\n\n🧮 Sheet match gate\nOnly proceeds when a valid row is found for the purchased automation.",
+          "height": 192
+        },
+        "type": "n8n-nodes-base.stickyNote",
+        "position": [
+          1056,
+          1040
+        ],
+        "typeVersion": 1,
+        "id": "c9b30bd0-9bbd-4b47-baca-cac27d5325a5",
+        "name": "Sticky Note16"
+      },
+      {
+        "parameters": {
+          "content": "## AI Agent  → Google Sheets Lookup\n\n🔍 Automation metadata lookup\nFinds matching automation by product/Name in “n8n Automations – Zip Files” sheet.",
+          "height": 224
+        },
+        "type": "n8n-nodes-base.stickyNote",
+        "position": [
+          688,
+          992
+        ],
+        "typeVersion": 1,
+        "id": "cde55b8d-7bcd-47ba-8dbe-951379b80421",
+        "name": "Sticky Note17"
+      },
+      {
+        "parameters": {
+          "content": "##  Check Required Fields\n\n🚦 Field validation\nEnsures order_reference, product_name, customer_name, and email are present before moving on.",
+          "height": 224
+        },
+        "type": "n8n-nodes-base.stickyNote",
+        "position": [
+          384,
+          1520
+        ],
+        "typeVersion": 1,
+        "id": "fcae0ff6-e228-4d88-8542-0f5744b565bd",
+        "name": "Sticky Note18"
+      },
+      {
+        "parameters": {
+          "content": "## Merge Logic Format Data\n\n🧠 Normalize fields\nBuilds clean JSON (customer_name, email, product_name, amount, currency, status, receipt_url, created).",
+          "height": 240
+        },
+        "type": "n8n-nodes-base.stickyNote",
+        "position": [
+          176,
+          1104
+        ],
+        "typeVersion": 1,
+        "id": "b1d8bcf2-3dd1-4a4d-8c22-dbfb9134432e",
+        "name": "Sticky Note19"
+      },
+      {
+        "parameters": {
+          "content": "## Merge Charge + PaymentIntent + Product\n\n🔄 Data merge hub\nCombines charge + payment_intent + product into one unified record per purchase.",
+          "height": 240
+        },
+        "type": "n8n-nodes-base.stickyNote",
+        "position": [
+          -48,
+          1568
+        ],
+        "typeVersion": 1,
+        "id": "df357cd7-5b94-4e8c-a92d-2d9193ff996a",
+        "name": "Sticky Note20"
+      },
+      {
+        "parameters": {
+          "content": "## Get Product Details (from Payment Intent)\n\n🧾 Stripe Product fetch\nUses order reference from payment_intent to get product name/description/image.",
+          "height": 224
+        },
+        "type": "n8n-nodes-base.stickyNote",
+        "position": [
+          -304,
+          976
+        ],
+        "typeVersion": 1,
+        "id": "301434a7-ad34-4353-8c80-cc20088faa1c",
+        "name": "Sticky Note21"
+      },
+      {
+        "parameters": {
+          "content": "## Get Payment Intent (from Charge)\n\n🔗 Stripe Payment Intent lookup\nExpands each charge with its payment_intent details for richer context.",
+          "height": 224
+        },
+        "type": "n8n-nodes-base.stickyNote",
+        "position": [
+          -704,
+          1488
+        ],
+        "typeVersion": 1,
+        "id": "28243790-72e7-4d5b-aca5-874656f8d28f",
+        "name": "Sticky Note23"
+      },
+      {
+        "parameters": {
+          "content": "## Trigger & Data Fetch\n\n🟢 Schedule Trigger\nTriggers every morning (7 AM IST) to fetch latest successful Stripe purchases.",
+          "height": 208
+        },
+        "type": "n8n-nodes-base.stickyNote",
+        "position": [
+          -1568,
+          1136
+        ],
+        "typeVersion": 1,
+        "id": "4a998670-3a1e-4b28-8455-3dca5114db76",
+        "name": "Sticky Note"
+      },
+      {
+        "parameters": {
+          "resource": "charge",
+          "operation": "getAll",
+          "returnAll": true
+        },
+        "type": "n8n-nodes-base.stripe",
+        "typeVersion": 1,
+        "position": [
+          -1104,
+          1360
+        ],
+        "id": "c9c2f539-2480-443b-abaa-51a6702d8002",
+        "name": "Stripe Data Collection",
+        "credentials": {
+          "stripeApi": {
+            "id": "nsMKPaLthyR80OZO",
+            "name": "Stripe account Techdome"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "conditions": {
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "strict",
+              "version": 2
+            },
+            "conditions": [
+              {
+                "id": "e593f4e0-b1e2-4e6b-b4d0-9a1a6e6495bd",
+                "leftValue": "={{ $json.status }}",
+                "rightValue": "succeeded",
+                "operator": {
+                  "type": "string",
+                  "operation": "equals",
+                  "name": "filter.operator.equals"
+                }
               }
-            }
-          }
-        },
-        "id": "a183bda0-76b5-4bd4-aa86-29ddb38a168b",
-        "name": "Download Completed Video",
-        "type": "n8n-nodes-base.httpRequest",
-        "typeVersion": 4.2,
-        "position": [
-          -224,
-          528
-        ]
-      },
-      {
-        "parameters": {
-          "name": "=HR_Onboarding_Video_{{ $now.format('yyyy-MM-dd_HHmmss') }}.mp4",
-          "driveId": {
-            "__rl": true,
-            "mode": "list",
-            "value": "My Drive"
-          },
-          "folderId": {
-            "__rl": true,
-            "value": "1zm4CTaf9mcX34-Bsk9dzQ7r02BROObOO",
-            "mode": "list",
-            "cachedResultName": "Sample Dummy Company Document",
-            "cachedResultUrl": "https://drive.google.com/drive/folders/1zm4CTaf9mcX34-Bsk9dzQ7r02BROObOO"
+            ],
+            "combinator": "and"
           },
           "options": {}
         },
-        "id": "7ec99e29-9ccf-4100-ba45-9e325f2f36f7",
-        "name": "Upload Video to Google Drive",
-        "type": "n8n-nodes-base.googleDrive",
-        "typeVersion": 3,
+        "type": "n8n-nodes-base.filter",
+        "typeVersion": 2.2,
         "position": [
-          0,
-          528
+          -896,
+          1392
         ],
-        "credentials": {
-          "googleDriveOAuth2Api": {
-            "id": "E7nEqUL27GUx1xHa",
-            "name": "Techdome Account"
-          }
-        }
+        "id": "07376dc3-6cc0-4d66-9642-a014a71288a7",
+        "name": "Filter – Successful Charges"
       },
       {
         "parameters": {
           "promptType": "define",
-          "text": "=Simplify the following company policy text into clear onboarding instructions for a new employee.\n\nMake the content:\n- easy to understand\n- friendly and conversational\n- accurate and compliant\n- structured by sections\n\nHere is the extracted policy text:\n{{ $json.text }}\n\nFollow the structure defined in the Output Parser and return ONLY valid JSON.\n",
+          "text": "=This is the input:{{ $json.product_name }}",
           "hasOutputParser": true,
           "options": {
-            "systemMessage": "=You are an expert HR policy analyst who specializes in simplifying complex company policies into clear, concise, employee-friendly onboarding content.\n\nYour responsibilities:\n- Remove legal jargon and unnecessary complexity.\n- Maintain accuracy while making content easy to understand.\n- Convert policy text into structured, step-by-step onboarding guidance.\n- Produce a friendly and welcoming tone suitable for new employees.\n- Preserve important rules, compliance points, and safety guidelines.\n- Avoid adding information that does not exist in the original document.\n\nYou must always produce output ONLY in the structured JSON format defined in the Output Parser.\nDo NOT include explanations, markdown, or additional commentary.\n"
+            "systemMessage": "=You are an AI assistant with access to a Google Sheets tool. Your task is as follows:\n\n- You will receive an input phrase. This phrase represents a name.\n- Use the Google Sheets tool to search for a row in the spreadsheet where the value in the \"Name\" column matches the input phrase with at least 80% similarity (fuzzy matching).\n- First, try to find an exact match. If no exact match exists, find the closest matching name that has at least 80% similarity to the input.\n- Consider variations in spelling, spacing, capitalization, and minor differences when matching names.\n- If a matching row is found (either exact or fuzzy match), return the entire row as a JSON object, including all columns and their values.\n- If no matching row is found with at least 80% similarity, respond with: \"No matching row found for the provided name.\"\n- If there are multiple matches with similar similarity scores (within 5% of each other), return the match with the highest similarity score.\n- Do not return any extra commentary or explanation—only the result.\n- If there is an error accessing the spreadsheet, respond with: \"Error accessing the spreadsheet.\"\n\nReturn ONLY a single JSON object with this exact structure:\n{\n  \"row_number\": \"\",\n  \"Name\": \"\",\n  \"Google Drive Link\": \"\",\n  \"Password\": \"\"\n}\n\nNo additional keys such as \"response\", \"action\", \"output\", or text outside the JSON.\n```\n\n## Key Changes Made:\n\n1. **Fuzzy Matching**: Changed from \"exactly matches\" to \"matches with at least 80% similarity\"\n2. **Matching Strategy**: Added instruction to try exact match first, then fuzzy match\n3. **Flexibility**: Added consideration for spelling variations, spacing, and capitalization\n4. **Best Match Selection**: If multiple similar matches exist, return the one with highest similarity"
           }
         },
         "type": "@n8n/n8n-nodes-langchain.agent",
-        "typeVersion": 2,
+        "typeVersion": 2.1,
         "position": [
-          -2224,
-          528
+          752,
+          1248
         ],
-        "id": "8cd022b5-89a2-4712-8ada-f50ae866e1d9",
-        "name": "AI Agent"
-      },
-      {
-        "parameters": {
-          "jsonSchemaExample": "{\n  \"summary\": \"A short 3–4 sentence summary of the entire policy in simple language.\",\n  \"key_points\": [\n    \"A list of all major rules and policies rewritten in easy language.\",\n    \"One point per rule or policy section.\",\n    \"No legal terminology.\"\n  ],\n  \"onboarding_instructions\": [\n    \"Practical steps new employees should follow based on the policy.\",\n    \"Written as actionable, friendly instructions.\"\n  ],\n  \"compliance_requirements\": [\n    \"Clear, simple statements about what employees must legally or formally comply with.\",\n    \"Examples: data security, confidentiality, behavior expectations.\"\n  ]\n}\n"
-        },
-        "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
-        "typeVersion": 1.3,
-        "position": [
-          -2016,
-          752
-        ],
-        "id": "908422ae-e9ae-4ab6-be18-6c5702c903b1",
-        "name": "Structured Output Parser"
-      },
-      {
-        "parameters": {
-          "sessionIdType": "customKey",
-          "sessionKey": "\"description writer\""
-        },
-        "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
-        "typeVersion": 1.3,
-        "position": [
-          -2144,
-          752
-        ],
-        "id": "5099525e-b7ab-4736-89de-a676f658259a",
-        "name": "Simple Memory1"
-      },
-      {
-        "parameters": {
-          "operation": "pdf",
-          "options": {}
-        },
-        "type": "n8n-nodes-base.extractFromFile",
-        "typeVersion": 1.1,
-        "position": [
-          -2496,
-          512
-        ],
-        "id": "a7c6b8fe-6254-40d1-b20a-7f936bfbfc50",
-        "name": "Extract from File"
-      },
-      {
-        "parameters": {
-          "model": {
-            "__rl": true,
-            "value": "gpt-4.1-mini",
-            "mode": "list",
-            "cachedResultName": "gpt-4.1-mini"
-          },
-          "responsesApiEnabled": false,
-          "options": {}
-        },
-        "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
-        "typeVersion": 1.3,
-        "position": [
-          -2272,
-          752
-        ],
-        "id": "5d7aa27d-c5ea-47e5-8a22-b239ffdbe21e",
-        "name": "OpenAI Chat Model",
-        "credentials": {
-          "openAiApi": {
-            "id": "5Kzt6hGSZ1JHZqWN",
-            "name": "OpenAi account 2"
-          }
-        }
-      },
-      {
-        "parameters": {
-          "jsonSchemaExample": "{\n  \"video_title\": \"A short, friendly title for the onboarding video.\",\n  \"intro\": \"A warm onboarding introduction, 2–4 sentences.\",\n  \"script_sections\": [\n    {\n      \"section_title\": \"Title for this script section.\",\n      \"narration\": \"Natural, flowing narration text for this section. Should sound like a real presenter speaking.\"\n    }\n  ],\n  \"closing\": \"A friendly closing message for the end of the video.\",\n  \"full_script\": \"A single combined narration script with all sections merged into one continuous flow, fully suitable for HeyGen.\"\n}\n"
-        },
-        "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
-        "typeVersion": 1.3,
-        "position": [
-          -1552,
-          752
-        ],
-        "id": "406b3173-0db8-485f-881a-798f61666155",
-        "name": "Structured Output Parser1"
-      },
-      {
-        "parameters": {
-          "sessionIdType": "customKey",
-          "sessionKey": "\"description writer\""
-        },
-        "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
-        "typeVersion": 1.3,
-        "position": [
-          -1680,
-          752
-        ],
-        "id": "0a655c3a-f199-4aaa-8502-84d3f267adad",
-        "name": "Simple Memory"
-      },
-      {
-        "parameters": {
-          "promptType": "define",
-          "text": "=Using the simplified policy details below, create a professional onboarding video narration script suitable for a HeyGen avatar.\n\nThe final script must:\n- Be conversational, friendly, and natural.\n- Introduce the topic warmly (e.g., “Welcome to the team!”).\n- Break the narration into clear sections or scenes.\n- Include subtle pause markers (like “[pause]” where appropriate).\n- Avoid bullet points inside the narration; write in full flowing sentences.\n- Keep all information accurate to the provided content.\n\nHere is the structured policy information:\n\nSummary:\n{{ $json.output.summary }}\n\nKey Points:\n{{ $json.output.key_points }}\n\nOnboarding Instructions:\n{{ $json.output.onboarding_instructions }}\n\nCompliance Requirements:\n{{ $json.output.compliance_requirements }}\n\nFollow the Output Parser JSON schema exactly and return ONLY valid JSON.\n",
-          "hasOutputParser": true,
-          "options": {
-            "systemMessage": "=You are an expert instructional scriptwriter who specializes in creating professional onboarding video scripts for HR training.\n\nYour responsibilities:\n- Convert structured HR policy content into a natural, friendly, conversational narration suitable for a HeyGen avatar.\n- Ensure the script flows logically, with a warm and welcoming tone.\n- Maintain accuracy while simplifying complex concepts.\n- Avoid robotic or overly formal language.\n- Add natural transitions, pauses, emphasis, and scene suggestions.\n- Do NOT invent new policies; stay faithful to the provided content.\n- Produce output ONLY in the JSON format defined in the Output Parser. \n- Generate the full_script which is easily acceptable by the generate video api.\n\n\n Strict Output Format:\n\n{\n  \"video_title\": \"\",\n  \"intro\": \"\",\n  \"script_sections\": [\n    {\n      \"section_title\": \"\",\n      \"narration\": \"\"\n    }\n  ],\n  \"closing\": \"\",\n  \"full_script\": \"\"\n}\n"
-          }
-        },
-        "type": "@n8n/n8n-nodes-langchain.agent",
-        "typeVersion": 2,
-        "position": [
-          -1744,
-          528
-        ],
-        "id": "f2a8a469-7afd-4c82-9e72-47ebc2d3c7f6",
-        "name": "Generate Script With AI",
+        "id": "c72504e0-b292-4a92-9a8f-27c58fe3f525",
+        "name": "AI Agent  → Google Sheets Lookup",
         "retryOnFail": true
       },
       {
         "parameters": {
-          "method": "POST",
-          "url": "https://api.heygen.com/v2/video/generate",
-          "sendHeaders": true,
-          "headerParameters": {
-            "parameters": [
+          "content": "## Append or update row in sheet  For  Tracking\n\n📊 Audit & reporting\nLogs each processed purchase and email outcome into “Automation Purchase Sheet”.",
+          "height": 224
+        },
+        "type": "n8n-nodes-base.stickyNote",
+        "position": [
+          3184,
+          1152
+        ],
+        "typeVersion": 1,
+        "id": "0e2b02cc-42da-464c-9d18-4423587bc95a",
+        "name": "Sticky Note3"
+      },
+      {
+        "parameters": {
+          "rule": {
+            "interval": [
               {
-                "name": "accept",
-                "value": "application/json"
-              },
-              {
-                "name": "x-api-key",
-                "value": "sk_V2_hgu_kQpjxYBiwRQ_jPIkB6THHvIhXs18SR63LNoiOhVfwuE3"
+                "triggerAtHour": 7
               }
             ]
-          },
-          "sendBody": true,
-          "specifyBody": "json",
-          "jsonBody": "={\n  \"caption\": false,\n  \"title\": \"Welcome to Sample Company Onboarding\",\n  \"video_inputs\": [\n    {\n      \"character\": {\n        \"type\": \"avatar\",\n        \"avatar_id\": \"a19c6b2f4d814539a6dcc86ea5a2e5bd\"\n      },\n      \"voice\": {\n        \"type\": \"text\",\n        \"voice_id\": \"e0cc82c22f414c95b1f25696c732f058\",\n        \"input_text\": \"hey i am saurabh garg i used to work on the n8n automation\"\n      },\n      \"background\": {\n        \"type\": \"color\",\n        \"value\": \"#FFFFFF\"\n      }\n    }\n  ],\n  \"dimension\": {\n    \"width\": 1280,\n    \"height\": 720\n  }\n}\n",
-          "options": {}
+          }
         },
-        "id": "0c874be8-4db7-451d-8085-22184aae3771",
-        "name": "Create HeyGen Video Task1",
-        "type": "n8n-nodes-base.httpRequest",
-        "typeVersion": 4.2,
+        "type": "n8n-nodes-base.scheduleTrigger",
+        "typeVersion": 1.2,
         "position": [
-          -1344,
-          528
+          -1328,
+          1360
+        ],
+        "id": "7e940abd-2bb0-495a-9f34-85705154e90b",
+        "name": "Schedule Trigger Daily"
+      },
+      {
+        "parameters": {
+          "numberInputs": 3
+        },
+        "id": "b8b682e2-af1a-42cc-b373-cadcb5bf46eb",
+        "name": "Merge Charge + PaymentIntent + Product",
+        "type": "n8n-nodes-base.merge",
+        "typeVersion": 3.2,
+        "position": [
+          16,
+          1344
         ]
       },
       {
         "parameters": {
-          "amount": 1
+          "jsCode": "// Get all combined items\nconst all = $input.all().map(i => i.json);\n\n// Separate by type\nconst charges = all.filter(i => i.object === 'charge');\nconst intents = all.filter(i => i.object === 'payment_intent');\nconst products = all.filter(i => i.object === 'product');\n\n// Merge logic\nconst merged = [];\n\nfor (const charge of charges) {\n  const intent = intents.find(i => i.id === charge.payment_intent);\n  if (!intent) continue;\n\n  const orderRef = intent?.payment_details?.order_reference;\n  const product = products.find(p => p.id === orderRef);\n\n  merged.push({\n    customer_name: charge.billing_details?.name || null,\n    email: charge.billing_details?.email || intent.receipt_email || null,\n    amount: charge.amount / 100,\n    currency: charge.currency,\n    status: charge.status,\n    payment_intent: charge.payment_intent,\n    order_reference: orderRef,\n    product_name: product?.name || null,\n    product_description: product?.description || null,\n    product_image: product?.images?.[0] || null,\n    receipt_url: charge.receipt_url,\n    created: charge.created\n  });\n}\n\nreturn merged.map(item => ({ json: item }));\n"
         },
-        "type": "n8n-nodes-base.wait",
-        "typeVersion": 1.1,
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
         "position": [
-          -672,
-          448
+          240,
+          1360
         ],
-        "id": "16c0a2c7-936f-4e8d-bfb2-6b9b4886d418",
-        "name": "Wait",
-        "webhookId": "31362452-a44a-4076-b831-dbefa74f7db1"
+        "id": "63679dc6-60d4-4057-bd67-01d64787284e",
+        "name": "Merge Logic Format Data"
       },
       {
         "parameters": {
-          "model": {
-            "__rl": true,
-            "value": "gpt-4.1-mini",
-            "mode": "list",
-            "cachedResultName": "gpt-4.1-mini"
+          "conditions": {
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "strict",
+              "version": 2
+            },
+            "conditions": [
+              {
+                "id": "f75a52cc-4555-429f-9edb-f363857eb379",
+                "leftValue": "={{ $json.order_reference }}",
+                "rightValue": "",
+                "operator": {
+                  "type": "string",
+                  "operation": "notEmpty",
+                  "singleValue": true
+                }
+              },
+              {
+                "id": "19d2ffe7-b8f7-45db-aa88-ad2aa3124f1c",
+                "leftValue": "={{ $json.product_name }}",
+                "rightValue": "",
+                "operator": {
+                  "type": "string",
+                  "operation": "notEmpty",
+                  "singleValue": true
+                }
+              },
+              {
+                "id": "a57d1ffe-7f55-4dee-add1-f314a6cc7dcd",
+                "leftValue": "={{ $json.customer_name }}",
+                "rightValue": "",
+                "operator": {
+                  "type": "string",
+                  "operation": "notEmpty",
+                  "singleValue": true
+                }
+              },
+              {
+                "id": "f57743ac-2dd9-44bf-911b-0b1f1e63c17a",
+                "leftValue": "={{ $json.email }}",
+                "rightValue": "",
+                "operator": {
+                  "type": "string",
+                  "operation": "notEmpty",
+                  "singleValue": true
+                }
+              }
+            ],
+            "combinator": "and"
           },
-          "responsesApiEnabled": false,
           "options": {}
         },
-        "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
-        "typeVersion": 1.3,
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2.2,
         "position": [
-          -1808,
-          752
+          464,
+          1360
         ],
-        "id": "71d9f6ca-3b1f-4357-b3ef-d6e7cfc50f75",
-        "name": "OpenAI Chat Model1",
+        "id": "4a9a5f11-44f9-4d5a-b66c-68689384f15d",
+        "name": "Check Required Fields"
+      },
+      {
+        "parameters": {
+          "conditions": {
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "strict",
+              "version": 2
+            },
+            "conditions": [
+              {
+                "id": "5d49d25f-c987-41c6-bfcb-1eca70253a85",
+                "leftValue": "={{ $json.output.Name }}",
+                "rightValue": "=",
+                "operator": {
+                  "type": "string",
+                  "operation": "notEmpty",
+                  "singleValue": true
+                }
+              }
+            ],
+            "combinator": "and"
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2.2,
+        "position": [
+          1152,
+          1248
+        ],
+        "id": "a5a425d6-8c3c-4a2d-a51d-bcfe75706097",
+        "name": "Check Match Found"
+      },
+      {
+        "parameters": {},
+        "type": "n8n-nodes-base.merge",
+        "typeVersion": 3.2,
+        "position": [
+          1376,
+          1360
+        ],
+        "id": "f2983b5e-2896-4cd4-867a-04a328d4f797",
+        "name": "Combine Stripe + Sheet Data"
+      },
+      {
+        "parameters": {
+          "documentId": {
+            "__rl": true,
+            "value": "142qqLXiISod9EzNvulhTOD1eQNOvRw85MtRHP8xcVD4",
+            "mode": "list",
+            "cachedResultName": "BDE Team Assignee",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/142qqLXiISod9EzNvulhTOD1eQNOvRw85MtRHP8xcVD4/edit?usp=drivesdk"
+          },
+          "sheetName": {
+            "__rl": true,
+            "value": 1978602406,
+            "mode": "list",
+            "cachedResultName": "Automation purchase sheet",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/142qqLXiISod9EzNvulhTOD1eQNOvRw85MtRHP8xcVD4/edit#gid=1978602406"
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.googleSheets",
+        "typeVersion": 4.7,
+        "position": [
+          1600,
+          1456
+        ],
+        "id": "533a5564-3e14-4c3f-9f1f-47b13141b6d9",
+        "name": "Get row(s) in sheet – Purchase Sheet Lookup",
+        "executeOnce": true,
         "credentials": {
-          "openAiApi": {
-            "id": "5Kzt6hGSZ1JHZqWN",
-            "name": "OpenAi account 2"
+          "googleSheetsOAuth2Api": {
+            "id": "kpPEOLCGn963qpoh",
+            "name": "automations@techdome.ai"
           }
         }
       },
       {
         "parameters": {
-          "respondWith": "binary",
-          "responseDataSource": "set",
+          "mode": "combineBySql",
+          "query": "SELECT input1.*\nFROM input1\nLEFT JOIN input2\n  ON LOWER(TRIM(input1.customerEmail)) = LOWER(TRIM(input2.email))\n     OR LOWER(TRIM(input1.customerName)) = LOWER(TRIM(input2.name))\nWHERE input2.email IS NULL\n",
           "options": {}
         },
-        "type": "n8n-nodes-base.respondToWebhook",
-        "typeVersion": 1.4,
+        "type": "n8n-nodes-base.merge",
+        "typeVersion": 3.2,
         "position": [
-          432,
-          528
+          1824,
+          1360
         ],
-        "id": "2be97da7-3b90-47bf-a9e2-aa758b863f14",
-        "name": "Respond to Webhook"
+        "id": "8a9d79a9-e004-4fba-b4fa-f12dc5da1d6b",
+        "name": "SQL Combine"
       },
       {
         "parameters": {
-          "httpMethod": "POST",
-          "path": "hr-onboarding-upload",
-          "responseMode": "responseNode",
-          "options": {
-            "binaryPropertyName": "data",
-            "rawBody": false
-          }
-        },
-        "id": "089aac03-c2dc-449c-929d-f123cbf32476",
-        "name": "Webhook - Receive Policy PDF",
-        "type": "n8n-nodes-base.webhook",
-        "typeVersion": 1.1,
-        "position": [
-          -2928,
-          512
-        ],
-        "webhookId": "hr-policy-upload"
-      },
-      {
-        "parameters": {
-          "url": "={{ $json.body.file_url }}",
-          "options": {
-            "response": {
-              "response": {
-                "responseFormat": "file"
+          "conditions": {
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "strict",
+              "version": 2
+            },
+            "conditions": [
+              {
+                "id": "c882466b-ec98-4ab4-be9e-851cf99a81a7",
+                "leftValue": "={{ $json.automationName }}",
+                "rightValue": "",
+                "operator": {
+                  "type": "string",
+                  "operation": "exists",
+                  "singleValue": true
+                }
+              },
+              {
+                "id": "8dedcc5f-6228-4e8d-94eb-43a8b8d07daa",
+                "leftValue": "",
+                "rightValue": "",
+                "operator": {
+                  "type": "string",
+                  "operation": "equals",
+                  "name": "filter.operator.equals"
+                }
               }
-            }
-          }
-        },
-        "id": "b2772bdb-0f2a-4e04-a9a0-2f7858ec3546",
-        "name": "Dowload file",
-        "type": "n8n-nodes-base.httpRequest",
-        "typeVersion": 4.2,
-        "position": [
-          -2688,
-          464
-        ]
-      },
-      {
-        "parameters": {
-          "operation": "download",
-          "fileId": {
-            "__rl": true,
-            "value": "={{ $json.id }}",
-            "mode": "id"
+            ],
+            "combinator": "and"
           },
           "options": {}
         },
-        "type": "n8n-nodes-base.googleDrive",
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2.2,
+        "position": [
+          2048,
+          1360
+        ],
+        "id": "06de9fee-3f8e-4941-ad12-ddf8f862b9ff",
+        "name": "Check Automation Exists"
+      },
+      {
+        "parameters": {
+          "options": {}
+        },
+        "type": "n8n-nodes-base.splitInBatches",
         "typeVersion": 3,
         "position": [
-          208,
-          528
+          2272,
+          1360
         ],
-        "id": "2957ff95-6de6-47b2-9acb-32b13bba4cde",
-        "name": "Download file1",
+        "id": "92464fd8-4bda-4c18-a04d-543eb5fd3e72",
+        "name": "Loop Over Items of New Purchases"
+      },
+      {
+        "parameters": {
+          "promptType": "define",
+          "text": "=Customer Details: \nName of customer: {{ $json.customerName }}\nEmail of the customer: {{ $json.customerEmail }}\n\nName of the Automation:{{ $json.automationName }}\nGoogle Drive Link: {{ $json.googleDriveLink }}\nPassword: {{ $json.password }} \nPurchase Date:{{ $json.purchaseDate }}",
+          "hasOutputParser": true,
+          "options": {
+            "systemMessage": "=You are an AI email writing assistant specialized in crafting personalized, professional, and heartfelt thank-you emails for customers who have purchased automation templates from Techdome.\n\nYou will receive structured input with the following details:\n- Customer name\n- Customer email\n- Name of the automation purchased\n- Google Drive link to the files\n- Password to access the files\n- Date of purchase\n\nYour goal is to create a beautifully formatted HTML email that:\n1. **Feels human and genuine** — use warm, conversational, and appreciative language.\n2. **Highlights the automation name naturally** — make it feel special, not mechanical.\n3. **Shows gratitude clearly** — thank the customer sincerely for trusting Techdome.\n4. **Includes clear access details**:\n   - Add a visible and styled hyperlink to the Google Drive link.\n   - Display the password prominently but professionally (bold or highlighted).\n   - Add a note to keep it confidential.\n5. **Gives a short onboarding tip** — 1–2 lines about importing or using the automation.\n6. **Encourages further engagement** — invite them to explore other automations or reach out for help.\n7. **Signs off gracefully** from Rahul Joshi (CEO & Co-Founder, Techdome) — include his name and title at the end.\n\n**Tone:** Friendly, confident, and professional — sounding like Rahul personally wrote it.\n\n**Formatting Rules (HTML)**:\n- Use `<p>` for paragraphs, `<b>` for bold, `<a>` for links.\n- Avoid unnecessary line breaks or raw URLs.\n- Keep spacing clean and make it easy to read.\n- Do not use Markdown — only valid HTML.\n\n**Example style:**\n```html\n<p>Dear <b>{{ $json.customerName }}</b>,</p>\n<p>Thank you so much for purchasing the <b>{{ $json.automationName }}</b> automation! We truly appreciate your trust in Techdome.</p>\n<p>You can access your automation files here: <a href=\"{{ $json.googleDriveLink }}\">Access Your Automation Files</a></p>\n<p>Use the password <b>{{ $json.password }} </b> to open the files. Please keep it confidential for your security.</p>\n<p>Once you open the folder, follow the included documentation to import and start using your automation instantly.</p>\n<p>If you need help or wish to explore other automations, feel free to reply to this email — we’d love to assist.</p>\n<p>Warm regards,<br>\n<b>Rahul Joshi</b><br>\nCEO & Co-Founder, Techdome</p>\n"
+          }
+        },
+        "type": "@n8n/n8n-nodes-langchain.agent",
+        "typeVersion": 2,
+        "position": [
+          2496,
+          1248
+        ],
+        "id": "64adf0d3-1460-4848-90ee-81684b24d7ef",
+        "name": "AI Agent – Email Composer"
+      },
+      {
+        "parameters": {
+          "sendTo": "={{ $('Loop Over Items of New Purchases').item.json.customerEmail }}",
+          "subject": "={{ $json.output.Subject }}",
+          "message": "={{ $json.output.Body }}",
+          "options": {
+            "appendAttribution": false,
+            "ccList": "anmol.kushwah@techdome.net.in,rahul.joshi@techdome.net.in,gaurav.chouhan@techdome.net.in"
+          }
+        },
+        "type": "n8n-nodes-base.gmail",
+        "typeVersion": 2.1,
+        "position": [
+          2848,
+          1248
+        ],
+        "id": "d5d8b09a-306f-4fe1-9773-182f9d62136e",
+        "name": "Send a message (Gmail)",
+        "webhookId": "b5df4377-15a0-44ba-a55c-92eac22b7a0b",
         "credentials": {
-          "googleDriveOAuth2Api": {
-            "id": "E7nEqUL27GUx1xHa",
-            "name": "Techdome Account"
+          "gmailOAuth2": {
+            "id": "gEIaWCTvGfYjMSb3",
+            "name": "Gmail credentials"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "operation": "appendOrUpdate",
+          "documentId": {
+            "__rl": true,
+            "value": "142qqLXiISod9EzNvulhTOD1eQNOvRw85MtRHP8xcVD4",
+            "mode": "list",
+            "cachedResultName": "BDE Team Assignee",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/142qqLXiISod9EzNvulhTOD1eQNOvRw85MtRHP8xcVD4/edit?usp=drivesdk"
+          },
+          "sheetName": {
+            "__rl": true,
+            "value": 1978602406,
+            "mode": "list",
+            "cachedResultName": "Automation purchase sheet",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/142qqLXiISod9EzNvulhTOD1eQNOvRw85MtRHP8xcVD4/edit#gid=1978602406"
+          },
+          "columns": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "name": "={{ $('Loop Over Items of New Purchases').item.json.customerName }}",
+              "email": "={{ $('Loop Over Items of New Purchases').item.json.customerEmail }}",
+              "template purchased": "={{ $('Loop Over Items of New Purchases').item.json.automationName }}",
+              "status": "={{ $('Loop Over Items of New Purchases').item.json.status }}",
+              "price": "={{ $('Loop Over Items of New Purchases').item.json.amount }}"
+            },
+            "matchingColumns": [
+              "name"
+            ],
+            "schema": [
+              {
+                "id": "name",
+                "displayName": "name",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "email",
+                "displayName": "email",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "template purchased",
+                "displayName": "template purchased",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "status",
+                "displayName": "status",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "price",
+                "displayName": "price",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              }
+            ],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": false
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.googleSheets",
+        "typeVersion": 4.7,
+        "position": [
+          3072,
+          1360
+        ],
+        "id": "1fa862b0-51be-4abb-ac4b-12a6a0ab4000",
+        "name": "Append or update row in sheet  For  Tracking",
+        "credentials": {
+          "googleSheetsOAuth2Api": {
+            "id": "kpPEOLCGn963qpoh",
+            "name": "automations@techdome.ai"
           }
         }
       }
     ],
     "connections": {
-      "Wait 10 Seconds": {
-        "main": [
+      "Azure OpenAI Chat Model": {
+        "ai_languageModel": [
           [
             {
-              "node": "Check HeyGen Video Status",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "Check HeyGen Video Status": {
-        "main": [
-          [
-            {
-              "node": "Wait",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "Check If Video Completed": {
-        "main": [
-          [
-            {
-              "node": "Download Completed Video",
-              "type": "main",
-              "index": 0
-            }
-          ],
-          [
-            {
-              "node": "Wait 10 Seconds",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "Download Completed Video": {
-        "main": [
-          [
-            {
-              "node": "Upload Video to Google Drive",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "Upload Video to Google Drive": {
-        "main": [
-          [
-            {
-              "node": "Download file1",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "AI Agent": {
-        "main": [
-          [
-            {
-              "node": "Generate Script With AI",
-              "type": "main",
+              "node": "AI Agent – Email Composer",
+              "type": "ai_languageModel",
               "index": 0
             }
           ]
@@ -1384,40 +2279,18 @@
         "ai_outputParser": [
           [
             {
-              "node": "AI Agent",
+              "node": "AI Agent – Email Composer",
               "type": "ai_outputParser",
               "index": 0
             }
           ]
         ]
       },
-      "Simple Memory1": {
-        "ai_memory": [
-          [
-            {
-              "node": "AI Agent",
-              "type": "ai_memory",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "Extract from File": {
-        "main": [
-          [
-            {
-              "node": "AI Agent",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "OpenAI Chat Model": {
+      "Azure OpenAI Chat Model1": {
         "ai_languageModel": [
           [
             {
-              "node": "AI Agent",
+              "node": "AI Agent  → Google Sheets Lookup",
               "type": "ai_languageModel",
               "index": 0
             }
@@ -1428,95 +2301,259 @@
         "ai_outputParser": [
           [
             {
-              "node": "Generate Script With AI",
+              "node": "AI Agent  → Google Sheets Lookup",
               "type": "ai_outputParser",
               "index": 0
             }
           ]
         ]
       },
-      "Simple Memory": {
-        "ai_memory": [
+      "Get row(s) in sheet in Google Sheets": {
+        "ai_tool": [
           [
             {
-              "node": "Generate Script With AI",
-              "type": "ai_memory",
+              "node": "AI Agent  → Google Sheets Lookup",
+              "type": "ai_tool",
               "index": 0
             }
           ]
         ]
       },
-      "Generate Script With AI": {
+      "Get Payment Intent (From Charge)": {
         "main": [
           [
             {
-              "node": "Create HeyGen Video Task1",
+              "node": "If1",
+              "type": "main",
+              "index": 0
+            },
+            {
+              "node": "Merge Charge + PaymentIntent + Product",
               "type": "main",
               "index": 0
             }
           ]
         ]
       },
-      "Create HeyGen Video Task1": {
+      "If1": {
         "main": [
           [
             {
-              "node": "Wait 10 Seconds",
+              "node": "Get Product Details (from Payment Intent)",
               "type": "main",
               "index": 0
             }
           ]
         ]
       },
-      "Wait": {
+      "Get Product Details (from Payment Intent)": {
         "main": [
           [
             {
-              "node": "Check If Video Completed",
+              "node": "Merge Charge + PaymentIntent + Product",
+              "type": "main",
+              "index": 2
+            }
+          ]
+        ]
+      },
+      "Customer matching": {
+        "main": [
+          [
+            {
+              "node": "SQL Combine",
               "type": "main",
               "index": 0
             }
           ]
         ]
       },
-      "OpenAI Chat Model1": {
-        "ai_languageModel": [
-          [
-            {
-              "node": "Generate Script With AI",
-              "type": "ai_languageModel",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "Webhook - Receive Policy PDF": {
+      "Stripe Data Collection": {
         "main": [
           [
             {
-              "node": "Dowload file",
+              "node": "Filter – Successful Charges",
               "type": "main",
               "index": 0
             }
           ]
         ]
       },
-      "Dowload file": {
+      "Filter – Successful Charges": {
         "main": [
           [
             {
-              "node": "Extract from File",
+              "node": "Get Payment Intent (From Charge)",
+              "type": "main",
+              "index": 0
+            },
+            {
+              "node": "Merge Charge + PaymentIntent + Product",
+              "type": "main",
+              "index": 1
+            }
+          ]
+        ]
+      },
+      "AI Agent  → Google Sheets Lookup": {
+        "main": [
+          [
+            {
+              "node": "Check Match Found",
               "type": "main",
               "index": 0
             }
           ]
         ]
       },
-      "Download file1": {
+      "Schedule Trigger Daily": {
         "main": [
           [
             {
-              "node": "Respond to Webhook",
+              "node": "Stripe Data Collection",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Merge Charge + PaymentIntent + Product": {
+        "main": [
+          [
+            {
+              "node": "Merge Logic Format Data",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Merge Logic Format Data": {
+        "main": [
+          [
+            {
+              "node": "Check Required Fields",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Check Required Fields": {
+        "main": [
+          [
+            {
+              "node": "AI Agent  → Google Sheets Lookup",
+              "type": "main",
+              "index": 0
+            },
+            {
+              "node": "Combine Stripe + Sheet Data",
+              "type": "main",
+              "index": 1
+            }
+          ]
+        ]
+      },
+      "Check Match Found": {
+        "main": [
+          [
+            {
+              "node": "Combine Stripe + Sheet Data",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Combine Stripe + Sheet Data": {
+        "main": [
+          [
+            {
+              "node": "Customer matching",
+              "type": "main",
+              "index": 0
+            },
+            {
+              "node": "Get row(s) in sheet – Purchase Sheet Lookup",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Get row(s) in sheet – Purchase Sheet Lookup": {
+        "main": [
+          [
+            {
+              "node": "SQL Combine",
+              "type": "main",
+              "index": 1
+            }
+          ]
+        ]
+      },
+      "SQL Combine": {
+        "main": [
+          [
+            {
+              "node": "Check Automation Exists",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Check Automation Exists": {
+        "main": [
+          [
+            {
+              "node": "Loop Over Items of New Purchases",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Loop Over Items of New Purchases": {
+        "main": [
+          [],
+          [
+            {
+              "node": "AI Agent – Email Composer",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "AI Agent – Email Composer": {
+        "main": [
+          [
+            {
+              "node": "Send a message (Gmail)",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Send a message (Gmail)": {
+        "main": [
+          [
+            {
+              "node": "Append or update row in sheet  For  Tracking",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Append or update row in sheet  For  Tracking": {
+        "main": [
+          [
+            {
+              "node": "Loop Over Items of New Purchases",
               "type": "main",
               "index": 0
             }
@@ -1525,8 +2562,8 @@
       }
     },
     "authors": "IT Support",
-    "name": null,
-    "description": null
+    "name": "Version d0b15520",
+    "description": ""
   },
   "tags": []
 }
