@@ -1,1280 +1,218 @@
 {
-  "updatedAt": "2025-09-12T02:17:57.000Z",
-  "createdAt": "2025-09-12T01:15:30.856Z",
-  "id": "B2Tql8wikmehetY0",
-  "name": "My workflow 17",
+  "updatedAt": "2025-08-27T10:23:25.000Z",
+  "createdAt": "2025-08-11T18:46:56.248Z",
+  "id": "AHdpdpvp7wMzaMl4",
+  "name": "Individual Team Productivity ClickUp(BDE)",
   "active": false,
-  "isArchived": true,
+  "isArchived": false,
   "nodes": [
     {
+      "parameters": {},
+      "id": "26ede84a-64ae-4734-8a7d-1ad54e246fb8",
+      "name": "When clicking 'Execute workflow'",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -784,
+        224
+      ]
+    },
+    {
       "parameters": {
-        "updates": [
-          "messages"
+        "functionCode": "// =========================\n// Helper: Parse dates from ClickUp with proper IST handling\n// =========================\nconst parseDate = (dateValue) => {\n  if (!dateValue) return null;\n\n  let date;\n  \n  // Handle Unix timestamp (ClickUp typically uses milliseconds)\n  if (/^\\d+$/.test(String(dateValue))) {\n    const timestamp = Number(dateValue);\n    // ClickUp timestamps are usually in milliseconds\n    date = new Date(timestamp);\n    \n    // If the timestamp seems to be in seconds (very old timestamp), convert to milliseconds\n    if (timestamp < 10000000000) {\n      date = new Date(timestamp * 1000);\n    }\n  } else {\n    // Handle string dates\n    date = new Date(dateValue);\n  }\n\n  return isNaN(date.getTime()) ? null : date;\n};\n\n// =========================\n// Helper: Convert UTC date to IST and get date-only\n// =========================\nconst convertToISTDateOnly = (utcDate) => {\n  if (!utcDate) return null;\n  \n  // Create a new date in IST (UTC + 5:30)\n  const istDate = new Date(utcDate.getTime() + (5.5 * 60 * 60 * 1000));\n  \n  // Return date-only (remove time component)\n  return new Date(istDate.getFullYear(), istDate.getMonth(), istDate.getDate());\n};\n\n// =========================\n// Helper: Get current IST date-only\n// =========================\nconst getCurrentISTDateOnly = () => {\n  const now = new Date();\n  return convertToISTDateOnly(now);\n};\n\n// =========================\n// Helper: Check if due today (IST)\n// =========================\nconst isDueToday = (dueDate) => {\n  if (!dueDate) return false;\n  const today = getCurrentISTDateOnly();\n  const due = convertToISTDateOnly(dueDate);\n  return today.getTime() === due.getTime();\n};\n\n// =========================\n// Helper: Check if due soon (next 3 days, IST)\n// =========================\nconst isDueSoon = (dueDate) => {\n  if (!dueDate) return false;\n  const today = getCurrentISTDateOnly();\n  const due = convertToISTDateOnly(dueDate);\n  const diffDays = Math.floor((due.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));\n  return diffDays >= 1 && diffDays <= 3;\n};\n\n// =========================\n// Helper: Format date to IST string\n// =========================\nconst formatDateIST = (date) => {\n  if (!date) return 'No Due Date';\n  \n  // Convert to IST\n  const istDate = new Date(date.getTime() + (5.5 * 60 * 60 * 1000));\n  \n  return istDate.toLocaleDateString('en-US', { \n    month: 'short', \n    day: 'numeric', \n    year: 'numeric',\n    timeZone: 'UTC' // Since we already converted to IST\n  });\n};\n\n// =========================\n// Helper: Calculate days difference in IST\n// =========================\nconst calculateDaysDifference = (dueDate) => {\n  if (!dueDate) return null;\n  \n  const today = getCurrentISTDateOnly();\n  const due = convertToISTDateOnly(dueDate);\n  \n  return Math.floor((due.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));\n};\n\n// =========================\n// Helper: Normalize status\n// =========================\nconst normalizeStatus = (status) => {\n  if (!status) return 'No Status';\n  const lower = String(status).toLowerCase();\n  if (lower.includes('complete') || lower.includes('done')) return 'Completed';\n  if (lower.includes('progress')) return 'In Progress';\n  if (lower.includes('review')) return 'Review';\n  if (lower.includes('backlog')) return 'Backlog';\n  if (lower.includes('to do') || lower.includes('todo')) return 'To Do';\n  return String(status);\n};\n\n// =========================\n// Helper: Normalize priority\n// =========================\nconst normalizePriority = (priority) => {\n  if (!priority) return 'Normal';\n  const lower = String(priority).toLowerCase();\n  if (lower.includes('urgent')) return 'Urgent';\n  if (lower.includes('high')) return 'High';\n  if (lower.includes('medium')) return 'Medium';\n  if (lower.includes('low')) return 'Low';\n  return String(priority);\n};\n\n// =========================\n// Helper: Safe number parsing\n// =========================\nconst parseNumber = (value, defaultValue = 0) => {\n  if (value === null || value === undefined) return defaultValue;\n  const num = Number(value);\n  return isNaN(num) ? defaultValue : num;\n};\n\n// =========================\n// Helper: Safe array access\n// =========================\nconst safeArray = (value) => Array.isArray(value) ? value : [];\n\n// =========================\n// Main Processing Function\n// =========================\nconst processSprintData = (inputData) => {\n  const allTasksMap = new Map();\n  let inputItems = [];\n\n  if (Array.isArray(inputData)) {\n    inputItems = inputData;\n  } else if (inputData && typeof inputData === 'object') {\n    inputItems = [inputData];\n  } else {\n    return { error: 'Invalid input data format', processedTasks: [], tasksByStatus: {}, tasksByAssignee: {}, summary: {} };\n  }\n\n  // Extract tasks\n  inputItems.forEach((item) => {\n    try {\n      let task = item.json || item;\n      if (task.tasks && Array.isArray(task.tasks)) {\n        task.tasks.forEach(nestedTask => {\n          if (nestedTask && nestedTask.id) allTasksMap.set(nestedTask.id, nestedTask);\n        });\n      } else if (task && task.id) {\n        allTasksMap.set(task.id, task);\n      }\n    } catch (error) {\n      console.error('Error processing input item:', error);\n    }\n  });\n\n  const uniqueTasks = Array.from(allTasksMap.values());\n\n  const processedTasks = uniqueTasks.map((task, index) => {\n    try {\n      const dueDate = parseDate(task.due_date);\n      const startDate = parseDate(task.start_date);\n      const dateCreated = parseDate(task.date_created);\n      const dateUpdated = parseDate(task.date_updated);\n      const dateClosed = parseDate(task.date_closed);\n      const dateDone = parseDate(task.date_done);\n\n      let dueDateStatus = 'No Due Date';\n      let daysDifference = null;\n\n      if (dueDate) {\n        daysDifference = calculateDaysDifference(dueDate);\n\n        if (daysDifference < 0) {\n          dueDateStatus = 'Overdue';\n        } else if (isDueToday(dueDate)) {\n          dueDateStatus = 'Due Today';\n        } else if (isDueSoon(dueDate)) {\n          dueDateStatus = 'Due Soon';\n        } else {\n          dueDateStatus = 'Upcoming';\n        }\n      }\n\n      const assignees = safeArray(task.assignees);\n      const assignee = assignees.length > 0\n        ? assignees[0]\n        : { username: 'Unassigned', email: null, initials: 'NA', color: '#808080' };\n\n      const timeSpentHours = Math.round((parseNumber(task.time_spent) / (1000 * 60 * 60)) * 10) / 10;\n      const timeEstimateHours = Math.round((parseNumber(task.time_estimate) / (1000 * 60 * 60)) * 10) / 10;\n\n      const priority = task.priority || {};\n      const priorityText = priority.priority || priority.name || 'Normal';\n\n      const status = task.status || {};\n      const statusText = status.status || status.name || 'No Status';\n\n      return {\n        id: task.id || `task-${index}`,\n        name: task.name || 'Untitled Task',\n        assignee: assignee.username || 'Unassigned',\n        assigneeEmail: assignee.email,\n        assigneeInitials: assignee.initials || 'NA',\n        assigneeColor: assignee.color || '#808080',\n        dueDate: formatDateIST(dueDate),\n        dueDateRaw: dueDate,\n        dueDateStatus,\n        daysDifference,\n        startDate: startDate ? formatDateIST(startDate) : null,\n        startDateRaw: startDate,\n        priority: normalizePriority(priorityText),\n        priorityLevel: parseNumber(priority.orderindex, 3),\n        priorityColor: priority.color || '#6fddff',\n        sprintPoints: parseNumber(task.points),\n        status: normalizeStatus(statusText),\n        statusOriginal: statusText,\n        statusColor: status.color || '#d3d3d3',\n        url: task.url || '',\n        description: task.description || '',\n        tags: safeArray(task.tags).map(tag => typeof tag === 'string' ? tag : (tag.name || '')).join(', '),\n        dateCreated: dateCreated ? formatDateIST(dateCreated) : '',\n        dateCreatedRaw: dateCreated,\n        dateUpdated: dateUpdated ? formatDateIST(dateUpdated) : '',\n        dateUpdatedRaw: dateUpdated,\n        dateClosed: dateClosed ? formatDateIST(dateClosed) : '',\n        dateDone: dateDone ? formatDateIST(dateDone) : '',\n        timeSpent: timeSpentHours,\n        timeEstimate: timeEstimateHours,\n        timeProgress: timeEstimateHours > 0 ? Math.min(100, Math.round((timeSpentHours / timeEstimateHours) * 100)) : 0,\n        isArchived: Boolean(task.archived),\n        customFields: safeArray(task.custom_fields),\n        dependencies: safeArray(task.dependencies),\n        checklistItems: safeArray(task.checklists).flatMap(cl => safeArray(cl.items || cl.checklist_items)),\n        parentTask: task.parent || null\n      };\n    } catch (error) {\n      console.error(`Error processing task ${task.id || index}:`, error);\n      return null;\n    }\n  }).filter(Boolean);\n\n  // Grouping\n  const tasksByStatus = {};\n  const tasksByAssignee = {};\n  processedTasks.forEach(task => {\n    if (!tasksByStatus[task.status]) tasksByStatus[task.status] = [];\n    tasksByStatus[task.status].push(task);\n\n    if (!tasksByAssignee[task.assignee]) {\n      tasksByAssignee[task.assignee] = { tasks: [], timeSpent: 0, timeEstimate: 0, dueTodayTasks: 0 };\n    }\n    tasksByAssignee[task.assignee].tasks.push(task);\n    tasksByAssignee[task.assignee].timeSpent += task.timeSpent;\n    tasksByAssignee[task.assignee].timeEstimate += task.timeEstimate;\n    if (task.dueDateStatus === 'Due Today') tasksByAssignee[task.assignee].dueTodayTasks++;\n  });\n\n  // Summary\n  const summary = {\n    totalTasks: processedTasks.length,\n    overdueTasks: processedTasks.filter(t => t.dueDateStatus === 'Overdue').length,\n    dueTodayTasks: processedTasks.filter(t => t.dueDateStatus === 'Due Today').length,\n    dueSoonTasks: processedTasks.filter(t => t.dueDateStatus === 'Due Soon').length,\n    completedTasks: processedTasks.filter(t => t.status === 'Completed').length,\n    inProgressTasks: processedTasks.filter(t => t.status === 'In Progress').length\n  };\n\n  // Get current IST date for report\n  const now = new Date();\n  const istNow = new Date(now.getTime() + (5.5 * 60 * 60 * 1000));\n  const reportDate = istNow.toLocaleDateString('en-US', { \n    weekday: 'long', \n    month: 'long', \n    day: 'numeric', \n    year: 'numeric',\n    timeZone: 'UTC'\n  });\n\n  return {\n    processedTasks,\n    tasksByStatus,\n    tasksByAssignee,\n    summary,\n    reportDate\n  };\n};\n\n// =========================\n// Run in n8n\n// =========================\ntry {\n  const inputData = $input.all();\n  const result = processSprintData(inputData);\n  return [{ json: result }];\n} catch (error) {\n  return [{\n    json: {\n      error: error.message,\n      processedTasks: [],\n      tasksByStatus: {},\n      tasksByAssignee: {},\n      summary: {}\n    }\n  }];\n}"
+      },
+      "id": "2bb8c892-2d01-43cc-a610-9480288985a9",
+      "name": "Process Sprint Data",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        -288,
+        208
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "subject": "=Assignee Productivity Report -{{ $now.format('dd-MM-yyyy') }}",
+        "includeHtml": true,
+        "htmlMessage": "={{ $json.htmlReport }}",
+        "message": "Testing click up logs table.",
+        "toList": [
+          "[Enter Your Mail Here]"
         ],
-        "options": {}
-      },
-      "id": "1ae52f24-3eb2-4ab9-8544-43c7bd21794c",
-      "name": "WhatsApp Trigger",
-      "type": "n8n-nodes-base.whatsAppTrigger",
-      "position": [
-        880,
-        1232
-      ],
-      "webhookId": "d3978cae-2aca-4553-8ac7-ab89068deabc",
-      "typeVersion": 1
-    },
-    {
-      "parameters": {
-        "url": "={{ $json.url }}",
-        "authentication": "genericCredentialType",
-        "genericAuthType": "httpHeaderAuth",
-        "options": {}
-      },
-      "id": "d551cb99-2b2b-4c51-aa5b-913f0fe08e90",
-      "name": "Download Image",
-      "type": "n8n-nodes-base.httpRequest",
-      "position": [
-        2304,
-        1264
-      ],
-      "typeVersion": 4.2
-    },
-    {
-      "parameters": {
-        "resource": "image",
-        "operation": "analyze",
-        "modelId": {
-          "__rl": true,
-          "mode": "list",
-          "value": "gpt-4o-mini",
-          "cachedResultName": "GPT-4O-MINI"
-        },
-        "text": "=You are an advanced image description AI assistant . Your primary function is to provide detailed, accurate descriptions of images submitted through WhatsApp.\n\nCORE FUNCTIONALITY:\n- When presented with an image, you will analyze it thoroughly and provide a comprehensive description in English.\n- Your descriptions should capture both the obvious and subtle elements within the image.\n\nIMAGE DESCRIPTION GUIDELINES:\n- Begin with a broad overview of what the image contains\n- Describe key subjects, people, objects, and their relationships\n- Note significant visual elements such as colors, lighting, composition, and perspective\n- Identify any text visible in the image\n- Describe the setting or environment\n- Mention any notable actions or events taking place\n- Comment on mood, tone, or atmosphere when relevant\n- If applicable, identify landmarks, famous people, or cultural references\n\nRESPONSE FORMAT:\n- Start with \"Image Description:\" followed by your analysis\n- Structure your description in a logical manner (general to specific)\n- Use clear, precise language appropriate for visual description\n- Format longer descriptions with paragraphs to enhance readability\n- End with any notable observations that might require special attention\n\nLIMITATIONS:\n- If the image is blurry, low resolution, or difficult to interpret, acknowledge these limitations\n- If an image contains potentially sensitive content, provide a factual description without judgment\n- Do not make assumptions about elements that cannot be clearly determined\n\nYour descriptions should be informative, objective, and thorough, enabling someone who cannot see the image to form an accurate mental picture of its contents.",
-        "inputType": "base64",
-        "options": {
-          "detail": "auto"
+        "additionalFields": {
+          "bccList": [],
+          "ccList": []
         }
       },
-      "id": "420bb5ec-375c-424e-8d9e-4c143d6bca13",
-      "name": "Analyze Image",
-      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "id": "d083b7b4-4636-414c-862d-de3b726ba9e3",
+      "name": "Send Daily Report Email",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 1,
       "position": [
-        2544,
-        1264
+        208,
+        176
       ],
-      "typeVersion": 1.8
-    },
-    {
-      "parameters": {
-        "url": "={{ $json.url }}",
-        "authentication": "genericCredentialType",
-        "genericAuthType": "httpHeaderAuth",
-        "options": {}
-      },
-      "id": "003db32d-468e-4ecd-8e3f-194894de046d",
-      "name": "Download Audio",
-      "type": "n8n-nodes-base.httpRequest",
-      "position": [
-        2304,
-        960
-      ],
-      "typeVersion": 4.2,
       "credentials": {
-        "httpHeaderAuth": {
-          "id": "Yl7m8EDBnkzhehnd",
-          "name": "Header Auth account 5"
+        "gmailOAuth2": {
+          "id": "gEIaWCTvGfYjMSb3",
+          "name": "Gmail credentials"
         }
       }
     },
     {
       "parameters": {
-        "resource": "audio",
-        "operation": "transcribe",
-        "options": {}
+        "operation": "getAll",
+        "team": "9016683627",
+        "space": "90162844741",
+        "folder": "90164394824",
+        "list": "901610354799",
+        "filters": {}
       },
-      "id": "bad8e6bd-91af-42b2-8ceb-fdb90cbe03c2",
-      "name": "Transcribe Audio",
-      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "type": "n8n-nodes-base.clickUp",
+      "typeVersion": 1,
       "position": [
-        2544,
-        960
+        -528,
+        96
       ],
-      "typeVersion": 1.8
-    },
-    {
-      "parameters": {
-        "model": {
-          "__rl": true,
-          "mode": "list",
-          "value": "gpt-4o-mini"
-        },
-        "options": {}
-      },
-      "id": "61e99a97-9c23-46e4-9e82-1c63e6ffaba6",
-      "name": "OpenAI Chat Model",
-      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
-      "position": [
-        1744,
-        2592
-      ],
-      "typeVersion": 1.2
-    },
-    {
-      "parameters": {
-        "promptType": "define",
-        "text": "={{ $json.text }}",
-        "options": {
-          "systemMessage": "You are an intelligent assistant. Your purpose is to analyze various types of input and provide helpful, accurate responses.\n\nCAPABILITIES:\n- Process and respond to text messages\n- Analyze uploaded files\n- Interpret and describe images\n- Transcribe and understand voice messages\n\nINPUT HANDLING:\n1. For text messages: Analyze the content, understand the intent, and provide a relevant response.\n2. For file analysis: Examine the file content, extract key information, and summarize important points also based on the questions asked.\n3. For image analysis: Describe what you see in the image, identify key elements, and respond to any questions about the image.\n4. For voice messages: Transcribe the audio, understand the message, and respond appropriately.\n\nRESPONSE GUIDELINES:\n- Be concise but thorough\n- Prioritize accuracy over speculation\n- Maintain a professional and helpful tone\n- When uncertain, acknowledge limitations\n- Format responses for easy reading on mobile devices\n- Include actionable information when appropriate\n\nLIMITATIONS:\n- Mention if you're unable to process certain file formats\n- Indicate if an image is unclear or if details are difficult to discern\n- Note if audio quality impacts transcription accuracy\n\nSECURITY & PRIVACY:\n- Do not store or remember sensitive information shared in files, images, or voice notes\n- Do not share personal information across different user interactions\n- Inform users about data privacy limitations when relevant\n\nAnalyze all inputs carefully before responding. Your goal is to provide value through accurate information and helpful assistance."
+      "id": "9919df8b-2b6c-4eb1-8a70-fa3b6378a3e3",
+      "name": "Get many tasks",
+      "credentials": {
+        "clickUpApi": {
+          "id": "ojaVHQq5eotJ70xs",
+          "name": "ClickUp account 4"
         }
-      },
-      "id": "ad1333b0-aa03-4ed2-bfdd-9f8d095bc628",
-      "name": "AI Agent1",
-      "type": "@n8n/n8n-nodes-langchain.agent",
-      "position": [
-        1744,
-        2368
-      ],
-      "typeVersion": 1.8
+      }
     },
     {
       "parameters": {
-        "url": "={{ $json.url }}",
-        "authentication": "genericCredentialType",
-        "genericAuthType": "httpHeaderAuth",
-        "options": {}
+        "functionCode": "// =========================\n// HTML Report Generator for n8n\n// =========================\n\nconst generateProductivityReport = (data) => {\n  const { processedTasks } = data;\n\n  // Helper function to get status pill class and color\n  const getStatusPillInfo = (status) => {\n    if (!status) return { class: 'other', color: '#6f42c1' };\n    const statusLower = status.toLowerCase();\n    if (statusLower.includes('complete') || statusLower.includes('done')) {\n      return { class: 'completed', color: '#28a745' };\n    }\n    if (statusLower.includes('progress')) {\n      return { class: 'inprogress', color: '#007bff' };\n    }\n    if (statusLower.includes('todo') || statusLower.includes('backlog')) {\n      return { class: 'todo', color: '#6c757d' };\n    }\n    return { class: 'other', color: '#6f42c1' };\n  };\n\n  // Helper function to format hours to hh:mm format\n  const formatHoursToHHMM = (decimalHours) => {\n    if (!decimalHours || isNaN(decimalHours)) return '0h';\n    const hours = Math.floor(decimalHours);\n    const minutes = Math.round((decimalHours - hours) * 60);\n    return minutes === 0 ? `${hours}h` : `${hours}h ${minutes}m`;\n  };\n\n  // Helper function to convert hh:mm to decimal hours\n  const convertHHMMToDecimal = (timeString) => {\n    if (!timeString || timeString === '0h') return 0;\n    const parts = timeString.split(/[h\\s]+/);\n    const hours = parseInt(parts[0]) || 0;\n    const minutes = parseInt(parts[1]) || 0;\n    return hours + (minutes / 60);\n  };\n\n  // Recalculate daysDifference and dueDateStatus based on current date\n  const currentDate = new Date('2025-08-12T00:00:00Z');\n  processedTasks.forEach(task => {\n    if (task.dueDateRaw) {\n      const due = new Date(task.dueDateRaw);\n      const diffMs = due - currentDate;\n      const diffDays = Math.ceil(diffMs / 86400000);\n      task.daysDifference = diffDays;\n      if (diffDays < 0) {\n        task.dueDateStatus = 'Overdue';\n      } else if (diffDays === 0) {\n        task.dueDateStatus = 'Due Today';\n      } else {\n        task.dueDateStatus = `Due in ${diffDays} days`;\n      }\n    } else {\n      task.daysDifference = null;\n      task.dueDateStatus = 'No Due Date';\n    }\n  });\n\n  // Group tasks by assignee\n  const tasksByAssignee = {};\n  processedTasks.forEach(task => {\n    const assignee = task.assignee || 'Unassigned';\n    if (!tasksByAssignee[assignee]) {\n      tasksByAssignee[assignee] = [];\n    }\n    tasksByAssignee[assignee].push(task);\n  });\n\n  // Calculate overall summary\n  const totalTasks = processedTasks.length;\n  const totalAssignees = Object.keys(tasksByAssignee).length;\n  const completedTasks = processedTasks.filter(task => task.status && (task.status.toLowerCase().includes('complete') || task.status.toLowerCase().includes('done'))).length;\n  const productivityPercentage = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;\n\n  // Generate individual productivity sections\n  const generateIndividualSections = () => {\n    let sections = '';\n    \n    Object.entries(tasksByAssignee).sort((a, b) => a[0].localeCompare(b[0])).forEach(([assignee, assigneeTasks]) => {\n      // Calculate assignee-specific metrics\n      const assigneeTotalTasks = assigneeTasks.length;\n      const assigneeCompleted = assigneeTasks.filter(task => task.status && (task.status.toLowerCase().includes('complete') || task.status.toLowerCase().includes('done'))).length;\n      const assigneeInProgress = assigneeTasks.filter(task => task.status && task.status.toLowerCase().includes('progress')).length;\n      const assigneeTodo = assigneeTasks.filter(task => task.status && (task.status.toLowerCase().includes('todo') || task.status.toLowerCase().includes('backlog'))).length;\n      const assigneeOverdue = assigneeTasks.filter(task => task.daysDifference !== null && task.daysDifference < 0).length;\n      const assigneeProductivity = assigneeTotalTasks > 0 ? Math.round((assigneeCompleted / assigneeTotalTasks) * 100) : 0;\n      \n      let totalEstimate = 0;\n      let totalSpent = 0;\n      let totalSprintPoints = 0;\n      assigneeTasks.forEach(task => {\n        let estimate = typeof task.timeEstimate === 'string' ? convertHHMMToDecimal(task.timeEstimate) : (task.timeEstimate || 0);\n        let spent = typeof task.timeSpent === 'string' ? convertHHMMToDecimal(task.timeSpent) : (task.timeSpent || 0);\n        totalEstimate += estimate;\n        totalSpent += spent;\n        totalSprintPoints += task.sprintPoints || 0;\n      });\n      const efficiency = totalEstimate > 0 ? Math.round((totalSpent / totalEstimate) * 100) : 0;\n\n      // Performance note\n      let performanceNote = '';\n      let performanceClass = '';\n      if (assigneeProductivity >= 80) {\n        performanceNote = 'High Productivity';\n        performanceClass = 'high-productivity';\n      } else if (assigneeProductivity >= 50) {\n        performanceNote = 'Moderate Productivity';\n        performanceClass = 'moderate-productivity';\n      } else {\n        performanceNote = assigneeOverdue > 0 ? 'Needs Improvement' : 'Low Productivity';\n        performanceClass = 'low-productivity';\n      }\n\n      // Prepare data for pie chart\n      const chartLabels = ['Completed', 'In Progress', 'To Do', 'Overdue'];\n      const chartValues = [assigneeCompleted, assigneeInProgress, assigneeTodo, assigneeOverdue];\n      const chartColors = ['#28a745', '#007bff', '#6c757d', '#e74c3c'];\n\n     \n\n     \n\n      // Generate task table for assignee\n      let tableRows = '';\n      assigneeTasks.forEach(task => {\n        const statusInfo = getStatusPillInfo(task.status);\n        const dueDateClass = task.dueDateStatus === 'Overdue' ? 'overdue-text' : '';\n        const taskUrl = task.url ? `<a href=\"${task.url}\" target=\"_blank\">${task.name || 'Untitled'}</a>` : (task.name || 'Untitled');\n        \n        tableRows += `\n          <tr>\n            <td>${taskUrl}</td>\n            <td>${task.dueDate || '-'}</td>\n            <td class=\"${dueDateClass}\">${task.dueDateStatus || '-'}</td>\n            <td>${task.priority || '-'}</td>\n            <td>${task.sprintPoints || 0}</td>\n            <td><span class=\"status-pill ${statusInfo.class}\" style=\"background-color: ${statusInfo.color}\">${task.status || 'Unknown'}</span></td>\n            <td>${formatHoursToHHMM(task.timeEstimate)}</td>\n            <td>${formatHoursToHHMM(task.timeSpent)}</td>\n          </tr>\n        `;\n      });\n\n      sections += `\n        <div class=\"assignee-section\">\n          <h2>Productivity Report for ${assignee}</h2>\n          <div class=\"summary-info ${performanceClass}\">\n            <p>Total Tasks: ${assigneeTotalTasks}</p>\n            <p>Completed Tasks: ${assigneeCompleted} (${assigneeProductivity}%)</p>\n            <p>In Progress: ${assigneeInProgress}</p>\n            <p>To Do: ${assigneeTodo}</p>\n            <p>Overdue Tasks: ${assigneeOverdue}</p>\n            <p>Total Sprint Points: ${totalSprintPoints}</p>\n            <p>Total Time Estimated: ${formatHoursToHHMM(totalEstimate)}</p>\n            <p>Total Time Spent: ${formatHoursToHHMM(totalSpent)}</p>\n            <p>Efficiency (Spent/Estimate): ${efficiency}%</p>\n            <p>Performance: ${performanceNote}</p>\n          </div>\n         \n          <h3>Task Details</h3>\n          ${assigneeTasks.length === 0 ? '<p>No tasks assigned.</p>' : `\n          <table>\n            <thead>\n              <tr>\n                <th>Task Name</th>\n                <th>Due Date</th>\n                <th>Due Status</th>\n                <th>Priority</th>\n                <th>Sprint Points</th>\n                <th>Status</th>\n                <th>Time Estimate</th>\n                <th>Time Spent</th>\n              </tr>\n            </thead>\n            <tbody>\n              ${tableRows}\n            </tbody>\n          </table>\n          `}\n        </div>\n      `;\n    });\n\n    return sections;\n  };\n\n  // Generate overall productivity chart\n  const chartLabels = Object.keys(tasksByAssignee).sort();\n  const completedData = chartLabels.map(name => tasksByAssignee[name].filter(task => task.status && (task.status.toLowerCase().includes('complete') || task.status.toLowerCase().includes('done'))).length);\n  const overdueData = chartLabels.map(name => tasksByAssignee[name].filter(task => task.daysDifference !== null && task.daysDifference < 0).length);\n\n  const overallChartConfig = {\n    type: 'bar',\n    data: {\n      labels: chartLabels,\n      datasets: [\n        {\n          label: 'Completed Tasks',\n          data: completedData,\n          backgroundColor: '#28a745'\n        },\n        {\n          label: 'Overdue Tasks',\n          data: overdueData,\n          backgroundColor: '#e74c3c'\n        }\n      ]\n    },\n    options: {\n      responsive: true,\n      scales: {\n        y: {\n          beginAtZero: true,\n          title: {\n            display: true,\n            text: 'Number of Tasks'\n          },\n          ticks: {\n            stepSize: 1\n          }\n        },\n        x: {\n          title: {\n            display: true,\n            text: 'Assignee'\n          }\n        }\n      },\n      plugins: {\n        legend: {\n          display: true,\n          position: 'top'\n        },\n        title: {\n          display: true,\n          text: 'Productivity Overview by Assignee',\n          font: { size: 16 }\n        }\n      }\n    }\n  };\n\n  const overallChartUrl = `https://quickchart.io/chart?width=600&height=300&chart=${encodeURIComponent(JSON.stringify(overallChartConfig))}`;\n\n  // Generate complete HTML report\n  const htmlContent = `\n<!DOCTYPE html>\n<html>\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>Team Member Productivity Report</title>\n    <style>\n        body {\n            font-family: \"Segoe UI\", Arial, sans-serif;\n            font-size: 14px;\n            color: #333333;\n            line-height: 1.4;\n            margin: 0;\n            padding: 20px;\n            background-color: #f8f9fa;\n        }\n        \n        .container {\n            max-width: 1200px;\n            margin: 0 auto;\n            background-color: white;\n            padding: 20px;\n            border-radius: 8px;\n            box-shadow: 0 2px 10px rgba(0,0,0,0.1);\n        }\n        \n        h1 {\n            color: #2c3e50;\n            font-size: 24px;\n            margin-bottom: 20px;\n            text-align: center;\n            border-bottom: 2px solid #3498db;\n            padding-bottom: 10px;\n        }\n        \n        h2 {\n            color: #333333;\n            font-size: 18px;\n            margin-top: 40px;\n            margin-bottom: 10px;\n            font-weight: bold;\n            border-bottom: 1px solid #ddd;\n            padding-bottom: 5px;\n        }\n        \n        h3 {\n            font-size: 16px;\n            margin-bottom: 10px;\n        }\n        \n        table {\n            border-collapse: collapse;\n            width: 100%;\n            background: #ffffff;\n            border-radius: 6px;\n            overflow: hidden;\n            margin-bottom: 30px;\n            box-shadow: 0 1px 3px rgba(0,0,0,0.1);\n        }\n        \n        th {\n            background-color: #f4f4f4;\n            font-weight: bold;\n            padding: 12px;\n            text-align: left;\n            border: 1px solid #ddd;\n            font-size: 13px;\n        }\n        \n        td {\n            padding: 14px;\n            border: 1px solid #ddd;\n            vertical-align: middle;\n            max-width: 200px;\n            word-break: break-word;\n        }\n        \n        tr:hover {\n            background-color: #f9f9f9;\n        }\n        \n        .status-pill {\n            display: inline-block;\n            padding: 6px 14px;\n            border-radius: 20px;\n            font-size: 12px;\n            font-weight: bold;\n            line-height: 1.2;\n            white-space: nowrap;\n            color: white !important;\n            text-align: center;\n            vertical-align: middle;\n            text-shadow: 0 1px 1px rgba(0,0,0,0.2);\n        }\n        \n        .status-pill.completed {\n            background-color: #28a745 !important;\n        }\n        \n        .status-pill.inprogress {\n            background-color: #007bff !important;\n        }\n        \n        .status-pill.todo {\n            background-color: #6c757d !important;\n        }\n        \n        .status-pill.other {\n            background-color: #6f42c1 !important;\n        }\n        \n        .overdue-text {\n            color: #b71c1c !important;\n            font-weight: bold;\n        }\n        \n        .summary-info {\n            background-color: #e9ecef;\n            padding: 15px;\n            border-radius: 5px;\n            margin-bottom: 20px;\n        }\n        \n        .summary-info p {\n            margin: 5px 0;\n            font-weight: bold;\n        }\n        \n        .high-productivity {\n            background-color: #d4edda !important;\n        }\n        \n        .moderate-productivity {\n            background-color: #fff3cd !important;\n        }\n        \n        .low-productivity {\n            background-color: #f8d7da !important;\n        }\n        \n        .assignee-section {\n            margin-bottom: 40px;\n            border-bottom: 1px solid #eee;\n            padding-bottom: 20px;\n        }\n        \n        .chart-container {\n            text-align: center;\n            margin-bottom: 20px;\n        }\n        \n        a {\n            color: #007bff;\n            text-decoration: none;\n        }\n        \n        a:hover {\n            text-decoration: underline;\n        }\n        \n        @media (max-width: 768px) {\n            .container {\n                padding: 10px;\n            }\n            \n            table {\n                font-size: 12px;\n            }\n            \n            th, td {\n                padding: 8px;\n            }\n            \n            .chart-container img {\n                width: 100%;\n                height: auto;\n            }\n        }\n    </style>\n</head>\n<body>\n    <div class=\"container\">\n        <h1>Team Member Productivity Report</h1>\n        \n        <div class=\"summary-info\">\n            <p>Report Date: ${new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}</p>\n            <p>Total Assignees: ${totalAssignees}</p>\n            <p>Total Tasks: ${totalTasks}</p>\n\n        </div>\n        \n        <h2>Overall Productivity Overview</h2>\n        <div class=\"chart-container\">\n            <img src=\"${overallChartUrl}\" alt=\"Overall Productivity by Assignee\" style=\"max-width: 100%; height: auto;\">\n        </div>\n        \n        ${generateIndividualSections()}\n    </div>\n</body>\n</html>\n  `;\n\n  return htmlContent;\n};\n\n// =========================\n// n8n Execution\n// =========================\ntry {\n  const inputData = $input.first().json;\n  console.log('Generating HTML report...');\n  console.log('Total tasks:', inputData.processedTasks.length);\n  console.log('Total assignees:', Object.keys(inputData.processedTasks.reduce((acc, task) => {\n    if (task.assignee) acc[task.assignee] = true;\n    return acc;\n  }, {})).length);\n\n  const htmlReport = generateProductivityReport(inputData);\n\n  return [{\n    json: {\n      htmlReport: htmlReport,\n      reportGenerated: true,\n      timestamp: new Date().toISOString()\n    }\n  }];\n} catch (error) {\n  console.error('Error generating HTML report:', error);\n  return [{\n    json: {\n      error: error.message,\n      htmlReport: '<html><body><h1>Error generating report</h1><p>' + error.message + '</p></body></html>',\n      reportGenerated: false\n    }\n  }];\n}"
       },
-      "id": "37d94c8b-b41e-4329-ab34-0ebd527a8b4a",
-      "name": "Download File",
-      "type": "n8n-nodes-base.httpRequest",
+      "id": "5962b39d-617f-49e3-8661-b4ec0b990803",
+      "name": "creating report",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
       "position": [
-        2304,
-        1600
+        -80,
+        96
       ],
-      "typeVersion": 4.2
+      "alwaysOutputData": true
     },
     {
       "parameters": {
-        "operation": "pdf",
-        "options": {}
-      },
-      "id": "c67101a1-bfe1-4f51-888c-6dfbb80eeffb",
-      "name": "Extract from File",
-      "type": "n8n-nodes-base.extractFromFile",
-      "position": [
-        2560,
-        1600
-      ],
-      "typeVersion": 1
-    },
-    {
-      "parameters": {
-        "sessionIdType": "customKey",
-        "sessionKey": "=memory_{{ $('WhatsApp Trigger').item.json.contacts[0].wa_id }}",
-        "contextWindowLength": 10
-      },
-      "id": "a90c8776-3aa6-4817-998b-fc12adde17b2",
-      "name": "Simple Memory",
-      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
-      "position": [
-        1888,
-        2592
-      ],
-      "typeVersion": 1.3
-    },
-    {
-      "parameters": {
-        "resource": "media",
-        "operation": "mediaUrlGet",
-        "mediaGetId": "={{ $('WhatsApp Trigger').item.json.messages[0].document.id }}"
-      },
-      "id": "a2c701a4-2c43-45f5-b027-f2185b9e7bf3",
-      "name": "Get File Url",
-      "type": "n8n-nodes-base.whatsApp",
-      "position": [
-        2080,
-        1600
-      ],
-      "webhookId": "280bd5de-32d7-4d8f-93d2-e91e3b0bc161",
-      "typeVersion": 1
-    },
-    {
-      "parameters": {
-        "conditions": {
-          "options": {
-            "version": 2,
-            "leftValue": "",
-            "caseSensitive": true,
-            "typeValidation": "strict"
-          },
-          "combinator": "and",
-          "conditions": [
-            {
-              "id": "f52d2aaa-e0b2-45e5-8c4b-ceef42182a0d",
-              "operator": {
-                "name": "filter.operator.equals",
-                "type": "string",
-                "operation": "equals"
-              },
-              "leftValue": "={{ $json.messages[0].document.mime_type }}",
-              "rightValue": "application/pdf"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "id": "dd80e3c5-cfac-4b6f-bcb8-37041d8cda29",
-      "name": "Only PDF File",
-      "type": "n8n-nodes-base.if",
-      "position": [
-        1808,
-        1632
-      ],
-      "typeVersion": 2.2
-    },
-    {
-      "parameters": {
-        "jsCode": "for (const item of $input.all()) {\n  if (item.binary) {\n    const binaryPropertyNames = Object.keys(item.binary);\n    for (const propName of binaryPropertyNames) {\n      if (item.binary[propName].mimeType === 'audio/mp3') {\n        item.binary[propName].mimeType = 'audio/mpeg';\n      }\n    }\n  }\n}\n\nreturn $input.all();"
-      },
-      "id": "c98a4b07-7767-403c-a2f0-9e1ad959c488",
-      "name": "Fix mimeType for Audio",
-      "type": "n8n-nodes-base.code",
-      "position": [
-        2624,
-        2224
-      ],
-      "typeVersion": 2
-    },
-    {
-      "parameters": {
-        "operation": "send",
-        "phoneNumberId": "470271332838881",
-        "recipientPhoneNumber": "={{ $('WhatsApp Trigger').item.json.messages[0].from }}",
-        "textBody": "={{ $json.output }}",
-        "additionalFields": {}
-      },
-      "id": "6d05d788-ff53-4653-98c5-db5f8110bfdc",
-      "name": "Send message",
-      "type": "n8n-nodes-base.whatsApp",
-      "position": [
-        2432,
-        2512
-      ],
-      "webhookId": "23834751-5066-48ba-8e19-549680df2b27",
-      "typeVersion": 1
-    },
-    {
-      "parameters": {
-        "operation": "send",
-        "phoneNumberId": "470271332838881",
-        "recipientPhoneNumber": "={{ $('Input type').item.json.contacts[0].wa_id }}",
-        "messageType": "audio",
-        "mediaPath": "useMedian8n",
-        "additionalFields": {}
-      },
-      "id": "2eca6027-7eae-4053-ab19-5ea6395e8ff4",
-      "name": "Send audio",
-      "type": "n8n-nodes-base.whatsApp",
-      "position": [
-        2848,
-        2224
-      ],
-      "webhookId": "d18b2c98-84e4-43cf-a532-0c47d5161684",
-      "typeVersion": 1
-    },
-    {
-      "parameters": {
-        "operation": "send",
-        "phoneNumberId": "470271332838881",
-        "recipientPhoneNumber": "={{ $('WhatsApp Trigger').item.json.messages[0].from }}",
-        "textBody": "=Sorry but you can only send PDF files",
-        "additionalFields": {}
-      },
-      "id": "2aae219b-2bdd-44f8-b853-a3e98ac8f307",
-      "name": "Incorrect format",
-      "type": "n8n-nodes-base.whatsApp",
-      "position": [
-        2080,
-        1840
-      ],
-      "webhookId": "23834751-5066-48ba-8e19-549680df2b27",
-      "typeVersion": 1
-    },
-    {
-      "parameters": {
-        "assignments": {
-          "assignments": [
-            {
-              "id": "c53cd9f9-77c1-4331-98ff-bfc9bdf95a3c",
-              "name": "text",
-              "type": "string",
-              "value": "={{ $('WhatsApp Trigger').item.json.messages[0].text.body }}"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "id": "34d14a93-4c67-4743-a334-67c1180061ee",
-      "name": "Text",
-      "type": "n8n-nodes-base.set",
-      "position": [
-        2832,
-        624
-      ],
-      "typeVersion": 3.4
-    },
-    {
-      "parameters": {
-        "assignments": {
-          "assignments": [
-            {
-              "id": "219577d5-b028-48fc-90be-980f4171ab68",
-              "name": "text",
-              "type": "string",
-              "value": "={{ $json.text }}"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "id": "8f33c617-e7eb-49c1-b49d-bba0c4eda756",
-      "name": "Audio",
-      "type": "n8n-nodes-base.set",
-      "position": [
-        2832,
-        960
-      ],
-      "typeVersion": 3.4
-    },
-    {
-      "parameters": {
-        "assignments": {
-          "assignments": [
-            {
-              "id": "67552183-de2e-494a-878e-c2948e8cb6bb",
-              "name": "text",
-              "type": "string",
-              "value": "=User request on the image:\n{{ \"Describe the following image\" || $('WhatsApp Trigger').item.json.messages[0].image.caption }}\n\nImage description:\n{{ $json.content }}"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "id": "77242f77-dafb-45fb-9701-26d52e91b384",
-      "name": "Image",
-      "type": "n8n-nodes-base.set",
-      "position": [
-        2800,
-        1264
-      ],
-      "typeVersion": 3.4
-    },
-    {
-      "parameters": {
-        "assignments": {
-          "assignments": [
-            {
-              "id": "67552183-de2e-494a-878e-c2948e8cb6bb",
-              "name": "text",
-              "type": "string",
-              "value": "=User request on the file:\n{{ \"Describe this file\" || $('Only PDF File').item.json.messages[0].document.caption }}\n\nFile content:\n{{ $json.text }}"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "id": "c3611621-f520-4a2c-960b-ebf8a02f9c42",
-      "name": "File",
-      "type": "n8n-nodes-base.set",
-      "position": [
-        2832,
-        1600
-      ],
-      "typeVersion": 3.4
-    },
-    {
-      "parameters": {
-        "operation": "send",
-        "phoneNumberId": "470271332838881",
-        "recipientPhoneNumber": "={{ $('WhatsApp Trigger').item.json.messages[0].from }}",
-        "textBody": "=You can only send text messages, images, audio files and PDF documents.",
-        "additionalFields": {}
-      },
-      "id": "65c41e33-6f46-4e4c-ad94-27f201f27939",
-      "name": "Not supported",
-      "type": "n8n-nodes-base.whatsApp",
-      "position": [
-        1328,
-        1504
-      ],
-      "webhookId": "23834751-5066-48ba-8e19-549680df2b27",
-      "typeVersion": 1
-    },
-    {
-      "parameters": {
-        "resource": "media",
-        "operation": "mediaUrlGet",
-        "mediaGetId": "={{ $('WhatsApp Trigger').item.json.messages[0].image.id }}"
-      },
-      "id": "fa7329ab-bf2d-44ab-a878-a37d630d635b",
-      "name": "Get Image Url",
-      "type": "n8n-nodes-base.whatsApp",
-      "position": [
-        2064,
-        1264
-      ],
-      "webhookId": "280bd5de-32d7-4d8f-93d2-e91e3b0bc161",
-      "typeVersion": 1
-    },
-    {
-      "parameters": {
-        "resource": "media",
-        "operation": "mediaUrlGet",
-        "mediaGetId": "={{ $('WhatsApp Trigger').item.json.messages[0].audio.id }}"
-      },
-      "id": "90885390-715a-4284-a8bb-27f695f7000b",
-      "name": "Get Audio Url",
-      "type": "n8n-nodes-base.whatsApp",
-      "position": [
-        2048,
-        960
-      ],
-      "webhookId": "87caa300-7204-47b5-959a-94f4a8fbf8cf",
-      "typeVersion": 1
-    },
-    {
-      "parameters": {
-        "resource": "audio",
-        "input": "={{ $('AI Agent1').item.json.output }}",
-        "voice": "onyx",
-        "options": {}
-      },
-      "id": "cb791067-989f-44bd-86ff-28cfdb40f564",
-      "name": "Generate Audio Response",
-      "type": "@n8n/n8n-nodes-langchain.openAi",
-      "position": [
-        2432,
-        2224
-      ],
-      "typeVersion": 1.8
-    },
-    {
-      "parameters": {
-        "content": "## Text",
-        "height": 240,
-        "width": 1340
-      },
-      "id": "f0fa9c85-8908-4905-9afe-71541374f3a3",
-      "name": "Sticky Note",
-      "type": "n8n-nodes-base.stickyNote",
-      "position": [
-        1712,
-        592
-      ],
-      "typeVersion": 1
-    },
-    {
-      "parameters": {
-        "content": "## Voice",
-        "height": 240,
-        "width": 1340
-      },
-      "id": "1b009dad-0858-4349-853e-581673b80f91",
-      "name": "Sticky Note1",
-      "type": "n8n-nodes-base.stickyNote",
-      "position": [
-        1712,
-        912
-      ],
-      "typeVersion": 1
-    },
-    {
-      "parameters": {
-        "content": "## Image",
-        "height": 240,
-        "width": 1340
-      },
-      "id": "bba84069-ae51-43ac-b0b7-16616b4cc736",
-      "name": "Sticky Note2",
-      "type": "n8n-nodes-base.stickyNote",
-      "position": [
-        1712,
-        1232
-      ],
-      "typeVersion": 1
-    },
-    {
-      "parameters": {
-        "content": "## Document",
-        "height": 240,
-        "width": 1340
-      },
-      "id": "c764d1a8-a433-450f-a97c-c32201971932",
-      "name": "Sticky Note3",
-      "type": "n8n-nodes-base.stickyNote",
-      "position": [
-        1712,
-        1568
-      ],
-      "typeVersion": 1
-    },
-    {
-      "parameters": {
-        "content": "## Response",
-        "height": 600,
-        "width": 1340,
-        "color": 5
-      },
-      "id": "3a3473fd-662f-4b61-ad29-d4e41764d699",
-      "name": "Sticky Note4",
-      "type": "n8n-nodes-base.stickyNote",
-      "position": [
-        1712,
-        2112
-      ],
-      "typeVersion": 1
-    },
-    {
-      "parameters": {
-        "conditions": {
-          "options": {
-            "version": 2,
-            "leftValue": "",
-            "caseSensitive": true,
-            "typeValidation": "strict"
-          },
-          "combinator": "and",
-          "conditions": [
-            {
-              "id": "b9d1d759-f585-4791-a743-b9d72951e77c",
-              "operator": {
-                "type": "object",
-                "operation": "exists",
-                "singleValue": true
-              },
-              "leftValue": "={{ $('WhatsApp Trigger').item.json.messages[0].audio }}",
-              "rightValue": ""
-            }
-          ]
-        },
-        "options": {}
-      },
-      "id": "54a3b6be-2176-4282-9817-021de652976f",
-      "name": "From audio to audio?",
-      "type": "n8n-nodes-base.if",
-      "position": [
-        2160,
-        2368
-      ],
-      "typeVersion": 2.2
-    },
-    {
-      "parameters": {
-        "rules": {
-          "values": [
-            {
-              "conditions": {
-                "options": {
-                  "version": 2,
-                  "leftValue": "",
-                  "caseSensitive": true,
-                  "typeValidation": "strict"
-                },
-                "combinator": "and",
-                "conditions": [
-                  {
-                    "id": "08fd0c80-307e-4f45-b1de-35192ee4ec5e",
-                    "operator": {
-                      "type": "string",
-                      "operation": "exists",
-                      "singleValue": true
-                    },
-                    "leftValue": "={{ $json.messages[0].text.body }}",
-                    "rightValue": ""
-                  }
-                ]
-              },
-              "renameOutput": true,
-              "outputKey": "Text"
-            },
-            {
-              "conditions": {
-                "options": {
-                  "version": 2,
-                  "leftValue": "",
-                  "caseSensitive": true,
-                  "typeValidation": "strict"
-                },
-                "combinator": "and",
-                "conditions": [
-                  {
-                    "id": "b7b64446-f1ea-4622-990c-22f3999a8269",
-                    "operator": {
-                      "type": "object",
-                      "operation": "exists",
-                      "singleValue": true
-                    },
-                    "leftValue": "={{ $json.messages[0].audio }}",
-                    "rightValue": ""
-                  }
-                ]
-              },
-              "renameOutput": true,
-              "outputKey": "Voice"
-            },
-            {
-              "conditions": {
-                "options": {
-                  "version": 2,
-                  "leftValue": "",
-                  "caseSensitive": true,
-                  "typeValidation": "strict"
-                },
-                "combinator": "and",
-                "conditions": [
-                  {
-                    "id": "202af928-a324-411a-bf15-68a349e7bf9e",
-                    "operator": {
-                      "type": "object",
-                      "operation": "exists",
-                      "singleValue": true
-                    },
-                    "leftValue": "={{ $json.messages[0].image }}",
-                    "rightValue": ""
-                  }
-                ]
-              },
-              "renameOutput": true,
-              "outputKey": "Image"
-            },
-            {
-              "conditions": {
-                "options": {
-                  "version": 2,
-                  "leftValue": "",
-                  "caseSensitive": true,
-                  "typeValidation": "strict"
-                },
-                "combinator": "and",
-                "conditions": [
-                  {
-                    "id": "c63299e9-6069-4bc6-afb9-7beebf6e3d69",
-                    "operator": {
-                      "type": "object",
-                      "operation": "exists",
-                      "singleValue": true
-                    },
-                    "leftValue": "={{ $json.messages[0].document }}",
-                    "rightValue": ""
-                  }
-                ]
-              },
-              "renameOutput": true,
-              "outputKey": "Document"
-            }
-          ]
-        },
-        "options": {
-          "fallbackOutput": "extra"
-        }
-      },
-      "id": "cab4b095-3e52-48bf-b94f-6346596ea041",
-      "name": "Input type",
-      "type": "n8n-nodes-base.switch",
-      "position": [
-        1168,
-        1184
-      ],
-      "typeVersion": 3.2
-    },
-    {
-      "parameters": {
-        "content": "How to obtain Whatsapp API?\n\n\n### ✅ Prerequisites\nBefore you begin, make sure you have:\n- A **Meta Business Account**\n- A **Facebook Developer Account**\n- A **Verified Business**\n- A **Phone Number** to link to WhatsApp\n- Access to **Meta's Graph API Explorer** or **Meta for Developers portal**\n\n---\n\n### 🪜 STEP 1: Create a Meta App\n\n1. Go to [https://developers.facebook.com/apps](https://developers.facebook.com/apps)\n2. Click **“Create App”**\n3. Choose **\"Business\"** as the app type, then click **Next**\n4. Give your app a name and enter a contact email\n5. Choose your Business Account (or create one)\n6. Click **Create App**\n\n---\n\n### 🪜 STEP 2: Add WhatsApp Product\n\n1. In your app dashboard, scroll down to **\"Add a Product\"**\n2. Find **\"WhatsApp\"** and click **“Set Up”**\n3. Link your **Business Manager Account**\n\n---\n\n### 🪜 STEP 3: Create a WhatsApp Business Account (if needed)\n\n1. If you haven’t already, go to [https://business.facebook.com/](https://business.facebook.com/)\n2. Click **“Create Account”**, and complete your business information\n3. Go to **Business Settings > Accounts > WhatsApp Accounts**\n4. Add a **Phone Number** (you'll receive a verification code)\n\n---\n\n### 🪜 STEP 4: Generate a Temporary Access Token (for development)\n\n1. In the **App Dashboard**, go to **WhatsApp > Getting Started**\n2. Choose your test phone number\n3. Copy the **temporary access token** (valid for 24 hours)\n4. Copy the **Phone Number ID** and **WhatsApp Business Account ID**\n\n✅ Save these 3 values:\n- **Access Token**\n- **Phone Number ID**\n- **WABA ID**\n\n📝 Tip: For production, you will later need to create a **permanent token** (see step 7).\n\n---\n\n### 🪜 STEP 5: Set Up a Webhook URL (n8n)\n\n1. In n8n, set up a **Webhook node** (or use the `WhatsApp Trigger` node)\n2. Copy the webhook URL\n3. In the Meta Developer Dashboard:\n   - Go to **WhatsApp > Configuration**\n   - Click **“Edit Callback URL”**\n   - Paste your n8n webhook URL and add a random **verify token**\n4. In n8n, configure your webhook to respond to the verification request\n\n---\n\n### 🪜 STEP 6: Subscribe to Webhook Fields\n\n1. Still under **WhatsApp > Configuration**, click **\"Manage Subscriptions\"**\n2. Enable:\n   - `messages`\n   - `message_status`\n   - (Optionally `message_template_status_update`)\n\n---\n\n### 🪜 STEP 7: (Optional but recommended) Generate a Permanent Token\n\n1. Go to [https://developers.facebook.com/tools/access_token/](https://developers.facebook.com/tools/access_token/)\n2. Select your app\n3. Click **Get Token > System User Token**\n4. Select the permissions:\n   - `whatsapp_business_management`\n   - `whatsapp_business_messaging`\n   - `business_management`\n5. Click **Generate Token**\n6. Copy and securely store this token\n\n---\n\n### 🪜 STEP 8: Configure Credentials in n8n\n\n1. Go to **n8n > Settings > Credentials**\n2. Create new credentials of type **HTTP Header Auth**\n   - **Name:** WhatsApp\n   - **Header Name:** `Authorization`\n   - **Value:** `Bearer <your_access_token>`\n3. Save\n\nThen, in your workflows:\n- Use the HTTP Request node or WhatsApp node\n- Set the `phone_number_id` in the node parameters\n- Connect it to your WhatsApp credential\n\n---\n\n### 🧪 STEP 9: Test the Connection\n\n1. Use a WhatsApp number to send a message to your business phone\n2. Your n8n workflow should be triggered\n3. You can now send and receive messages programmatically 🎉\n",
-        "height": 2680,
-        "width": 780,
+        "content": "📧 STAKEHOLDER COMMUNICATION HUB\n\nPurpose: Delivers formatted sprint report to team leads, managers, and stakeholders\n\nFunction: Automated email distribution with professional sprint dashboard\n\nCritical: Ensures consistent communication and transparency across project teams\n\nRecipients: Managers and all stackholder",
+        "height": 384,
         "color": 3
       },
-      "id": "538c57cb-8ac7-4789-8328-af53ec8b0079",
-      "name": "Sticky Note5",
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        0,
-        0
+        240,
+        -224
       ],
-      "typeVersion": 1
-    },
-    {
-      "parameters": {},
-      "id": "49105470-1e56-4a25-b1f4-fac19c728ade",
-      "name": "When clicking ‘Test workflow’",
-      "type": "n8n-nodes-base.manualTrigger",
-      "position": [
-        6288,
-        1968
-      ],
-      "typeVersion": 1
+      "typeVersion": 1,
+      "id": "f40fc0e6-1298-4f9e-bf42-96086ba73269",
+      "name": "Sticky Note1"
     },
     {
       "parameters": {
-        "amount": 10
+        "content": "📊 PROFESSIONAL REPORT GENERATOR\n\nPurpose: Formats sprint analytics into polished, stakeholder-ready HTML report\n\nFunction: Creates visual dashboard with charts, progress bars, and executive summary\n\nCritical: Converts technical data into business-friendly presentation format\n\nOutput Components:\n- Sprint progress overview\n- Team velocity metrics\n- Completed vs. pending tasks\n- Risk alerts and recommendations\n- Individual contributor highlights",
+        "height": 464,
+        "color": 4
       },
-      "id": "ae94deb2-a8c5-4bf1-86dd-349c574c9486",
-      "name": "Wait",
-      "type": "n8n-nodes-base.wait",
-      "position": [
-        7088,
-        1968
-      ],
-      "webhookId": "1c3e61f9-9bd3-489b-a0a1-e20c1f52d496",
-      "typeVersion": 1.1
-    },
-    {
-      "parameters": {
-        "assignments": {
-          "assignments": [
-            {
-              "id": "53226f92-5381-4f9f-9be5-4b25f31db99c",
-              "name": "data.video_url",
-              "type": "string",
-              "value": "={{ $json.data.video_url }}"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "id": "b7b47915-79bf-4e99-a4aa-c7c1be49c15b",
-      "name": "Output",
-      "type": "n8n-nodes-base.set",
-      "position": [
-        7712,
-        1984
-      ],
-      "typeVersion": 3.4
-    },
-    {
-      "parameters": {
-        "conditions": {
-          "options": {
-            "version": 2,
-            "leftValue": "",
-            "caseSensitive": true,
-            "typeValidation": "strict"
-          },
-          "combinator": "and",
-          "conditions": [
-            {
-              "id": "2643b070-cbb2-4562-9269-a61389e0c242",
-              "operator": {
-                "name": "filter.operator.equals",
-                "type": "string",
-                "operation": "equals"
-              },
-              "leftValue": "={{ $json.data.status }}",
-              "rightValue": "completed"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "id": "e0e648c0-5b6c-4896-8a25-b2e78e3aeff0",
-      "name": "is Completed",
-      "type": "n8n-nodes-base.if",
-      "position": [
-        7488,
-        1968
-      ],
-      "typeVersion": 2.2
-    },
-    {
-      "parameters": {
-        "method": "POST",
-        "url": "https://api.heygen.com/v2/video/generate",
-        "authentication": "genericCredentialType",
-        "genericAuthType": "httpHeaderAuth",
-        "sendBody": true,
-        "specifyBody": "json",
-        "jsonBody": "={\n  \"video_inputs\": [\n    {\n      \"character\": {\n        \"type\": \"avatar\",\n        \"avatar_id\": \"{{ $json.avatar_id }}\",\n        \"avatar_style\": \"normal\"\n      },\n      \"voice\": {\n        \"type\": \"text\",\n        \"input_text\": \"{{ $json.text }}\",\n        \"voice_id\": \"{{ $json.voice_id }}\",\n        \"speed\": 1\n      }\n    }\n  ],\n  \"caption\": true,\n  \"dimension\": {\n    \"width\": 1080,\n    \"height\": 1920\n  }\n}",
-        "options": {}
-      },
-      "id": "df20e8d7-1305-47e8-ab93-2ec201e81b11",
-      "name": "Create Video",
-      "type": "n8n-nodes-base.httpRequest",
-      "position": [
-        6768,
-        2032
-      ],
-      "typeVersion": 4.2,
-      "credentials": {
-        "httpHeaderAuth": {
-          "id": "ZjNiM3D506pUWE4j",
-          "name": "Header Auth account 6"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "assignments": {
-          "assignments": [
-            {
-              "id": "dc091aca-844f-404f-ad0c-8ad4b48a505b",
-              "name": "avatar_id",
-              "type": "string",
-              "value": "7895d2d9f4f9453899e1d80e5accb6be"
-            },
-            {
-              "id": "eb2ed34c-53d2-41e8-ab2f-1b8278bde235",
-              "name": "voice_id",
-              "type": "string",
-              "value": "PBgwoAVFZIC0UB6sU914"
-            },
-            {
-              "id": "2c939d6c-73f8-482d-b11f-71bdd7baf04e",
-              "name": "text",
-              "type": "string",
-              "value": "Imagine ADHD as that super energetic friend who jumps from one cool idea to the next. Now, add AI—the smart helper trying to keep things on track. Sometimes, they work together perfectly, and other times, things get a little goofy. One minute you're starting a project, and the next, you're off chasing a shiny new idea! But that's the fun of it. With a bit of AI magic, even the craziest thoughts find their place. Embrace the chaos, laugh at the mix-ups, and let your creativity shine!"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "id": "08dc2a39-9729-41c5-b2ae-43e4aa48a640",
-      "name": "Config",
-      "type": "n8n-nodes-base.set",
-      "position": [
-        6528,
-        2048
-      ],
-      "typeVersion": 3.4
-    },
-    {
-      "parameters": {
-        "url": "https://api.heygen.com/v1/video_status.get",
-        "authentication": "genericCredentialType",
-        "genericAuthType": "httpHeaderAuth",
-        "sendQuery": true,
-        "queryParameters": {
-          "parameters": [
-            {
-              "name": "video_id",
-              "value": "={{ $('Create Video').first().json.data.video_id }}"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "id": "5c6d860d-1c45-476f-aae9-4931fbf1a5c4",
-      "name": "Get Video Status",
-      "type": "n8n-nodes-base.httpRequest",
-      "position": [
-        7296,
-        1968
-      ],
-      "typeVersion": 4.2,
-      "credentials": {
-        "httpHeaderAuth": {
-          "id": "Yl7m8EDBnkzhehnd",
-          "name": "Header Auth account 5"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "content": "## Check video status",
-        "height": 340,
-        "width": 660,
-        "color": 7
-      },
-      "id": "037d62bf-3557-455d-bee0-4fdc967474f8",
-      "name": "Sticky Note6",
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        7008,
-        1872
+        -176,
+        -384
       ],
-      "typeVersion": 1
+      "typeVersion": 1,
+      "id": "ad6805a8-550c-4d0a-865c-82c3782c3adf",
+      "name": "Sticky Note2"
     },
     {
       "parameters": {
-        "content": "# Generate AI Videos with HeyGen in n8n\n\nThis workflow allows you to generate AI-powered videos using [HeyGen](https://www.heygen.com), a platform that provides customizable AI avatars and voices. By integrating HeyGen with n8n, you can create videos by providing a text input, which is then spoken by an AI-generated avatar.\n\n# [👉🏻 Try HeyGen for free 👈🏻](https://www.heygen.com)\n\n## Setup\n\n### Step 1: Create a HeyGen Account & API Key\n1. Sign up for a [HeyGen account](https://www.heygen.com).\n2. Navigate to your account settings and locate your **API Key**.\n3. Copy your API key for use in n8n.\n\n\n⚠️ To use Heygen API you need to purchase API credits\n\n### Step 2: Create n8n Credentials\n1. In n8n, create new credentials and select **\"Custom Auth\"** as the authentication type.\n2. In the Name provide : `X-Api-Key`\n3. And in the value paste your API key from Heygen\n4. Update the 2 http node with the right credentials.\n\n### Step 3: Choose an Avatar and a Voice\nHeyGen provides multiple AI avatars and voice options. You need to choose:\n- An **Avatar ID** (representing the AI-generated presenter)\n- A **Voice ID** (which will read your text)\n\nTo find available avatars and voices:\n1. Visit the HeyGen [API Documentation](https://www.heygen.com/api) or check the list in your HeyGen account.\n2. Copy the **Avatar ID** and **Voice ID** that you want to use.\n",
-        "height": 860,
-        "width": 820
+        "content": "⚡ SPRINT ANALYTICS PROCESSOR\n\nPurpose: Analyzes raw task data and generates comprehensive sprint insights\n\nFunction: Calculates completion rates, identifies blockers, tracks velocity metrics\n\nCritical: Transforms task data into actionable sprint intelligence and trend analysis\nFeatures: \n- Sprint burndown calculations\n- Task categorization by status/priority\n- Team performance metrics\n- Risk identification and flagging",
+        "height": 432,
+        "color": 6
       },
-      "id": "daf4b288-c596-4228-8858-1c7b3bee4706",
-      "name": "Sticky Note7",
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        5344,
-        1840
+        -448,
+        384
       ],
-      "typeVersion": 1
+      "typeVersion": 1,
+      "id": "0e5cf018-960d-4db3-af5e-e76d2072ea58",
+      "name": "Sticky Note3"
     },
     {
       "parameters": {
-        "content": "# ☝️ Provide Video Details\n\n   - **Avatar ID** \n   - **Voice ID** \n   - **Text**",
-        "height": 180,
-        "width": 440
+        "content": "📋 TASK DATA COLLECTOR\n\nPurpose: Retrieves all active sprint tasks and project items from integrated system\n\nFunction: Fetches task details, status updates, assignees, deadlines, and progress metrics\n\nCritical: Primary data source for sprint analysis - ensures complete task visibility\n\nConfiguration: Filter by sprint dates, team members, and project scope",
+        "height": 352,
+        "color": 2
       },
-      "id": "a0e9f492-d5e3-4b45-91d3-978be06ea575",
-      "name": "Sticky Note8",
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        6544,
-        2224
+        -656,
+        -272
       ],
-      "typeVersion": 1
+      "typeVersion": 1,
+      "id": "90dccae7-e274-42c4-bb61-5b0d6e32138b",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "🚀 SPRINT WORKFLOW INITIATOR\n\nPurpose: Manually starts the daily sprint reporting and task analysis workflow.\n\nFunction: Triggers automated task retrieval from project management system.\n\nCritical: Entry point for generating comprehensive sprint progress reports.\n\nUsage: Execute daily for consistent sprint monitoring and team updates.",
+        "height": 368,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1008,
+        -144
+      ],
+      "typeVersion": 1,
+      "id": "9d02af44-49f3-440c-af1f-e0a1a51f141b",
+      "name": "Sticky Note5"
     }
   ],
   "connections": {
-    "File": {
+    "When clicking 'Execute workflow'": {
       "main": [
         [
           {
-            "node": "AI Agent1",
+            "node": "Get many tasks",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Text": {
+    "Process Sprint Data": {
       "main": [
         [
           {
-            "node": "AI Agent1",
+            "node": "creating report",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Audio": {
+    "Get many tasks": {
       "main": [
         [
           {
-            "node": "AI Agent1",
+            "node": "Process Sprint Data",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Image": {
+    "creating report": {
       "main": [
         [
           {
-            "node": "AI Agent1",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "AI Agent1": {
-      "main": [
-        [
-          {
-            "node": "From audio to audio?",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Input type": {
-      "main": [
-        [
-          {
-            "node": "Text",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "Get Audio Url",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "Get Image Url",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "Only PDF File",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "Not supported",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Get File Url": {
-      "main": [
-        [
-          {
-            "node": "Download File",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Analyze Image": {
-      "main": [
-        [
-          {
-            "node": "Image",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Download File": {
-      "main": [
-        [
-          {
-            "node": "Extract from File",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Get Audio Url": {
-      "main": [
-        [
-          {
-            "node": "Download Audio",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Get Image Url": {
-      "main": [
-        [
-          {
-            "node": "Download Image",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Only PDF File": {
-      "main": [
-        [
-          {
-            "node": "Get File Url",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "Incorrect format",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Simple Memory": {
-      "ai_memory": [
-        [
-          {
-            "node": "AI Agent1",
-            "type": "ai_memory",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Download Audio": {
-      "main": [
-        [
-          {
-            "node": "Transcribe Audio",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Download Image": {
-      "main": [
-        [
-          {
-            "node": "Analyze Image",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Transcribe Audio": {
-      "main": [
-        [
-          {
-            "node": "Audio",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "WhatsApp Trigger": {
-      "main": [
-        [
-          {
-            "node": "Input type",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Extract from File": {
-      "main": [
-        [
-          {
-            "node": "File",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "OpenAI Chat Model": {
-      "ai_languageModel": [
-        [
-          {
-            "node": "AI Agent1",
-            "type": "ai_languageModel",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "From audio to audio?": {
-      "main": [
-        [
-          {
-            "node": "Generate Audio Response",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "Send message",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Fix mimeType for Audio": {
-      "main": [
-        [
-          {
-            "node": "Send audio",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Generate Audio Response": {
-      "main": [
-        [
-          {
-            "node": "Fix mimeType for Audio",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Wait": {
-      "main": [
-        [
-          {
-            "node": "Get Video Status",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Config": {
-      "main": [
-        [
-          {
-            "node": "Create Video",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Create Video": {
-      "main": [
-        [
-          {
-            "node": "Wait",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "is Completed": {
-      "main": [
-        [
-          {
-            "node": "Output",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "Wait",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Get Video Status": {
-      "main": [
-        [
-          {
-            "node": "is Completed",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "When clicking ‘Test workflow’": {
-      "main": [
-        [
-          {
-            "node": "Config",
+            "node": "Send Daily Report Email",
             "type": "main",
             "index": 0
           }
@@ -1286,17 +224,19 @@
     "executionOrder": "v1"
   },
   "staticData": null,
-  "meta": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
   "pinData": {},
-  "versionId": "a015cf67-95d3-48d1-ba23-ca9aa740fb7c",
+  "versionId": "4bb79f9c-e5b9-4479-bc04-6cbc375e0932",
   "activeVersionId": null,
   "triggerCount": 0,
   "shared": [
     {
-      "updatedAt": "2025-09-12T01:15:30.858Z",
-      "createdAt": "2025-09-12T01:15:30.858Z",
+      "updatedAt": "2025-08-11T18:46:56.251Z",
+      "createdAt": "2025-08-11T18:46:56.251Z",
       "role": "workflow:owner",
-      "workflowId": "B2Tql8wikmehetY0",
+      "workflowId": "AHdpdpvp7wMzaMl4",
       "projectId": "iXigq15mRQoAAIrt"
     }
   ],
