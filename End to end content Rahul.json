@@ -1,0 +1,541 @@
+{
+  "updatedAt": "2025-10-14T07:37:40.000Z",
+  "createdAt": "2025-08-13T09:54:22.152Z",
+  "id": "aiEsBOYhoHLzL89A",
+  "name": "End to end content Rahul",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -768,
+        -160
+      ],
+      "id": "3ecf5ccc-8051-402e-b04b-508805846fb3",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "model": "gpt-4o-mini",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatAzureOpenAi",
+      "typeVersion": 1,
+      "position": [
+        -448,
+        64
+      ],
+      "id": "d622d58d-f065-4a93-b58b-1eef5c703fd3",
+      "name": "Azure OpenAI Chat Model",
+      "credentials": {
+        "azureOpenAiApi": {
+          "id": "C3WzT18XqF8OdVM6",
+          "name": "Azure Open AI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "gpt-4o-mini",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatAzureOpenAi",
+      "typeVersion": 1,
+      "position": [
+        352,
+        64
+      ],
+      "id": "6e672444-f0ee-4f3a-886f-21832f47974e",
+      "name": "Azure OpenAI Chat Model1",
+      "credentials": {
+        "azureOpenAiApi": {
+          "id": "C3WzT18XqF8OdVM6",
+          "name": "Azure Open AI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are a social media strategist for **Rahul Joshi**, the CEO and Co-Founder of **Techdome** – a tech solutions company specializing in AI, cloud computing, blockchain, and digital transformation services globally. Rahul is a visionary who solves complex business challenges with innovative tech solutions. Techdome is a **trusted partner for end-to-end technology services** (artificial intelligence, cloud integration, cybersecurity, data analytics, etc.), helping businesses modernize and grow. Rahul’s personal brand centers on **tech leadership, innovation, and making advanced technology accessible to businesses** in the growing tech landscape.\n\nRahul Joshi – Personal Branding Context\nRahul Joshi is the Co-Founder and CEO of Techdome, a technology solutions company serving globally. With over a decade of global experience working at MNCs (in Hyderabad, Japan, and the US), Rahul is a tech visionary and innovator who leads a team of 100+ professionals worldwide. He often refers to himself and his team as diagnosing and solving complex tech challenges for businesses. Under his leadership, Techdome emphasizes innovation, scalability, and client-focused solutions in areas like AI and cloud computing. Rahul’s personal brand revolves around being a hands-on tech leader (he even continues to code as a CEO) and a thought leader in emerging technologies. This positioning means that content associated with Rahul should highlight his expertise in cutting-edge tech trends, his role as a problem-solver for businesses, and his perspective as a tech entrepreneur on the global stage.  \n\nTechdome – Company Overview & Services\nTechdome (founded 2020) is presented as a “trusted partner for end-to-end technology solutions,” offering comprehensive services from planning and design to development and launch. The company specializes in making complex technology accessible and driving digital transformation for businesses, especially small and medium enterprises. \n\nTechdome’s key service domains include:  \nArtificial Intelligence (AI) – developing AI-driven solutions and products \nAI Automations using n8n \nCloud Computing – cloud integration and migration services \nCybersecurity – next-gen cybersecurity solutions \nData Analytics & Business Intelligence – leveraging data for insights \nBlockchain Solutions – secure, transparent solutions using blockchain tech \nApp Development \nBusiness Analytics  \n\nTechdome’s mission is to modernize operations and enable growth for clients through tailored tech solutions. They pride themselves on innovation and problem-solving, aligning with Rahul’s philosophy. This service positioning means content should highlight how Techdome partners with businesses to deliver solutions (rather than marketing a specific product).  Emphasizing Services in Rahul’s Content Strategy  Given the above context, the social media content strategy for Rahul should reinforce both his personal brand and Techdome’s service-focused value proposition. \n\nThis means any suggested topics should: \n- Align with Techdome’s Expertise: Topics should relate to areas like AI advancements, cloud strategy, digital transformation, cybersecurity trends, blockchain in business, etc., since those are core to Techdome’s services. \n- Highlight Thought Leadership: Rahul’s content should position him as a thought leader who comments on trending tech topics (AI, software, startups) with insight. Since Rahul has a background in global tech innovation and a role as a CEO, a CEO-first perspective can set his content apart. \n- Be Current and Catchy: The topics must be currently trending – e.g., hot discussions in the tech industry or on social platforms right now. Each topic suggestion should be short (max 10 words) and attention-grabbing, as it will serve as the central idea across LinkedIn, Twitter (X), and Instagram posts.\n- Consistent Across Platforms: Using one unified topic across all platforms ensures Rahul’s personal brand message is consistent. The prompt should yield one topic that can be posted on LinkedIn, Twitter, and Instagram simultaneously, tailored if needed but essentially the same theme everywhere.   \n\nKeeping these points in mind, provide exactly two concise, trendy topic idea different for each platform that meets all criteria and is informed by Rahul/Techdome’s context.\n\n**Requirements:**  \n- Provide 2 topics for each platform: LinkedIn, Instagram, and X (Twitter) — separate lists.\n- The topic should be relevant to Rahul's journey and also related to Techdome. It should be specific and not generic\n- Topic must reveal Rahul’s unique founder lens: coding as a CEO, scaling Techdome, solving SME challenges, global exposure.\n- Propose short, catchy topic** (max 10 words) \n- **Trending & Relevant:** The topic must be **currently trending** in tech and relevant to Rahul’s domain.\n- **Tone:** **Catchy and concise** – it should grab attention, reflect thought leadership, but **no extra explanation** or hashtag in the output. Think of it like a headline or title of a post.  \n- **Output Format:** **Return a JSON** object **exactly** in the following format, with the topic idea(s) duplicated under each platform key (no additional commentary or formatting): \n\nIt's not all important to select AI topic only in all posts. Please choose different types of topics always as per trends and other instructions. \n\n  \"linkedin\": [\n    \"Topic 1\",\n    \"Topic 2\"\n  ],\n  \"instagram\": [\n    \"Topic 1\",\n    \"Topic 2\"\n  ],\n  \"twitter\": [\n    \"Topic 1\",\n    \"Topic 2\"\n  ]\n}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.1,
+      "position": [
+        -544,
+        -160
+      ],
+      "id": "339f9522-3fb9-420e-9943-b0e59196dfe2",
+      "name": "Topic Generator"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.output }}",
+        "options": {
+          "systemMessage": "=You are a social media content strategist specializing in CEO personal branding across LinkedIn, Instagram, and Twitter (X).\n\nContext:\nRahul Joshi is the CEO and Co-Founder of Techdome, a services-focused technology partner specializing in AI, automation (n8n), cloud, cybersecurity, blockchain, data analytics, and app development.\n\nTask:\nTake the **finalized single topic** and create platform-specific posts. Posts must feel like Rahul himself wrote them—insightful, slightly contrarian, rooted in his journey, and full of first-person perspective. Have a fresh and different start for each different post.\n\nImportant Instructions:\n\n- Always write in Rahul Joshi’s first-person voice: confident, reflective, occasionally contrarian, with the curiosity of a builder who codes even as CEO. Sound like a founder sharing raw lessons, not a corporate press release.\n\n- Every post must introduce a clear argument or contrarian distinction (e.g., “AI-native vs AI-powered”). Reframe the conversation instead of adding commentary.\n- Structure the content as a mini-essay: \n   1) Bold hook or provocation (bold claim, contrarian insight, sharp question, surprising start, personal story, or vivid anecdote)\n   2) Why the conventional view is flawed \n   3) Rahul’s reframing with story, example, or metaphor \n   4) Rahul's insights or strategic lessons \n   5) Reflective or provocative closing question.\n   6) Add-ons in content that you feel should be there to enhance the post\n   7) Take a different approach for this post and not like previously created ones\n\n- Posts must reveal Rahul’s unique founder lens: talking about tech services(relevant to what Techdome provides), mindset as a CEO, leadership philosophy, coding as a CEO, scaling Techdome, solving tech challenges, global exposure. But remember to write each post differently as well.\n\n- Use storytelling devices (metaphors, analogies, behind-the-scenes anecdotes).\n\n- Avoid generic corporate language (“AI is the future”, “empowering businesses”).\n- Keep every line sharp, personal, and debate-worthy. Cut filler.\n- Write in a humanized language and not an AI language. \n- End each post with a sharp takeaway or a provocative question to spark engagement. \n- In each post, Rahul should talk about his journey, experiences, learnings, successes, failures, and Techdome relevancy\n\nPlatform Guidelines:\n**LinkedIn**\n- 350–450 words\n- Structure: Hook → Personal Story → Sharp Insight → Call-to-Action\n- Tone: Professional yet conversational. Think like a reflective founder writing to peers.\n- Formatting:\nShort paragraphs (1–3 sentences)\n3–5 relevant industry hashtags\nLine breaks for readability\nAvoid excessive emojis (max 2–3)\n\n**Instagram**\n- 80–120 word caption\n- Hook → Visual/Behind-the-scenes → Soft CTA\n- Make captions conversational and visual. Imagine Rahul is showing a photo/video of his team, office, or whiteboard—caption should feel like he’s narrating behind the scenes.”\n- Relatable, human tone\n- Formatting:\nUse line breaks for easy reading\nInclude 5–10 relevant and trending hashtags\nStrategic use of emojis (2–5) to enhance tone without overuse\n\n**Twitter (X)**\n- 180–240 characters (or 3–5 tweet thread if needed)\n- Insightful, spiky, contrarian\n- Each tweet must stand alone as a conversation starter. Prioritize contrarian insights (‘Most startups overspend on X… here’s what we did differently’)\n- Hook in first line\n- Formatting:\n1–3 relevant hashtags\nNo more than 1 emoji (optional)\nAvoid long sentences—keep it punchy\n\nOutput strictly as JSON:\n{\n  \"linkedin\": \"LinkedIn post text\",\n  \"instagram\": \"Instagram caption text\",\n  \"twitter\": \"Twitter/X post text\"\n}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.1,
+      "position": [
+        256,
+        -160
+      ],
+      "id": "2764a4f8-b8b4-4540-8de0-ee5c0d7e47c9",
+      "name": "Content Generation"
+    },
+    {
+      "parameters": {
+        "model": "gpt-4o-mini",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatAzureOpenAi",
+      "typeVersion": 1,
+      "position": [
+        -48,
+        64
+      ],
+      "id": "b5306268-63bb-49a2-9ff9-3777f9a72aba",
+      "name": "Azure OpenAI Chat Model2",
+      "credentials": {
+        "azureOpenAiApi": {
+          "id": "C3WzT18XqF8OdVM6",
+          "name": "Azure Open AI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.output }}",
+        "options": {
+          "systemMessage": "=You are the Topic Finalizer for Rahul Joshi, CEO and Co-Founder of Techdome.\n\nYour Task: From now select the topic I have added below in the final topic under the Output Format\n\n\nOutput Format (pure JSON):\n{\n  \"final_topic\": \"The Role of Human Creativity in an Automated World\"\n}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.1,
+      "position": [
+        -144,
+        -160
+      ],
+      "id": "931d6671-624c-4b2f-bf88-94c1ab6af797",
+      "name": "Topic Finalizer"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get the incoming JSON from previous node\nconst inputData = items[0].json;\n\n// Parse the AI output (it's already JSON)\nconst aiOutput = Array.isArray(inputData) ? inputData[0] : inputData;\n\n// Helper function to format sections\nfunction formatSection(title, content) {\n  return `\n    <h2 style=\"color:#1a73e8;\">${title}</h2>\n    <p style=\"white-space:pre-wrap;\">${content || '—'}</p>\n  `;\n}\n\nconst htmlBody = `\n<!DOCTYPE html>\n<html>\n<head>\n<meta charset=\"UTF-8\">\n<title>CEO Personal Branding Posts</title>\n<style>\n  body { font-family: Arial, sans-serif; background-color: #f4f6f8; margin: 0; padding: 0; }\n  .email-container {\n    max-width: 650px;\n    background-color: #ffffff;\n    margin: 30px auto;\n    padding: 25px;\n    border-radius: 10px;\n    box-shadow: 0px 3px 10px rgba(0,0,0,0.08);\n    color: #333333;\n    line-height: 1.6;\n  }\n  h1 { color: #1a73e8; font-size: 22px; margin-bottom: 15px; }\n  p { font-size: 15px; margin-bottom: 15px; }\n  .footer { font-size: 13px; color: #888888; margin-top: 20px; text-align: center; }\n</style>\n</head>\n<body>\n  <div class=\"email-container\">\n    <h1>CEO Personal Branding Content</h1>\n    ${formatSection(\"LinkedIn Post\", aiOutput.linkedin)}\n    ${formatSection(\"Instagram Post\", aiOutput.instagram)}\n    ${formatSection(\"Twitter Post\", aiOutput.twitter)}\n    <div class=\"footer\">Sent via n8n Automation</div>\n  </div>\n</body>\n</html>\n`;\n\nreturn [{\n  json: {\n    subject: \"CEO Personal Branding Posts\",\n    htmlBody\n  }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        880,
+        -160
+      ],
+      "id": "3e92d21d-72a8-4d9c-afaa-0183a6a8106f",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get raw AI output\nconst rawOutput = $json.output;\n\n// Parse the string into a JSON object\nlet parsedOutput;\ntry {\n  parsedOutput = JSON.parse(rawOutput);\n} catch (error) {\n  throw new Error(\"Invalid JSON string in 'output': \" + error.message);\n}\n\n// Return structured data\nreturn [\n  {\n    json: {\n      linkedin: parsedOutput.linkedin || null,\n      instagram: parsedOutput.instagram || null,\n      twitter: parsedOutput.twitter || null\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        656,
+        -160
+      ],
+      "id": "963778a8-83fc-4817-8705-922d5bf6a245",
+      "name": "Code1"
+    },
+    {
+      "parameters": {
+        "operation": "toBinary",
+        "sourceProperty": "b64_json",
+        "options": {}
+      },
+      "id": "39626ae3-eb10-4f66-89ce-f519a3aafc18",
+      "name": "Convert to File",
+      "type": "n8n-nodes-base.convertToFile",
+      "position": [
+        2176,
+        -160
+      ],
+      "typeVersion": 1.1
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.openai.com/v1/images/generations",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "openAiApi",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "model",
+              "value": "={{ $json.openai_image_model }}"
+            },
+            {
+              "name": "prompt",
+              "value": "={{ $json.image_prompt }}"
+            },
+            {
+              "name": "n",
+              "value": "={{ $json.number_of_images }}"
+            },
+            {
+              "name": "size",
+              "value": "={{ $json.size_of_image }}"
+            },
+            {
+              "name": "quality",
+              "value": "={{ $json.quality_of_image }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "22725035-978b-4f93-83b3-3b98395bf606",
+      "name": "OpenAI - Generate Image",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        1728,
+        -160
+      ],
+      "typeVersion": 4.2,
+      "credentials": {
+        "openAiApi": {
+          "id": "5Kzt6hGSZ1JHZqWN",
+          "name": "OpenAi account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "2a5d52c2-5af1-4796-acba-4e1807fc7d7b",
+              "name": "image_prompt",
+              "type": "string",
+              "value": "={{ $json.output }}"
+            },
+            {
+              "id": "c41a8091-d952-4f5a-ae24-3b0691bbce57",
+              "name": "number_of_images",
+              "type": "number",
+              "value": 2
+            },
+            {
+              "id": "00feec5a-19c8-43af-bf93-e0729d1391f8",
+              "name": "quality_of_image",
+              "type": "string",
+              "value": "high"
+            },
+            {
+              "id": "1b359a11-c05a-49c8-aa27-402b145fcbc1",
+              "name": "size_of_image",
+              "type": "string",
+              "value": "1024x1024"
+            },
+            {
+              "id": "6cf4ba85-d11a-48bb-9eaf-4084c9538d87",
+              "name": "openai_image_model",
+              "type": "string",
+              "value": "=gpt-image-1"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "8f551dc5-9fd7-4ad2-8979-394bf4db4b10",
+      "name": "Set Variables",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        1504,
+        -160
+      ],
+      "typeVersion": 3.4
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "data",
+        "options": {}
+      },
+      "id": "ddea1f6a-3953-4dde-8721-6d6563909e97",
+      "name": "Separate Image Outputs",
+      "type": "n8n-nodes-base.splitOut",
+      "position": [
+        1952,
+        -160
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "model": "gpt-4o-mini",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatAzureOpenAi",
+      "typeVersion": 1,
+      "position": [
+        1200,
+        64
+      ],
+      "id": "2ef9e31e-d361-4143-9c66-fd1ace893e2f",
+      "name": "Azure OpenAI Chat Model3",
+      "credentials": {
+        "azureOpenAiApi": {
+          "id": "C3WzT18XqF8OdVM6",
+          "name": "Azure Open AI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Content: {{ $('Content Generation').item.json.output }}",
+        "options": {
+          "systemMessage": "You are a visual strategist specializing in creating professional thought-leadership visuals for social media (LinkedIn, Instagram, Twitter/X).  \n\nContext:  \nThe visual must align with Rahul Joshi’s personal brand as CEO of Techdome: builder-first, reflective, slightly contrarian, and tech-leadership driven. Topics are usually around AI, automation, cloud, and emerging tech.  \n\nObjective:  \nGenerate a single strategic, visually appealing image that pairs directly with the finalized written content. The image must visually **summarize the post’s core insight or 2–3 key points** in a scroll-stopping, professional way.  \n\nGuidelines:  \n- **Style**: Minimalist, bold, and modern. Designed like a LinkedIn carousel/leadership post visual.  \n- **Background**: Have an image relevant to the content if necessary\n- **Text inclusion**: Extract and display the *main hook line or 2–3 sharp bullet points* from the content. (e.g., “AI-native ≠ AI-powered” or “Culture > Technology”). Keep the text short and bold for readability.  \n- **Color Palette**: Professional tech-inspired (blue, grey, black, white, accent tones if needed).  \n- **Layout**: Clean composition with:  \n   * Headline text (the hook or bold claim).  \n   * 2–3 supporting bullets or phrases (taken from the post).  \n   * Simple visual metaphor/illustration (icons, abstract shapes, or diagrams).  \n- **Format**: LinkedIn-optimized (1200x1200). Space for text, no overcrowding.  \n- **Output**: Provide a descriptive image prompt including text to display, suggested layout, and metaphor idea. Example:  \n   *“Minimal split-screen visual. Left: cluttered dashboard labeled ‘AI-Powered’. Right: sleek glowing brain labeled ‘AI-Native’. Overlay bold headline: ‘AI-Native ≠ AI-Powered’. Small subtext: ‘Infer. Suggest. Adapt.’ Professional, modern, LinkedIn thought-leadership style.”*  \n\nDeliverable:  \nReturn one detailed visual concept (metaphor + headline text + layout suggestion) that directly represents the provided written content.\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.1,
+      "position": [
+        1104,
+        -160
+      ],
+      "id": "a201dc49-317a-4f52-ab1d-04daed569387",
+      "name": "Prompt generator for image"
+    },
+    {
+      "parameters": {
+        "fromEmail": "anuj.techdome@gmail.com",
+        "toEmail": "gupta.snehy099@gmail.com",
+        "subject": "={{ $('Code').item.json.subject }}",
+        "html": "={{ $('Code').item.json.htmlBody }}",
+        "options": {
+          "attachments": "data"
+        }
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        2400,
+        -160
+      ],
+      "id": "4423a6d9-8082-4912-954e-dcac63bf9829",
+      "name": "Send email1",
+      "webhookId": "2a9cdbb4-3945-4f89-b76a-ed3e93c302f3",
+      "credentials": {
+        "smtp": {
+          "id": "viOhy0pjdvfp6R4g",
+          "name": "SMTP account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Topic Generator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Azure OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Topic Generator",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Azure OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Content Generation",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Topic Generator": {
+      "main": [
+        [
+          {
+            "node": "Topic Finalizer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Azure OpenAI Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Topic Finalizer",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Topic Finalizer": {
+      "main": [
+        [
+          {
+            "node": "Content Generation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Content Generation": {
+      "main": [
+        [
+          {
+            "node": "Code1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Prompt generator for image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code1": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to File": {
+      "main": [
+        [
+          {
+            "node": "Send email1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI - Generate Image": {
+      "main": [
+        [
+          {
+            "node": "Separate Image Outputs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Variables": {
+      "main": [
+        [
+          {
+            "node": "OpenAI - Generate Image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Separate Image Outputs": {
+      "main": [
+        [
+          {
+            "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Azure OpenAI Chat Model3": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Prompt generator for image",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prompt generator for image": {
+      "main": [
+        [
+          {
+            "node": "Set Variables",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "345e0ecf-7fc7-4e65-a384-db19f46f5f42",
+  "activeVersionId": null,
+  "triggerCount": 0,
+  "shared": [
+    {
+      "updatedAt": "2025-08-13T09:54:22.155Z",
+      "createdAt": "2025-08-13T09:54:22.155Z",
+      "role": "workflow:owner",
+      "workflowId": "aiEsBOYhoHLzL89A",
+      "projectId": "iXigq15mRQoAAIrt"
+    }
+  ],
+  "activeVersion": null,
+  "tags": []
+}
