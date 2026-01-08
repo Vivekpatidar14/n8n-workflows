@@ -1,0 +1,506 @@
+{
+  "updatedAt": "2026-01-02T11:23:59.630Z",
+  "createdAt": "2025-12-30T11:26:57.062Z",
+  "id": "CFZorDjjDt71C7o2",
+  "name": "Analyze Stock Market Social Media Sentiment using GPT-4o and Create Asana Tasks with Slack Alerts",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "position": [
+        -192,
+        880
+      ],
+      "id": "464f4c27-e49e-4889-a107-432abcf7adba",
+      "name": "Error Handler Trigger"
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "C09GNB90TED",
+          "mode": "list",
+          "cachedResultName": "general-information"
+        },
+        "text": "=❌ *Error in API Error Catalog Workflow* *Node:* {{ $json.node.name }} *Message:* {{ $json.error.message }} *Time:* {{ $json.timestamp }}",
+        "otherOptions": {}
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.3,
+      "position": [
+        176,
+        880
+      ],
+      "id": "634c192a-9e01-4f66-a371-a07e37284a9d",
+      "name": "Slack: Send Error Alert",
+      "webhookId": "d5eff2c3-ff6e-4116-bdda-59455acd861b",
+      "credentials": {
+        "slackApi": {
+          "id": "rNqvWj9TfChPVRYY",
+          "name": "Slack account vivek"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## 🚨 Error Handling \n\n \nCatches any workflow failure and posts an alert to Slack.  \nIncludes node name, error message, and timestamp for quick debugging.\n",
+        "height": 336,
+        "width": 672,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -288,
+        720
+      ],
+      "typeVersion": 1,
+      "id": "123fe0f4-1aa1-4f8f-b8fb-7fb57221a94e",
+      "name": "Sticky Note8"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "167f8f95-d055-4d26-9dcb-0a3fee135556",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -160,
+        96
+      ],
+      "id": "9758a165-8f13-4ceb-a5f7-7b12aaf9c62e",
+      "name": "Receive Stock Market Query Request (Webhook Trigger)",
+      "webhookId": "167f8f95-d055-4d26-9dcb-0a3fee135556"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "80c843aa-4a0c-4917-abf3-984ea9a6b7a7",
+              "name": "body.query",
+              "value": "={{ $json.body.query }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        128,
+        96
+      ],
+      "id": "4dc58082-4b13-4bf3-9d76-fe19aacf1d8e",
+      "name": "Extract Stock Market Query from Request Payload"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Analyze public social media discussions related to the following query:\n\n\"{{ $json.body.query }}\"\n\nFocus on understanding the current stock market sentiment and intent behind user discussions.\n\nReturn only actionable stock market intent signals based on public posts.\n",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "You are a Stock Market Social Media Intent Analysis Agent.\n\nYour role is to analyze public social media content using connected social intelligence tools and extract meaningful stock market intent.\n\nSCOPE:\n- Platforms: Twitter/X and Instagram (public posts only)\n- Domain: Stock market, trading, investing, indices, sectors, stocks\n- Timeframe: Recent / current discussions only\n\nWHAT TO ANALYZE:\nIdentify posts where users:\n1. Ask about current market status or sentiment\n2. Discuss buying or selling stocks\n3. Express fear, panic, losses, or uncertainty\n4. Look for opportunities, rallies, or reversals\n5. React to market news, events, or price movement\n6. Ask for opinions or guidance on stocks or indices\n\nIGNORE:\n- Pure news headlines without opinion\n- Educational or tutorial posts\n- Promotions, ads, or influencer marketing\n- Generic motivational or meme content\n- Self-promotion or referral links\n\nINTENT CLASSIFICATION:\n- HIGH: Clear buy/sell intent, urgency, fear, or capital at risk\n- MEDIUM: Researching, asking opinions, comparing views\n- LOW: General discussion or curiosity\n\nOUTPUT RULES:\n- Use only publicly available data\n- Do NOT invent private or personal data\n- Do NOT include explanations outside JSON\n- Return a maximum of 10 results\n- If no meaningful signals exist, return an empty array []\n\nOUTPUT FORMAT (STRICT JSON ONLY):\n[\n  {\n    \"platform\": \"Twitter|Instagram\",\n    \"username\": \"public_handle\",\n    \"post_text\": \"exact post excerpt (max 200 chars)\",\n    \"market_context\": \"stock, index, sector, or event mentioned\",\n    \"intent_type\": \"Buy|Sell|Fear|Opportunity|Research\",\n    \"sentiment\": \"Bullish|Bearish|Neutral|Confused\",\n    \"intent_strength\": \"High|Medium|Low\",\n    \"urgency\": \"Yes|No\",\n    \"key_insight\": \"why this post matters for market analysis\"\n  }\n]\n",
+          "maxIterations": 30
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        432,
+        96
+      ],
+      "id": "90a43bc7-399f-41c6-bbab-6e4d8068f1db",
+      "name": "Analyze Social Media for Stock Market Intent Signals (AI)"
+    },
+    {
+      "parameters": {
+        "endpointUrl": "https://mcp.xpoz.ai/mcp",
+        "authentication": "bearerAuth",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpClientTool",
+      "typeVersion": 1.2,
+      "position": [
+        592,
+        352
+      ],
+      "id": "403f1bf2-f508-4b62-a5d9-ca46f2ebe9e9",
+      "name": "Social Intelligence Data Fetch Tool (MCP Client)",
+      "rewireOutputLogTo": "ai_tool",
+      "credentials": {
+        "httpBearerAuth": {
+          "id": "t7ezbRpBs11G61N9",
+          "name": "saurabh xpoz"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o",
+          "mode": "list",
+          "cachedResultName": "gpt-4o"
+        },
+        "responsesApiEnabled": false,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        368,
+        352
+      ],
+      "id": "45dab2d6-f890-499c-b3ee-e8874a3a8648",
+      "name": "OpenAI Reasoning Engine for Market Intent Analysis",
+      "credentials": {
+        "openAiApi": {
+          "id": "5Kzt6hGSZ1JHZqWN",
+          "name": "OpenAi account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Convert the following stock market social media insights into:\n\n1. An Asana task payload\n2. A concise email summary for managers\n\nINPUT DATA:\n{{ $json.output }}\n\nSTRUCTURE THE OUTPUT IN THIS EXACT FORMAT:\n\n{\n  \"asana_task\": {\n    \"title\": \"\",\n    \"description\": \"\",\n    \"priority\": \"High|Medium|Low\",\n    \"recommended_owner\": \"Market Research Team\",\n    \"due_in_days\": 0\n  },\n  \"email_summary\": {\n    \"subject\": \"\",\n    \"body\": \"\"\n  },\n  \"key_signals\": [\n    {\n      \"market_context\": \"\",\n      \"intent_type\": \"\",\n      \"sentiment\": \"\",\n      \"urgency\": \"Yes|No\",\n      \"why_it_matters\": \"\"\n    }\n  ],\n  \"overall_market_sentiment\": \"Bullish|Bearish|Mixed|Uncertain\"\n}\n",
+        "options": {
+          "systemMessage": "You are a data structuring and operations assistant.\n\nYour task is to transform unstructured or narrative stock market social media insights into structured, machine-readable data for operations teams.\n\nYou MUST:\n- Extract actionable insights only\n- Normalize intent, sentiment, and urgency\n- Prepare content suitable for task creation and executive reporting\n\nOUTPUT REQUIREMENTS:\n- Output ONLY valid JSON\n- No markdown\n- No explanations\n- No extra text\n\nLOGIC RULES:\n1. Aggregate similar insights where possible\n2. Determine overall market sentiment\n3. Identify high-priority actions\n4. Keep wording professional and concise\n5. Optimize content for managers (not traders)\n\nPRIORITY RULES:\n- If any insight has intent_strength = High AND urgency = Yes → Priority = High\n- Else if mixed signals → Priority = Medium\n- Else → Priority = Low\n",
+          "maxIterations": 30
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        912,
+        96
+      ],
+      "id": "0a9950bc-6daa-4e5a-badb-23c25578ef40",
+      "name": "Transform Market Intent Signals into Ops-Ready Actions (AI)"
+    },
+    {
+      "parameters": {
+        "model": "gpt-4o-mini",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatAzureOpenAi",
+      "typeVersion": 1,
+      "position": [
+        880,
+        352
+      ],
+      "id": "86c6d0bc-8b74-4af4-bc7f-8e7f0976d98b",
+      "name": "Azure OpenAI Reasoning Engine for Ops Structuring",
+      "credentials": {
+        "azureOpenAiApi": {
+          "id": "C3WzT18XqF8OdVM6",
+          "name": "Azure Open AI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get the first input item\nconst item = $input.first();\n\n// Ensure output exists\nif (!item.json.output) {\n  throw new Error(\"No 'output' field found to parse\");\n}\n\n// Parse the JSON string inside `output`\nlet parsed;\ntry {\n  parsed = JSON.parse(item.json.output);\n} catch (e) {\n  throw new Error(\"Failed to parse output JSON: \" + e.message);\n}\n\n// Return parsed object as normal n8n output\nreturn [\n  {\n    json: parsed\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1328,
+        96
+      ],
+      "id": "d113c362-1c25-4800-b45a-c3dfb33601af",
+      "name": "Parse Structured Ops Payload from AI Output"
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "workspace": "1212551193156936",
+        "name": "={{ $json.asana_task.title }}",
+        "otherProperties": {
+          "due_on": "={{ $now.plus({ days: 1 }).toISODate() }}\n",
+          "notes": "=Market Sentiment Overview:\nOverall market sentiment is {{$json.overall_market_sentiment}}.\n\nKey Highlights:\n• {{$json.key_signals[0].market_context}}\n• {{$json.key_signals[1].market_context}}\n\nKey Signals:\n{{ $json.key_signals.map((s, i) => \n`${i+1}. ${s.intent_type} | ${s.sentiment} | Urgency: ${s.urgency}\nContext: ${s.market_context}\nWhy it matters: ${s.why_it_matters}`\n).join('\\n\\n') }}\n\nRecommended Action:\n• Review high-opportunity sectors highlighted above\n• Assess risks in bearish or research-driven signals\n• Prepare actionable insights for leadership\n\nOwner: {{$json.asana_task.recommended_owner}}\nPriority: {{$json.asana_task.priority}}\nTimeline: {{$json.asana_task.due_in_days}} days\n",
+          "projects": [
+            "1212565062132347"
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.asana",
+      "typeVersion": 1,
+      "position": [
+        1712,
+        -96
+      ],
+      "id": "80ce2754-1b4c-4824-92d2-828b9ddf19e4",
+      "name": "Create Asana Task for Market Signal Review",
+      "credentials": {
+        "asanaOAuth2Api": {
+          "id": "9Jp2gIIAp5UAgrHO",
+          "name": "saurabh Asana account 4"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "C09GNB90TED",
+          "mode": "list",
+          "cachedResultName": "general-information"
+        },
+        "text": "={{ $json.email_summary.subject }}\n\n{{ $json.email_summary.body }}",
+        "otherOptions": {}
+      },
+      "id": "3ac0f292-6197-48c1-9430-8809328d1b57",
+      "name": "Send Market Risk & Sentiment Alert to Slack",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.1,
+      "position": [
+        1712,
+        256
+      ],
+      "webhookId": "c15b6935-ed1d-4d93-9e8d-27d1b67d29f0",
+      "credentials": {
+        "slackApi": {
+          "id": "rNqvWj9TfChPVRYY",
+          "name": "Slack account vivek"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## 📊 Analyze Stock Market Social Media Sentiment using GPT-4o and Create Asana Tasks with Slack Alerts\n\n### How it works\nThis workflow exposes a webhook endpoint that accepts a stock market–related query and analyzes real-time public social media discussions to identify meaningful market intent signals. Once triggered, the query is extracted and passed to an AI agent that scans Twitter/X and Instagram using connected social intelligence tools.\n\nThe AI identifies actionable signals such as buying interest, selling pressure, fear, uncertainty, or opportunity sentiment across stocks, indices, sectors, or market events. Each signal is classified by intent type, sentiment, urgency, and strength.\n\nThe extracted insights are then transformed into operations-ready outputs. A second AI agent structures the findings into a prioritized Asana task for the market research team and a concise executive-style alert for Slack. This enables fast awareness of emerging market risks or opportunities without manual monitoring.\n\n### Setup steps\n1. Configure the webhook URL as an input source.\n2. Connect OpenAI and Azure OpenAI credentials.\n3. Add MCP (Xpoz) social intelligence credentials.\n4. Set the Asana workspace and project ID.\n5. Select the Slack channel for alerts.\n6. Test the webhook with a sample market query.\n\n### Customization\n- Adjust intent classification rules in the AI prompts.\n- Change task priority logic or due dates.\n- Extend outputs to email or dashboards if needed.\n",
+        "height": 704,
+        "width": 672
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1136,
+        -704
+      ],
+      "typeVersion": 1,
+      "id": "e226b219-9311-4943-aa32-7b16b5c33a1a",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## Webhook Intake & Query Preparation\nReceives external stock market queries and normalizes input for analysis.\n",
+        "height": 496,
+        "width": 496,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -224,
+        -64
+      ],
+      "typeVersion": 1,
+      "id": "6f009911-223b-4f61-98ea-fed7107f53d6",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "## Social Market Signal Discovery\nAnalyzes public social media discussions to extract stock market intent, sentiment, and urgency signals.\n",
+        "height": 640,
+        "width": 400,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        320,
+        -80
+      ],
+      "typeVersion": 1,
+      "id": "a4d273a2-c283-4d77-a8c5-4b603411af0e",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "## Ops-Ready Insight Transformation\nConverts raw market signals into structured actions, priorities, and summaries for operations teams.\n",
+        "height": 640,
+        "width": 416,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        768,
+        -112
+      ],
+      "typeVersion": 1,
+      "id": "18ec7713-dc65-4db0-9bca-a8e12aa9909e",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "## Output Parsing & Validation\nSafely parses and validates AI-generated structured JSON for downstream use.\n",
+        "height": 352,
+        "width": 304,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1216,
+        -64
+      ],
+      "typeVersion": 1,
+      "id": "a2b884c2-d5ed-42b7-ad5f-316ec50d6f31",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "## Distribution & Task Execution\nCreates actionable Asana tasks and sends executive alerts to Slack.\n",
+        "height": 800,
+        "width": 448,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1568,
+        -304
+      ],
+      "typeVersion": 1,
+      "id": "8a36c100-d340-41b4-a061-0a9b33e82e1a",
+      "name": "Sticky Note5"
+    }
+  ],
+  "connections": {
+    "Error Handler Trigger": {
+      "main": [
+        [
+          {
+            "node": "Slack: Send Error Alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Receive Stock Market Query Request (Webhook Trigger)": {
+      "main": [
+        [
+          {
+            "node": "Extract Stock Market Query from Request Payload",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Stock Market Query from Request Payload": {
+      "main": [
+        [
+          {
+            "node": "Analyze Social Media for Stock Market Intent Signals (AI)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyze Social Media for Stock Market Intent Signals (AI)": {
+      "main": [
+        [
+          {
+            "node": "Transform Market Intent Signals into Ops-Ready Actions (AI)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Social Intelligence Data Fetch Tool (MCP Client)": {
+      "ai_tool": [
+        [
+          {
+            "node": "Analyze Social Media for Stock Market Intent Signals (AI)",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Reasoning Engine for Market Intent Analysis": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Analyze Social Media for Stock Market Intent Signals (AI)",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Transform Market Intent Signals into Ops-Ready Actions (AI)": {
+      "main": [
+        [
+          {
+            "node": "Parse Structured Ops Payload from AI Output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Azure OpenAI Reasoning Engine for Ops Structuring": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Transform Market Intent Signals into Ops-Ready Actions (AI)",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Structured Ops Payload from AI Output": {
+      "main": [
+        [
+          {
+            "node": "Create Asana Task for Market Signal Review",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Send Market Risk & Sentiment Alert to Slack",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Asana Task for Market Signal Review": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "0fb25ab8-2461-47ed-a818-11d23fd862e2",
+  "activeVersionId": null,
+  "triggerCount": 0,
+  "shared": [
+    {
+      "updatedAt": "2025-12-30T11:26:57.062Z",
+      "createdAt": "2025-12-30T11:26:57.062Z",
+      "role": "workflow:owner",
+      "workflowId": "CFZorDjjDt71C7o2",
+      "projectId": "iXigq15mRQoAAIrt"
+    }
+  ],
+  "activeVersion": null,
+  "tags": []
+}
