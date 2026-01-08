@@ -1,0 +1,70 @@
+{
+  "updatedAt": "2025-12-16T05:40:31.591Z",
+  "createdAt": "2025-12-16T05:40:31.591Z",
+  "id": "Bv4C4R0oUYWYdkef",
+  "name": "My workflow 31",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -352,
+        -32
+      ],
+      "id": "849db4ff-509f-4890-809a-7fc8ea8bb268",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "resource": "worksheet",
+        "workbook": {
+          "__rl": true,
+          "value": "https://techdome-my.sharepoint.com/:x:/g/personal/surya_eluri_techdome_net_in/IQBWI-De5cKNTbUvQgdVu--zAUOd8Lfw98MCUTHEhJOoPmE?wdOrigin=TEAMS-MAGLEV.null_ns.rwc&wdExp=TEAMS-TREATMENT&wdhostclicktime=1765863152417&web=1",
+          "mode": "id"
+        },
+        "returnAll": true,
+        "filters": {}
+      },
+      "type": "n8n-nodes-base.microsoftExcel",
+      "typeVersion": 2.2,
+      "position": [
+        464,
+        -32
+      ],
+      "id": "c0320fb8-884f-4ca1-8950-fe271b3f2661",
+      "name": "Get sheets",
+      "credentials": {
+        "microsoftExcelOAuth2Api": {
+          "id": "tEQMhw93e0jM1Cd4",
+          "name": "Microsoft Excel account"
+        }
+      }
+    }
+  ],
+  "connections": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "baa33596-a84e-4480-96d4-e0930ce54f7c",
+  "activeVersionId": null,
+  "triggerCount": 0,
+  "shared": [
+    {
+      "updatedAt": "2025-12-16T05:40:31.595Z",
+      "createdAt": "2025-12-16T05:40:31.595Z",
+      "role": "workflow:owner",
+      "workflowId": "Bv4C4R0oUYWYdkef",
+      "projectId": "iXigq15mRQoAAIrt"
+    }
+  ],
+  "activeVersion": null,
+  "tags": []
+}
