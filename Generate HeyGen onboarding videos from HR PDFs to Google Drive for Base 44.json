@@ -1,0 +1,1532 @@
+{
+  "updatedAt": "2025-12-27T15:16:49.000Z",
+  "createdAt": "2025-12-11T09:11:08.391Z",
+  "id": "4ITR4MrDy48KTQTq",
+  "name": "Generate HeyGen onboarding videos from HR PDFs to Google Drive for Base 44",
+  "active": true,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## Credentials & Security\nConfigure OAuth and API keys securely. Replace all placeholder IDs before running the workflow.\n",
+        "width": 368,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        672,
+        560
+      ],
+      "typeVersion": 1,
+      "id": "8d75dd12-2423-4fe2-a48c-825ad03da21e",
+      "name": "Sticky Note6"
+    },
+    {
+      "parameters": {
+        "content": "## Video Delivery\nDownloads the completed video, stores it in Google Drive, and returns the result via webhook response.\n",
+        "height": 352,
+        "width": 928,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -272,
+        384
+      ],
+      "typeVersion": 1,
+      "id": "30a2b3bd-2335-4e58-bfd0-3942a9e1bcd8",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "content": "## Video Creation & Status\nSubmits the script to HeyGen and polls the API until the video generation is complete.\n",
+        "height": 352,
+        "width": 1104,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1392,
+        384
+      ],
+      "typeVersion": 1,
+      "id": "121026eb-7619-47a5-9f68-77f279e51c5e",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "## Script Generation\nTransforms simplified policy data into a natural, conversational video script optimized for HeyGen avatars.\n",
+        "height": 528,
+        "width": 416,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1824,
+        368
+      ],
+      "typeVersion": 1,
+      "id": "787daf1a-095b-447f-8c90-ed6dc07438d2",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "## Policy Simplification\nUses AI to convert raw policy text into clear, structured onboarding guidance in JSON format.\n",
+        "height": 528,
+        "width": 464,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -2320,
+        384
+      ],
+      "typeVersion": 1,
+      "id": "1de15ad1-9777-4dd6-8e64-e5bfd8b1b168",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "## 🧩 HR Onboarding Video Generator (HeyGen + Google Drive)\n\n### How it works\nThis workflow turns an HR policy PDF into a complete onboarding video automatically. It starts when a policy document is uploaded via a webhook. The text is extracted from the PDF and simplified using AI into clear, employee-friendly onboarding content. That content is then converted into a natural, conversational video script designed specifically for a HeyGen avatar.\n\nOnce the script is ready, the workflow creates a HeyGen video generation task and periodically checks the video status until it is complete. After the video is finished, it is downloaded and securely stored in Google Drive. The final video file is then returned as part of the webhook response, making it easy to integrate with external apps or internal tools.\n\nThis automation helps HR teams save time, ensure consistency, and quickly create professional onboarding videos without manual scripting or video editing.\n\n### Setup steps\n1. Connect your credentials for Google Drive, OpenAI, and HeyGen.\n2. Replace placeholder values such as API keys, avatar ID, and voice ID in the HeyGen nodes.\n3. Configure the webhook endpoint and test the workflow by uploading a sample HR policy PDF.\n",
+        "height": 688,
+        "width": 432
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -2976,
+        -352
+      ],
+      "typeVersion": 1,
+      "id": "36b85cd1-43c0-48f3-a7ba-767906a5a6dc",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## PDF Intake & Extraction\nReceives the HR policy PDF via webhook and extracts readable text for downstream AI processing.\n",
+        "height": 336,
+        "width": 624,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -2960,
+        384
+      ],
+      "typeVersion": 1,
+      "id": "9e2ad384-72ac-4100-87e9-12650d62c807",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "amount": 1
+      },
+      "id": "6f1dd664-fa22-41d6-879c-380e5bde5dcb",
+      "name": "Wait 10 Seconds",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        -1120,
+        528
+      ],
+      "webhookId": "wait-webhook-id"
+    },
+    {
+      "parameters": {
+        "url": "https://api.heygen.com/v1/video_status.get",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "video_id",
+              "value": "=d438315e5eac48d8adf3a2424beaf3da"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "accept",
+              "value": "application/json"
+            },
+            {
+              "name": "x-api-key",
+              "value": "sk_V2_hgu_kQpjxYBiwRQ_jPIkB6THHvIhXs18SR63LNoiOhVfwuE3"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "2e188f40-9840-45c0-aa21-a72e2ad0f40a",
+      "name": "Check HeyGen Video Status",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -896,
+        448
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "id": "0bffc679-63bf-4395-b2b6-8d072cee6484",
+              "leftValue": "={{ $json.data.status }}",
+              "rightValue": "completed",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "5c0e92dd-5134-4b8d-a7f7-f3cc9237d284",
+      "name": "Check If Video Completed",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        -448,
+        528
+      ]
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.data.video_url }}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          }
+        }
+      },
+      "id": "a183bda0-76b5-4bd4-aa86-29ddb38a168b",
+      "name": "Download Completed Video",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -224,
+        528
+      ]
+    },
+    {
+      "parameters": {
+        "name": "=HR_Onboarding_Video_{{ $now.format('yyyy-MM-dd_HHmmss') }}.mp4",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "1zm4CTaf9mcX34-Bsk9dzQ7r02BROObOO",
+          "mode": "list",
+          "cachedResultName": "Sample Dummy Company Document",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1zm4CTaf9mcX34-Bsk9dzQ7r02BROObOO"
+        },
+        "options": {}
+      },
+      "id": "7ec99e29-9ccf-4100-ba45-9e325f2f36f7",
+      "name": "Upload Video to Google Drive",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        0,
+        528
+      ],
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "E7nEqUL27GUx1xHa",
+          "name": "Techdome Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Simplify the following company policy text into clear onboarding instructions for a new employee.\n\nMake the content:\n- easy to understand\n- friendly and conversational\n- accurate and compliant\n- structured by sections\n\nHere is the extracted policy text:\n{{ $json.text }}\n\nFollow the structure defined in the Output Parser and return ONLY valid JSON.\n",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=You are an expert HR policy analyst who specializes in simplifying complex company policies into clear, concise, employee-friendly onboarding content.\n\nYour responsibilities:\n- Remove legal jargon and unnecessary complexity.\n- Maintain accuracy while making content easy to understand.\n- Convert policy text into structured, step-by-step onboarding guidance.\n- Produce a friendly and welcoming tone suitable for new employees.\n- Preserve important rules, compliance points, and safety guidelines.\n- Avoid adding information that does not exist in the original document.\n\nYou must always produce output ONLY in the structured JSON format defined in the Output Parser.\nDo NOT include explanations, markdown, or additional commentary.\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        -2224,
+        528
+      ],
+      "id": "8cd022b5-89a2-4712-8ada-f50ae866e1d9",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"summary\": \"A short 3–4 sentence summary of the entire policy in simple language.\",\n  \"key_points\": [\n    \"A list of all major rules and policies rewritten in easy language.\",\n    \"One point per rule or policy section.\",\n    \"No legal terminology.\"\n  ],\n  \"onboarding_instructions\": [\n    \"Practical steps new employees should follow based on the policy.\",\n    \"Written as actionable, friendly instructions.\"\n  ],\n  \"compliance_requirements\": [\n    \"Clear, simple statements about what employees must legally or formally comply with.\",\n    \"Examples: data security, confidentiality, behavior expectations.\"\n  ]\n}\n"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        -2016,
+        752
+      ],
+      "id": "908422ae-e9ae-4ab6-be18-6c5702c903b1",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "\"description writer\""
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -2144,
+        752
+      ],
+      "id": "5099525e-b7ab-4736-89de-a676f658259a",
+      "name": "Simple Memory1"
+    },
+    {
+      "parameters": {
+        "operation": "pdf",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1.1,
+      "position": [
+        -2496,
+        512
+      ],
+      "id": "a7c6b8fe-6254-40d1-b20a-7f936bfbfc50",
+      "name": "Extract from File"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4.1-mini"
+        },
+        "responsesApiEnabled": false,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        -2272,
+        752
+      ],
+      "id": "5d7aa27d-c5ea-47e5-8a22-b239ffdbe21e",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "5Kzt6hGSZ1JHZqWN",
+          "name": "OpenAi account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"video_title\": \"A short, friendly title for the onboarding video.\",\n  \"intro\": \"A warm onboarding introduction, 2–4 sentences.\",\n  \"script_sections\": [\n    {\n      \"section_title\": \"Title for this script section.\",\n      \"narration\": \"Natural, flowing narration text for this section. Should sound like a real presenter speaking.\"\n    }\n  ],\n  \"closing\": \"A friendly closing message for the end of the video.\",\n  \"full_script\": \"A single combined narration script with all sections merged into one continuous flow, fully suitable for HeyGen.\"\n}\n"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        -1552,
+        752
+      ],
+      "id": "406b3173-0db8-485f-881a-798f61666155",
+      "name": "Structured Output Parser1"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "\"description writer\""
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -1680,
+        752
+      ],
+      "id": "0a655c3a-f199-4aaa-8502-84d3f267adad",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Using the simplified policy details below, create a professional onboarding video narration script suitable for a HeyGen avatar.\n\nThe final script must:\n- Be conversational, friendly, and natural.\n- Introduce the topic warmly (e.g., “Welcome to the team!”).\n- Break the narration into clear sections or scenes.\n- Include subtle pause markers (like “[pause]” where appropriate).\n- Avoid bullet points inside the narration; write in full flowing sentences.\n- Keep all information accurate to the provided content.\n\nHere is the structured policy information:\n\nSummary:\n{{ $json.output.summary }}\n\nKey Points:\n{{ $json.output.key_points }}\n\nOnboarding Instructions:\n{{ $json.output.onboarding_instructions }}\n\nCompliance Requirements:\n{{ $json.output.compliance_requirements }}\n\nFollow the Output Parser JSON schema exactly and return ONLY valid JSON.\n",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=You are an expert instructional scriptwriter who specializes in creating professional onboarding video scripts for HR training.\n\nYour responsibilities:\n- Convert structured HR policy content into a natural, friendly, conversational narration suitable for a HeyGen avatar.\n- Ensure the script flows logically, with a warm and welcoming tone.\n- Maintain accuracy while simplifying complex concepts.\n- Avoid robotic or overly formal language.\n- Add natural transitions, pauses, emphasis, and scene suggestions.\n- Do NOT invent new policies; stay faithful to the provided content.\n- Produce output ONLY in the JSON format defined in the Output Parser. \n- Generate the full_script which is easily acceptable by the generate video api.\n\n\n Strict Output Format:\n\n{\n  \"video_title\": \"\",\n  \"intro\": \"\",\n  \"script_sections\": [\n    {\n      \"section_title\": \"\",\n      \"narration\": \"\"\n    }\n  ],\n  \"closing\": \"\",\n  \"full_script\": \"\"\n}\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        -1744,
+        528
+      ],
+      "id": "f2a8a469-7afd-4c82-9e72-47ebc2d3c7f6",
+      "name": "Generate Script With AI",
+      "retryOnFail": true
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.heygen.com/v2/video/generate",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "accept",
+              "value": "application/json"
+            },
+            {
+              "name": "x-api-key",
+              "value": "sk_V2_hgu_kQpjxYBiwRQ_jPIkB6THHvIhXs18SR63LNoiOhVfwuE3"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"caption\": false,\n  \"title\": \"Welcome to Sample Company Onboarding\",\n  \"video_inputs\": [\n    {\n      \"character\": {\n        \"type\": \"avatar\",\n        \"avatar_id\": \"a19c6b2f4d814539a6dcc86ea5a2e5bd\"\n      },\n      \"voice\": {\n        \"type\": \"text\",\n        \"voice_id\": \"e0cc82c22f414c95b1f25696c732f058\",\n        \"input_text\": \"hey i am saurabh garg i used to work on the n8n automation\"\n      },\n      \"background\": {\n        \"type\": \"color\",\n        \"value\": \"#FFFFFF\"\n      }\n    }\n  ],\n  \"dimension\": {\n    \"width\": 1280,\n    \"height\": 720\n  }\n}\n",
+        "options": {}
+      },
+      "id": "0c874be8-4db7-451d-8085-22184aae3771",
+      "name": "Create HeyGen Video Task1",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -1344,
+        528
+      ]
+    },
+    {
+      "parameters": {
+        "amount": 1
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        -672,
+        448
+      ],
+      "id": "16c0a2c7-936f-4e8d-bfb2-6b9b4886d418",
+      "name": "Wait",
+      "webhookId": "31362452-a44a-4076-b831-dbefa74f7db1"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4.1-mini"
+        },
+        "responsesApiEnabled": false,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        -1808,
+        752
+      ],
+      "id": "71d9f6ca-3b1f-4357-b3ef-d6e7cfc50f75",
+      "name": "OpenAI Chat Model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "5Kzt6hGSZ1JHZqWN",
+          "name": "OpenAi account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "binary",
+        "responseDataSource": "set",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        432,
+        528
+      ],
+      "id": "2be97da7-3b90-47bf-a9e2-aa758b863f14",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "hr-onboarding-upload",
+        "responseMode": "responseNode",
+        "options": {
+          "binaryPropertyName": "data",
+          "rawBody": false
+        }
+      },
+      "id": "089aac03-c2dc-449c-929d-f123cbf32476",
+      "name": "Webhook - Receive Policy PDF",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1.1,
+      "position": [
+        -2928,
+        512
+      ],
+      "webhookId": "hr-policy-upload"
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.body.file_url }}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          }
+        }
+      },
+      "id": "b2772bdb-0f2a-4e04-a9a0-2f7858ec3546",
+      "name": "Dowload file",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -2688,
+        464
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        208,
+        528
+      ],
+      "id": "2957ff95-6de6-47b2-9acb-32b13bba4cde",
+      "name": "Download file1",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "E7nEqUL27GUx1xHa",
+          "name": "Techdome Account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Wait 10 Seconds": {
+      "main": [
+        [
+          {
+            "node": "Check HeyGen Video Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check HeyGen Video Status": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check If Video Completed": {
+      "main": [
+        [
+          {
+            "node": "Download Completed Video",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Wait 10 Seconds",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download Completed Video": {
+      "main": [
+        [
+          {
+            "node": "Upload Video to Google Drive",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload Video to Google Drive": {
+      "main": [
+        [
+          {
+            "node": "Download file1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Generate Script With AI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory1": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser1": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Generate Script With AI",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "Generate Script With AI",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Script With AI": {
+      "main": [
+        [
+          {
+            "node": "Create HeyGen Video Task1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create HeyGen Video Task1": {
+      "main": [
+        [
+          {
+            "node": "Wait 10 Seconds",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Check If Video Completed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Generate Script With AI",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook - Receive Policy PDF": {
+      "main": [
+        [
+          {
+            "node": "Dowload file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Dowload file": {
+      "main": [
+        [
+          {
+            "node": "Extract from File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download file1": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "1a5d238c-82f4-474e-a9a9-0ba5fdbf0493",
+  "activeVersionId": "1a5d238c-82f4-474e-a9a9-0ba5fdbf0493",
+  "triggerCount": 1,
+  "shared": [
+    {
+      "updatedAt": "2025-12-11T09:11:08.396Z",
+      "createdAt": "2025-12-11T09:11:08.396Z",
+      "role": "workflow:owner",
+      "workflowId": "4ITR4MrDy48KTQTq",
+      "projectId": "iXigq15mRQoAAIrt"
+    }
+  ],
+  "activeVersion": {
+    "updatedAt": "2025-12-18T09:59:22.976Z",
+    "createdAt": "2025-12-18T09:59:22.976Z",
+    "versionId": "1a5d238c-82f4-474e-a9a9-0ba5fdbf0493",
+    "workflowId": "4ITR4MrDy48KTQTq",
+    "nodes": [
+      {
+        "parameters": {
+          "content": "## Credentials & Security\nConfigure OAuth and API keys securely. Replace all placeholder IDs before running the workflow.\n",
+          "width": 368,
+          "color": 3
+        },
+        "type": "n8n-nodes-base.stickyNote",
+        "position": [
+          672,
+          560
+        ],
+        "typeVersion": 1,
+        "id": "8d75dd12-2423-4fe2-a48c-825ad03da21e",
+        "name": "Sticky Note6"
+      },
+      {
+        "parameters": {
+          "content": "## Video Delivery\nDownloads the completed video, stores it in Google Drive, and returns the result via webhook response.\n",
+          "height": 352,
+          "width": 928,
+          "color": 2
+        },
+        "type": "n8n-nodes-base.stickyNote",
+        "position": [
+          -272,
+          384
+        ],
+        "typeVersion": 1,
+        "id": "30a2b3bd-2335-4e58-bfd0-3942a9e1bcd8",
+        "name": "Sticky Note5"
+      },
+      {
+        "parameters": {
+          "content": "## Video Creation & Status\nSubmits the script to HeyGen and polls the API until the video generation is complete.\n",
+          "height": 352,
+          "width": 1104,
+          "color": 3
+        },
+        "type": "n8n-nodes-base.stickyNote",
+        "position": [
+          -1392,
+          384
+        ],
+        "typeVersion": 1,
+        "id": "121026eb-7619-47a5-9f68-77f279e51c5e",
+        "name": "Sticky Note4"
+      },
+      {
+        "parameters": {
+          "content": "## Script Generation\nTransforms simplified policy data into a natural, conversational video script optimized for HeyGen avatars.\n",
+          "height": 528,
+          "width": 416,
+          "color": 2
+        },
+        "type": "n8n-nodes-base.stickyNote",
+        "position": [
+          -1824,
+          368
+        ],
+        "typeVersion": 1,
+        "id": "787daf1a-095b-447f-8c90-ed6dc07438d2",
+        "name": "Sticky Note3"
+      },
+      {
+        "parameters": {
+          "content": "## Policy Simplification\nUses AI to convert raw policy text into clear, structured onboarding guidance in JSON format.\n",
+          "height": 528,
+          "width": 464,
+          "color": 3
+        },
+        "type": "n8n-nodes-base.stickyNote",
+        "position": [
+          -2320,
+          384
+        ],
+        "typeVersion": 1,
+        "id": "1de15ad1-9777-4dd6-8e64-e5bfd8b1b168",
+        "name": "Sticky Note2"
+      },
+      {
+        "parameters": {
+          "content": "## 🧩 HR Onboarding Video Generator (HeyGen + Google Drive)\n\n### How it works\nThis workflow turns an HR policy PDF into a complete onboarding video automatically. It starts when a policy document is uploaded via a webhook. The text is extracted from the PDF and simplified using AI into clear, employee-friendly onboarding content. That content is then converted into a natural, conversational video script designed specifically for a HeyGen avatar.\n\nOnce the script is ready, the workflow creates a HeyGen video generation task and periodically checks the video status until it is complete. After the video is finished, it is downloaded and securely stored in Google Drive. The final video file is then returned as part of the webhook response, making it easy to integrate with external apps or internal tools.\n\nThis automation helps HR teams save time, ensure consistency, and quickly create professional onboarding videos without manual scripting or video editing.\n\n### Setup steps\n1. Connect your credentials for Google Drive, OpenAI, and HeyGen.\n2. Replace placeholder values such as API keys, avatar ID, and voice ID in the HeyGen nodes.\n3. Configure the webhook endpoint and test the workflow by uploading a sample HR policy PDF.\n",
+          "height": 688,
+          "width": 432
+        },
+        "type": "n8n-nodes-base.stickyNote",
+        "position": [
+          -2976,
+          -352
+        ],
+        "typeVersion": 1,
+        "id": "36b85cd1-43c0-48f3-a7ba-767906a5a6dc",
+        "name": "Sticky Note"
+      },
+      {
+        "parameters": {
+          "content": "## PDF Intake & Extraction\nReceives the HR policy PDF via webhook and extracts readable text for downstream AI processing.\n",
+          "height": 336,
+          "width": 624,
+          "color": 2
+        },
+        "type": "n8n-nodes-base.stickyNote",
+        "position": [
+          -2960,
+          384
+        ],
+        "typeVersion": 1,
+        "id": "9e2ad384-72ac-4100-87e9-12650d62c807",
+        "name": "Sticky Note1"
+      },
+      {
+        "parameters": {
+          "amount": 1
+        },
+        "id": "6f1dd664-fa22-41d6-879c-380e5bde5dcb",
+        "name": "Wait 10 Seconds",
+        "type": "n8n-nodes-base.wait",
+        "typeVersion": 1.1,
+        "position": [
+          -1120,
+          528
+        ],
+        "webhookId": "wait-webhook-id"
+      },
+      {
+        "parameters": {
+          "url": "https://api.heygen.com/v1/video_status.get",
+          "sendQuery": true,
+          "queryParameters": {
+            "parameters": [
+              {
+                "name": "video_id",
+                "value": "=d438315e5eac48d8adf3a2424beaf3da"
+              }
+            ]
+          },
+          "sendHeaders": true,
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "accept",
+                "value": "application/json"
+              },
+              {
+                "name": "x-api-key",
+                "value": "sk_V2_hgu_kQpjxYBiwRQ_jPIkB6THHvIhXs18SR63LNoiOhVfwuE3"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "id": "2e188f40-9840-45c0-aa21-a72e2ad0f40a",
+        "name": "Check HeyGen Video Status",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "position": [
+          -896,
+          448
+        ]
+      },
+      {
+        "parameters": {
+          "conditions": {
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "strict",
+              "version": 1
+            },
+            "conditions": [
+              {
+                "id": "0bffc679-63bf-4395-b2b6-8d072cee6484",
+                "leftValue": "={{ $json.data.status }}",
+                "rightValue": "completed",
+                "operator": {
+                  "type": "string",
+                  "operation": "equals"
+                }
+              }
+            ],
+            "combinator": "and"
+          },
+          "options": {}
+        },
+        "id": "5c0e92dd-5134-4b8d-a7f7-f3cc9237d284",
+        "name": "Check If Video Completed",
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2,
+        "position": [
+          -448,
+          528
+        ]
+      },
+      {
+        "parameters": {
+          "url": "={{ $json.data.video_url }}",
+          "options": {
+            "response": {
+              "response": {
+                "responseFormat": "file"
+              }
+            }
+          }
+        },
+        "id": "a183bda0-76b5-4bd4-aa86-29ddb38a168b",
+        "name": "Download Completed Video",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "position": [
+          -224,
+          528
+        ]
+      },
+      {
+        "parameters": {
+          "name": "=HR_Onboarding_Video_{{ $now.format('yyyy-MM-dd_HHmmss') }}.mp4",
+          "driveId": {
+            "__rl": true,
+            "mode": "list",
+            "value": "My Drive"
+          },
+          "folderId": {
+            "__rl": true,
+            "value": "1zm4CTaf9mcX34-Bsk9dzQ7r02BROObOO",
+            "mode": "list",
+            "cachedResultName": "Sample Dummy Company Document",
+            "cachedResultUrl": "https://drive.google.com/drive/folders/1zm4CTaf9mcX34-Bsk9dzQ7r02BROObOO"
+          },
+          "options": {}
+        },
+        "id": "7ec99e29-9ccf-4100-ba45-9e325f2f36f7",
+        "name": "Upload Video to Google Drive",
+        "type": "n8n-nodes-base.googleDrive",
+        "typeVersion": 3,
+        "position": [
+          0,
+          528
+        ],
+        "credentials": {
+          "googleDriveOAuth2Api": {
+            "id": "E7nEqUL27GUx1xHa",
+            "name": "Techdome Account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "promptType": "define",
+          "text": "=Simplify the following company policy text into clear onboarding instructions for a new employee.\n\nMake the content:\n- easy to understand\n- friendly and conversational\n- accurate and compliant\n- structured by sections\n\nHere is the extracted policy text:\n{{ $json.text }}\n\nFollow the structure defined in the Output Parser and return ONLY valid JSON.\n",
+          "hasOutputParser": true,
+          "options": {
+            "systemMessage": "=You are an expert HR policy analyst who specializes in simplifying complex company policies into clear, concise, employee-friendly onboarding content.\n\nYour responsibilities:\n- Remove legal jargon and unnecessary complexity.\n- Maintain accuracy while making content easy to understand.\n- Convert policy text into structured, step-by-step onboarding guidance.\n- Produce a friendly and welcoming tone suitable for new employees.\n- Preserve important rules, compliance points, and safety guidelines.\n- Avoid adding information that does not exist in the original document.\n\nYou must always produce output ONLY in the structured JSON format defined in the Output Parser.\nDo NOT include explanations, markdown, or additional commentary.\n"
+          }
+        },
+        "type": "@n8n/n8n-nodes-langchain.agent",
+        "typeVersion": 2,
+        "position": [
+          -2224,
+          528
+        ],
+        "id": "8cd022b5-89a2-4712-8ada-f50ae866e1d9",
+        "name": "AI Agent"
+      },
+      {
+        "parameters": {
+          "jsonSchemaExample": "{\n  \"summary\": \"A short 3–4 sentence summary of the entire policy in simple language.\",\n  \"key_points\": [\n    \"A list of all major rules and policies rewritten in easy language.\",\n    \"One point per rule or policy section.\",\n    \"No legal terminology.\"\n  ],\n  \"onboarding_instructions\": [\n    \"Practical steps new employees should follow based on the policy.\",\n    \"Written as actionable, friendly instructions.\"\n  ],\n  \"compliance_requirements\": [\n    \"Clear, simple statements about what employees must legally or formally comply with.\",\n    \"Examples: data security, confidentiality, behavior expectations.\"\n  ]\n}\n"
+        },
+        "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+        "typeVersion": 1.3,
+        "position": [
+          -2016,
+          752
+        ],
+        "id": "908422ae-e9ae-4ab6-be18-6c5702c903b1",
+        "name": "Structured Output Parser"
+      },
+      {
+        "parameters": {
+          "sessionIdType": "customKey",
+          "sessionKey": "\"description writer\""
+        },
+        "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+        "typeVersion": 1.3,
+        "position": [
+          -2144,
+          752
+        ],
+        "id": "5099525e-b7ab-4736-89de-a676f658259a",
+        "name": "Simple Memory1"
+      },
+      {
+        "parameters": {
+          "operation": "pdf",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.extractFromFile",
+        "typeVersion": 1.1,
+        "position": [
+          -2496,
+          512
+        ],
+        "id": "a7c6b8fe-6254-40d1-b20a-7f936bfbfc50",
+        "name": "Extract from File"
+      },
+      {
+        "parameters": {
+          "model": {
+            "__rl": true,
+            "value": "gpt-4.1-mini",
+            "mode": "list",
+            "cachedResultName": "gpt-4.1-mini"
+          },
+          "responsesApiEnabled": false,
+          "options": {}
+        },
+        "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "typeVersion": 1.3,
+        "position": [
+          -2272,
+          752
+        ],
+        "id": "5d7aa27d-c5ea-47e5-8a22-b239ffdbe21e",
+        "name": "OpenAI Chat Model",
+        "credentials": {
+          "openAiApi": {
+            "id": "5Kzt6hGSZ1JHZqWN",
+            "name": "OpenAi account 2"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "jsonSchemaExample": "{\n  \"video_title\": \"A short, friendly title for the onboarding video.\",\n  \"intro\": \"A warm onboarding introduction, 2–4 sentences.\",\n  \"script_sections\": [\n    {\n      \"section_title\": \"Title for this script section.\",\n      \"narration\": \"Natural, flowing narration text for this section. Should sound like a real presenter speaking.\"\n    }\n  ],\n  \"closing\": \"A friendly closing message for the end of the video.\",\n  \"full_script\": \"A single combined narration script with all sections merged into one continuous flow, fully suitable for HeyGen.\"\n}\n"
+        },
+        "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+        "typeVersion": 1.3,
+        "position": [
+          -1552,
+          752
+        ],
+        "id": "406b3173-0db8-485f-881a-798f61666155",
+        "name": "Structured Output Parser1"
+      },
+      {
+        "parameters": {
+          "sessionIdType": "customKey",
+          "sessionKey": "\"description writer\""
+        },
+        "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+        "typeVersion": 1.3,
+        "position": [
+          -1680,
+          752
+        ],
+        "id": "0a655c3a-f199-4aaa-8502-84d3f267adad",
+        "name": "Simple Memory"
+      },
+      {
+        "parameters": {
+          "promptType": "define",
+          "text": "=Using the simplified policy details below, create a professional onboarding video narration script suitable for a HeyGen avatar.\n\nThe final script must:\n- Be conversational, friendly, and natural.\n- Introduce the topic warmly (e.g., “Welcome to the team!”).\n- Break the narration into clear sections or scenes.\n- Include subtle pause markers (like “[pause]” where appropriate).\n- Avoid bullet points inside the narration; write in full flowing sentences.\n- Keep all information accurate to the provided content.\n\nHere is the structured policy information:\n\nSummary:\n{{ $json.output.summary }}\n\nKey Points:\n{{ $json.output.key_points }}\n\nOnboarding Instructions:\n{{ $json.output.onboarding_instructions }}\n\nCompliance Requirements:\n{{ $json.output.compliance_requirements }}\n\nFollow the Output Parser JSON schema exactly and return ONLY valid JSON.\n",
+          "hasOutputParser": true,
+          "options": {
+            "systemMessage": "=You are an expert instructional scriptwriter who specializes in creating professional onboarding video scripts for HR training.\n\nYour responsibilities:\n- Convert structured HR policy content into a natural, friendly, conversational narration suitable for a HeyGen avatar.\n- Ensure the script flows logically, with a warm and welcoming tone.\n- Maintain accuracy while simplifying complex concepts.\n- Avoid robotic or overly formal language.\n- Add natural transitions, pauses, emphasis, and scene suggestions.\n- Do NOT invent new policies; stay faithful to the provided content.\n- Produce output ONLY in the JSON format defined in the Output Parser. \n- Generate the full_script which is easily acceptable by the generate video api.\n\n\n Strict Output Format:\n\n{\n  \"video_title\": \"\",\n  \"intro\": \"\",\n  \"script_sections\": [\n    {\n      \"section_title\": \"\",\n      \"narration\": \"\"\n    }\n  ],\n  \"closing\": \"\",\n  \"full_script\": \"\"\n}\n"
+          }
+        },
+        "type": "@n8n/n8n-nodes-langchain.agent",
+        "typeVersion": 2,
+        "position": [
+          -1744,
+          528
+        ],
+        "id": "f2a8a469-7afd-4c82-9e72-47ebc2d3c7f6",
+        "name": "Generate Script With AI",
+        "retryOnFail": true
+      },
+      {
+        "parameters": {
+          "method": "POST",
+          "url": "https://api.heygen.com/v2/video/generate",
+          "sendHeaders": true,
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "accept",
+                "value": "application/json"
+              },
+              {
+                "name": "x-api-key",
+                "value": "sk_V2_hgu_kQpjxYBiwRQ_jPIkB6THHvIhXs18SR63LNoiOhVfwuE3"
+              }
+            ]
+          },
+          "sendBody": true,
+          "specifyBody": "json",
+          "jsonBody": "={\n  \"caption\": false,\n  \"title\": \"Welcome to Sample Company Onboarding\",\n  \"video_inputs\": [\n    {\n      \"character\": {\n        \"type\": \"avatar\",\n        \"avatar_id\": \"a19c6b2f4d814539a6dcc86ea5a2e5bd\"\n      },\n      \"voice\": {\n        \"type\": \"text\",\n        \"voice_id\": \"e0cc82c22f414c95b1f25696c732f058\",\n        \"input_text\": \"hey i am saurabh garg i used to work on the n8n automation\"\n      },\n      \"background\": {\n        \"type\": \"color\",\n        \"value\": \"#FFFFFF\"\n      }\n    }\n  ],\n  \"dimension\": {\n    \"width\": 1280,\n    \"height\": 720\n  }\n}\n",
+          "options": {}
+        },
+        "id": "0c874be8-4db7-451d-8085-22184aae3771",
+        "name": "Create HeyGen Video Task1",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "position": [
+          -1344,
+          528
+        ]
+      },
+      {
+        "parameters": {
+          "amount": 1
+        },
+        "type": "n8n-nodes-base.wait",
+        "typeVersion": 1.1,
+        "position": [
+          -672,
+          448
+        ],
+        "id": "16c0a2c7-936f-4e8d-bfb2-6b9b4886d418",
+        "name": "Wait",
+        "webhookId": "31362452-a44a-4076-b831-dbefa74f7db1"
+      },
+      {
+        "parameters": {
+          "model": {
+            "__rl": true,
+            "value": "gpt-4.1-mini",
+            "mode": "list",
+            "cachedResultName": "gpt-4.1-mini"
+          },
+          "responsesApiEnabled": false,
+          "options": {}
+        },
+        "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "typeVersion": 1.3,
+        "position": [
+          -1808,
+          752
+        ],
+        "id": "71d9f6ca-3b1f-4357-b3ef-d6e7cfc50f75",
+        "name": "OpenAI Chat Model1",
+        "credentials": {
+          "openAiApi": {
+            "id": "5Kzt6hGSZ1JHZqWN",
+            "name": "OpenAi account 2"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "respondWith": "binary",
+          "responseDataSource": "set",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.respondToWebhook",
+        "typeVersion": 1.4,
+        "position": [
+          432,
+          528
+        ],
+        "id": "2be97da7-3b90-47bf-a9e2-aa758b863f14",
+        "name": "Respond to Webhook"
+      },
+      {
+        "parameters": {
+          "httpMethod": "POST",
+          "path": "hr-onboarding-upload",
+          "responseMode": "responseNode",
+          "options": {
+            "binaryPropertyName": "data",
+            "rawBody": false
+          }
+        },
+        "id": "089aac03-c2dc-449c-929d-f123cbf32476",
+        "name": "Webhook - Receive Policy PDF",
+        "type": "n8n-nodes-base.webhook",
+        "typeVersion": 1.1,
+        "position": [
+          -2928,
+          512
+        ],
+        "webhookId": "hr-policy-upload"
+      },
+      {
+        "parameters": {
+          "url": "={{ $json.body.file_url }}",
+          "options": {
+            "response": {
+              "response": {
+                "responseFormat": "file"
+              }
+            }
+          }
+        },
+        "id": "b2772bdb-0f2a-4e04-a9a0-2f7858ec3546",
+        "name": "Dowload file",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "position": [
+          -2688,
+          464
+        ]
+      },
+      {
+        "parameters": {
+          "operation": "download",
+          "fileId": {
+            "__rl": true,
+            "value": "={{ $json.id }}",
+            "mode": "id"
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.googleDrive",
+        "typeVersion": 3,
+        "position": [
+          208,
+          528
+        ],
+        "id": "2957ff95-6de6-47b2-9acb-32b13bba4cde",
+        "name": "Download file1",
+        "credentials": {
+          "googleDriveOAuth2Api": {
+            "id": "E7nEqUL27GUx1xHa",
+            "name": "Techdome Account"
+          }
+        }
+      }
+    ],
+    "connections": {
+      "Wait 10 Seconds": {
+        "main": [
+          [
+            {
+              "node": "Check HeyGen Video Status",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Check HeyGen Video Status": {
+        "main": [
+          [
+            {
+              "node": "Wait",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Check If Video Completed": {
+        "main": [
+          [
+            {
+              "node": "Download Completed Video",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Wait 10 Seconds",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Download Completed Video": {
+        "main": [
+          [
+            {
+              "node": "Upload Video to Google Drive",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Upload Video to Google Drive": {
+        "main": [
+          [
+            {
+              "node": "Download file1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "AI Agent": {
+        "main": [
+          [
+            {
+              "node": "Generate Script With AI",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Structured Output Parser": {
+        "ai_outputParser": [
+          [
+            {
+              "node": "AI Agent",
+              "type": "ai_outputParser",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Simple Memory1": {
+        "ai_memory": [
+          [
+            {
+              "node": "AI Agent",
+              "type": "ai_memory",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Extract from File": {
+        "main": [
+          [
+            {
+              "node": "AI Agent",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "OpenAI Chat Model": {
+        "ai_languageModel": [
+          [
+            {
+              "node": "AI Agent",
+              "type": "ai_languageModel",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Structured Output Parser1": {
+        "ai_outputParser": [
+          [
+            {
+              "node": "Generate Script With AI",
+              "type": "ai_outputParser",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Simple Memory": {
+        "ai_memory": [
+          [
+            {
+              "node": "Generate Script With AI",
+              "type": "ai_memory",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Generate Script With AI": {
+        "main": [
+          [
+            {
+              "node": "Create HeyGen Video Task1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Create HeyGen Video Task1": {
+        "main": [
+          [
+            {
+              "node": "Wait 10 Seconds",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Wait": {
+        "main": [
+          [
+            {
+              "node": "Check If Video Completed",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "OpenAI Chat Model1": {
+        "ai_languageModel": [
+          [
+            {
+              "node": "Generate Script With AI",
+              "type": "ai_languageModel",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Webhook - Receive Policy PDF": {
+        "main": [
+          [
+            {
+              "node": "Dowload file",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Dowload file": {
+        "main": [
+          [
+            {
+              "node": "Extract from File",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Download file1": {
+        "main": [
+          [
+            {
+              "node": "Respond to Webhook",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "authors": "IT Support",
+    "name": null,
+    "description": null
+  },
+  "tags": []
+}
