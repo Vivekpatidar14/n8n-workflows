@@ -1,198 +1,111 @@
 {
-  "updatedAt": "2025-10-30T07:55:00.000Z",
-  "createdAt": "2025-10-29T13:48:51.182Z",
-  "id": "4I9Mtqy1qQ6FzzvO",
-  "name": "PR Review automation",
+  "updatedAt": "2025-09-19T11:25:37.000Z",
+  "createdAt": "2025-09-19T09:41:48.944Z",
+  "id": "2TAjmaAlmWmlpdzh",
+  "name": "Knowledge base auto update",
   "active": false,
   "isArchived": false,
   "nodes": [
     {
-      "parameters": {
-        "httpMethod": "POST",
-        "path": "ghl-report",
-        "responseMode": "=onReceived",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.webhook",
-      "typeVersion": 2.1,
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
       "position": [
-        0,
-        0
+        144,
+        64
       ],
-      "id": "00ba9fe4-934b-43c4-953d-5f73a1b7cc43",
-      "name": "Webhook",
-      "webhookId": "c722a549-dd5b-4603-81d1-174b9c1e527d"
+      "id": "4843e4db-5965-4684-8c7e-477dcfd5ae82",
+      "name": "When clicking ‘Execute workflow’"
     },
     {
       "parameters": {
-        "options": {
-          "includeInputFields": true,
-          "timezone": "IST"
-        }
+        "content": "## Workflow Purpose\n\nThis workflow automatically updates a Google Sheets knowledge base with Zendesk tickets that have the \"howto\" tag.\n\n**Flow Overview:**\n1. Fetches all tickets from Zendesk\n2. Filters for tickets with \"howto\" tag only\n3. Gets detailed user information for each ticket\n4. Updates Google Sheets with ticket details\n\n**Use Case:** Perfect for maintaining a knowledge base of how-to requests from customers.",
+        "height": 304,
+        "width": 526
       },
-      "type": "n8n-nodes-base.dateTime",
-      "typeVersion": 2,
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
       "position": [
-        208,
-        0
+        -480,
+        -48
       ],
-      "id": "a6db11bb-a475-42a1-9ea2-f553dc870a7d",
-      "name": "Date & Time"
+      "id": "f30ea011-fa7e-47e1-a4a0-e562a4105d2c",
+      "name": "Workflow Description"
     },
     {
       "parameters": {
-        "authentication": "serviceAccount",
-        "operation": "appendOrUpdate",
-        "documentId": {
-          "__rl": true,
-          "value": "1lY6WlTPsYwlvVsrL6WG3hViTE2MPa4ohIHzROetcXik",
-          "mode": "list",
-          "cachedResultName": "PR Review Dashboard",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1lY6WlTPsYwlvVsrL6WG3hViTE2MPa4ohIHzROetcXik/edit?usp=drivesdk"
-        },
-        "sheetName": {
-          "__rl": true,
-          "value": "gid=0",
-          "mode": "list",
-          "cachedResultName": "Wizlo",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1lY6WlTPsYwlvVsrL6WG3hViTE2MPa4ohIHzROetcXik/edit#gid=0"
-        },
-        "columns": {
-          "mappingMode": "defineBelow",
-          "value": {
-            "Current Task Description": "={{ $('Webhook').item.json.body['Task Status Discription'] }}",
-            "Active Task ID": "={{ $('Date & Time').item.json.body.first_name }}",
-            "Email of Engineer": "={{ $('Date & Time').item.json.body.email }}"
-          },
-          "matchingColumns": [
-            "Email of Engineer"
-          ],
-          "schema": [
-            {
-              "id": "Reviewer Name",
-              "displayName": "Reviewer Name",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true,
-              "removed": true
-            },
-            {
-              "id": "Engineer Name",
-              "displayName": "Engineer Name",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true,
-              "removed": true
-            },
-            {
-              "id": "Email of Engineer",
-              "displayName": "Email of Engineer",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true,
-              "removed": false
-            },
-            {
-              "id": "Active Task ID",
-              "displayName": "Active Task ID",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "Current Task Description",
-              "displayName": "Current Task Description",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "Submitted At (IST)",
-              "displayName": "Submitted At (IST)",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true,
-              "removed": true
-            },
-            {
-              "id": "C1 (No GitHub Conversations open)",
-              "displayName": "C1 (No GitHub Conversations open)",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "C2 (Runs Locally)",
-              "displayName": "C2 (Runs Locally)",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "Criteria 3 (Acceptance Met)",
-              "displayName": "Criteria 3 (Acceptance Met)",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "Status",
-              "displayName": "Status",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "Reviewer Notes",
-              "displayName": "Reviewer Notes",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            }
-          ],
-          "attemptToConvertTypes": false,
-          "convertFieldsToString": false
-        },
-        "options": {
-          "useAppend": true
-        }
+        "content": "## Manual Trigger\n\nClick the 'Execute Workflow' button to run this automation manually.\n\n**When to use:**\n- Testing the workflow\n- One-time data sync\n- Troubleshooting\n\n**Note:** You can also set this up with a schedule trigger to run automatically (daily, weekly, etc.)",
+        "height": 296,
+        "width": 320
       },
-      "type": "n8n-nodes-base.googleSheets",
-      "typeVersion": 4.7,
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
       "position": [
-        832,
-        -96
+        80,
+        -288
       ],
-      "id": "5abf4f35-8fb9-41f1-a260-feb45a399f4f",
-      "name": "Append or update row in sheet",
-      "credentials": {
-        "googleApi": {
-          "id": "bo5o2EJvHQnohNQF",
-          "name": "Google Sheets account 5"
-        }
-      }
+      "id": "798f15a3-e84b-4248-9ace-365b56f8b3b5",
+      "name": "Trigger Instructions"
+    },
+    {
+      "parameters": {
+        "content": "## Zendesk Integration\n\nFetches ALL tickets from your Zendesk instance.\n\n**What it does:**\n- Connects to Zendesk using API credentials\n- Retrieves all available tickets\n- Passes ticket data to next step\n\n**Important:** Make sure your Zendesk credentials are properly configured in the node settings.",
+        "height": 312,
+        "width": 320
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        272,
+        240
+      ],
+      "id": "696b2cc3-0c68-40cd-8e88-b2a0803c4d07",
+      "name": "Zendesk Fetch Details"
+    },
+    {
+      "parameters": {
+        "content": "## Filtering Logic\n\nOnly processes tickets with the \"howto\" tag.\n\n**Filter Condition:**\n- Checks if first tag equals \"howto\"\n- Case sensitive matching\n- Only matching tickets proceed to next step\n\n**Tip:** You can modify this filter to use different tags or multiple conditions as needed.",
+        "height": 296,
+        "width": 320
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        480,
+        -272
+      ],
+      "id": "6cce2c3f-683b-41e5-bece-d5d086d2bfc8",
+      "name": "Filter Explanation"
+    },
+    {
+      "parameters": {
+        "content": "## User Details Enrichment\n\nGets detailed information about the person who created each ticket.\n\n**Retrieved Data:**\n- User name\n- Email address\n- Other user profile information\n\n**Why needed:** The initial ticket data only contains user ID, but we need name and email for the spreadsheet.",
+        "height": 296,
+        "width": 320
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        704,
+        240
+      ],
+      "id": "48b2fcd7-2e78-448d-8713-d7dfd9eb4da7",
+      "name": "User Details Purpose"
+    },
+    {
+      "parameters": {
+        "content": "## Google Sheets Update\n\nSaves or updates ticket information in your knowledge base spreadsheet.\n\n**Data Saved:**\n- Ticket Number\n- Description\n- Status\n- Tag\n- Owner Name\n- Email\n\n**Smart Update:** Uses description as matching column to avoid duplicates - existing tickets get updated instead of creating new rows.",
+        "height": 384,
+        "width": 320
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        912,
+        -368
+      ],
+      "id": "784943a6-7b5a-4813-a5d0-d1c075b27cf3",
+      "name": "Sheets Update Logic"
     },
     {
       "parameters": {
@@ -205,9 +118,9 @@
           },
           "conditions": [
             {
-              "id": "153d0ccc-869d-4083-9e85-6982c78164c3",
-              "leftValue": "={{$json.deptNorm}}",
-              "rightValue": "wizlo",
+              "id": "cc47baeb-cdfb-4a6b-94ca-ef18c6450d9f",
+              "leftValue": "={{ $json.tags[0] }}",
+              "rightValue": "=howto",
               "operator": {
                 "type": "string",
                 "operation": "equals",
@@ -222,58 +135,67 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        624,
-        0
+        592,
+        64
       ],
-      "id": "0efe9ccf-9131-47d3-afd2-b466936cd52c",
-      "name": "Route Dept"
+      "id": "f3f7ba7c-67e9-4103-917e-279ddb2cef91",
+      "name": "Filter HowTo Tickets Only"
     },
     {
       "parameters": {
-        "authentication": "serviceAccount",
+        "resource": "user",
+        "operation": "get",
+        "id": "={{ $json.requester_id }}"
+      },
+      "type": "n8n-nodes-base.zendesk",
+      "typeVersion": 1,
+      "position": [
+        816,
+        64
+      ],
+      "id": "26d98a0e-891a-4a46-9811-86344ac5b909",
+      "name": "Get Requester User Info",
+      "credentials": {
+        "zendeskApi": {
+          "id": "BQ61OjTaFfNPQ1bK",
+          "name": "Zendesk account-anuj"
+        }
+      }
+    },
+    {
+      "parameters": {
         "operation": "appendOrUpdate",
         "documentId": {
           "__rl": true,
-          "value": "1lY6WlTPsYwlvVsrL6WG3hViTE2MPa4ohIHzROetcXik",
+          "value": "1Utpt2Z8krX-29nE3_HAJVmm9yUp9NRcq-_P8JL1UqRk",
           "mode": "list",
-          "cachedResultName": "PR Review Dashboard",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1lY6WlTPsYwlvVsrL6WG3hViTE2MPa4ohIHzROetcXik/edit?usp=drivesdk"
+          "cachedResultName": "Ticket status dummy",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Utpt2Z8krX-29nE3_HAJVmm9yUp9NRcq-_P8JL1UqRk/edit?usp=drivesdk"
         },
         "sheetName": {
           "__rl": true,
-          "value": 590837538,
+          "value": "gid=0",
           "mode": "list",
-          "cachedResultName": "JIA",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1lY6WlTPsYwlvVsrL6WG3hViTE2MPa4ohIHzROetcXik/edit#gid=590837538"
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Utpt2Z8krX-29nE3_HAJVmm9yUp9NRcq-_P8JL1UqRk/edit#gid=0"
         },
         "columns": {
           "mappingMode": "defineBelow",
-          "value": {},
+          "value": {
+            "Description": "={{ $('Filter HowTo Tickets Only').item.json.description }}",
+            "Status": "={{ $('Filter HowTo Tickets Only').item.json.status }}",
+            "Tag": "={{ $('Filter HowTo Tickets Only').item.json.tags[0] || 'No tags' }}",
+            "Ticket No.": "={{ $('Filter HowTo Tickets Only').item.json.id }}",
+            "owner": "={{ $json.name }}",
+            "email": "={{ $json.email }}"
+          },
           "matchingColumns": [
-            "Email of Engineer"
+            "Description"
           ],
           "schema": [
             {
-              "id": "Reviewer Name",
-              "displayName": "Reviewer Name",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "Engineer Name",
-              "displayName": "Engineer Name",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "Email of Engineer",
-              "displayName": "Email of Engineer",
+              "id": "Ticket No.",
+              "displayName": "Ticket No.",
               "required": false,
               "defaultMatch": false,
               "display": true,
@@ -282,58 +204,14 @@
               "removed": false
             },
             {
-              "id": "Active Task ID",
-              "displayName": "Active Task ID",
+              "id": "Description",
+              "displayName": "Description",
               "required": false,
               "defaultMatch": false,
               "display": true,
               "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "Current Task Description",
-              "displayName": "Current Task Description",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "Submitted At (IST)",
-              "displayName": "Submitted At (IST)",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "C1 (No GitHub Conversations open)",
-              "displayName": "C1 (No GitHub Conversations open)",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "C2 (Runs Locally)",
-              "displayName": "C2 (Runs Locally)",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "Criteria 3 (Acceptance Met)",
-              "displayName": "Criteria 3 (Acceptance Met)",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
+              "canBeUsedToMatch": true,
+              "removed": false
             },
             {
               "id": "Status",
@@ -345,13 +223,32 @@
               "canBeUsedToMatch": true
             },
             {
-              "id": "Reviewer Notes",
-              "displayName": "Reviewer Notes",
+              "id": "owner",
+              "displayName": "owner",
               "required": false,
               "defaultMatch": false,
               "display": true,
               "type": "string",
               "canBeUsedToMatch": true
+            },
+            {
+              "id": "email",
+              "displayName": "email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Tag",
+              "displayName": "Tag",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
             }
           ],
           "attemptToConvertTypes": false,
@@ -360,90 +257,81 @@
         "options": {}
       },
       "type": "n8n-nodes-base.googleSheets",
-      "typeVersion": 4.7,
+      "typeVersion": 4.6,
       "position": [
-        832,
+        1040,
         64
       ],
-      "id": "26576ac3-4693-44d3-a2db-56ff00142ca4",
-      "name": "Append or update row in sheet1",
+      "id": "0d0c9e54-1207-435d-9298-ea49ea1f8974",
+      "name": "Update Knowledge Base Sheet",
       "credentials": {
-        "googleApi": {
-          "id": "bo5o2EJvHQnohNQF",
-          "name": "Google Sheets account 5"
+        "googleSheetsOAuth2Api": {
+          "id": "s4dP1fNuVZ2gWvs3",
+          "name": "Google Sheets account"
         }
       }
     },
     {
       "parameters": {
-        "assignments": {
-          "assignments": [
-            {
-              "id": "7a805241-bf1b-4934-a46a-d33306acebc8",
-              "name": "deptNorm",
-              "value": "={{   (()=>{     const b = $json.body ?? {};     let raw =       (Array.isArray(b.Department) ? b.Department[0] : undefined) ??       b[\"Department[0]\"] ??       b.Department ??       \"\";      if (raw && typeof raw === \"object\") {       raw = raw.value ?? raw.label ?? raw.name ?? JSON.stringify(raw);     }      return raw.toString().trim().toLowerCase();   })() }}",
-              "type": "string"
-            }
-          ]
-        },
+        "operation": "getAll",
+        "returnAll": true,
         "options": {}
       },
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 3.4,
+      "type": "n8n-nodes-base.zendesk",
+      "typeVersion": 1,
       "position": [
-        416,
-        0
+        368,
+        64
       ],
-      "id": "65fa02ea-48b3-478a-878e-925e0f1be091",
-      "name": "Normalize Dept"
+      "id": "da17ca3d-ae79-47ad-9bba-3b14609d3310",
+      "name": "Fetch All Zendesk Tickets",
+      "credentials": {
+        "zendeskApi": {
+          "id": "BQ61OjTaFfNPQ1bK",
+          "name": "Zendesk account-anuj"
+        }
+      }
     }
   ],
   "connections": {
-    "Webhook": {
+    "When clicking ‘Execute workflow’": {
       "main": [
         [
           {
-            "node": "Date & Time",
+            "node": "Fetch All Zendesk Tickets",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Date & Time": {
+    "Filter HowTo Tickets Only": {
       "main": [
         [
           {
-            "node": "Normalize Dept",
+            "node": "Get Requester User Info",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Route Dept": {
+    "Get Requester User Info": {
       "main": [
         [
           {
-            "node": "Append or update row in sheet",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "Append or update row in sheet1",
+            "node": "Update Knowledge Base Sheet",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Normalize Dept": {
+    "Fetch All Zendesk Tickets": {
       "main": [
         [
           {
-            "node": "Route Dept",
+            "node": "Filter HowTo Tickets Only",
             "type": "main",
             "index": 0
           }
@@ -452,23 +340,20 @@
     }
   },
   "settings": {
-    "executionOrder": "v1",
-    "callerPolicy": "workflowsFromSameOwner"
+    "executionOrder": "v1"
   },
   "staticData": null,
-  "meta": {
-    "templateCredsSetupCompleted": true
-  },
+  "meta": null,
   "pinData": {},
-  "versionId": "d16a13ab-d2bc-47d2-96da-462e2979fba6",
+  "versionId": "c4606bbd-1238-4fcc-bed4-b97ea91bf136",
   "activeVersionId": null,
   "triggerCount": 0,
   "shared": [
     {
-      "updatedAt": "2025-10-29T13:48:51.184Z",
-      "createdAt": "2025-10-29T13:48:51.184Z",
+      "updatedAt": "2025-09-19T09:41:48.946Z",
+      "createdAt": "2025-09-19T09:41:48.946Z",
       "role": "workflow:owner",
-      "workflowId": "4I9Mtqy1qQ6FzzvO",
+      "workflowId": "2TAjmaAlmWmlpdzh",
       "projectId": "iXigq15mRQoAAIrt"
     }
   ],
