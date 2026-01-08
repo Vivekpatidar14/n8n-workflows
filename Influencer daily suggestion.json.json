@@ -1,1570 +1,1646 @@
 {
-  "updatedAt": "2025-08-30T12:24:04.000Z",
-  "createdAt": "2025-08-24T09:05:41.839Z",
-  "id": "5hNTYI4UuXABlp7o",
-  "name": "LinkedIn Post Bot - Input Article URL",
-  "active": false,
-  "isArchived": true,
+  "updatedAt": "2026-01-08T07:12:07.256Z",
+  "createdAt": "2025-08-20T12:29:06.939Z",
+  "id": "bY9HGgxOJvIhlfQ1",
+  "name": "Upwork  company specific JOB Proposal",
+  "active": true,
+  "isArchived": false,
   "nodes": [
     {
       "parameters": {
-        "assignments": {
-          "assignments": [
+        "rule": {
+          "interval": [
             {
-              "id": "0cb531b5-a591-4484-83d0-13518ba864cc",
-              "name": "title",
-              "value": "={{ $('Fetch a Random Article').item.json.title }}",
-              "type": "string"
-            },
-            {
-              "id": "905c9845-800d-4ab3-860b-5494e1ba7c0f",
-              "name": "url",
-              "value": "={{ $('Fetch a Random Article').item.json.url }}",
-              "type": "string"
-            },
-            {
-              "id": "8deda793-60df-4cf6-ac6b-d80a6c39619c",
-              "name": "content",
-              "value": "={{ $('Remove EM Dashes').item.json.message.content.content }}",
-              "type": "string"
+              "field": "cronExpression",
+              "expression": "0 0 8,10,12,15,17 * * *"
             }
           ]
-        },
-        "options": {}
+        }
       },
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 3.4,
-      "position": [
-        288,
-        1184
-      ],
-      "id": "532075de-da91-44c3-ac8a-b40dc5378206",
-      "name": "Prepare Approval Payload"
-    },
-    {
-      "parameters": {
-        "resume": "webhook",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.wait",
-      "typeVersion": 1,
-      "position": [
-        736,
-        1184
-      ],
-      "id": "688421c1-2166-4d90-b33c-ad392e028081",
-      "name": "Wait For Approval",
-      "webhookId": "29553916-9873-47ce-ad51-3205eab7d92a"
-    },
-    {
-      "parameters": {
-        "conditions": {
-          "options": {
-            "caseSensitive": true,
-            "leftValue": "",
-            "typeValidation": "strict",
-            "version": 1
-          },
-          "conditions": [
-            {
-              "id": "af0b5e17-0c96-4e4d-b71a-bd2bbcbb41e1",
-              "leftValue": "={{ $json.query.action }}",
-              "rightValue": "approve",
-              "operator": {
-                "type": "string",
-                "operation": "equals",
-                "name": "filter.operator.equals"
-              }
-            }
-          ],
-          "combinator": "and"
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.if",
-      "typeVersion": 2,
-      "position": [
-        1408,
-        1392
-      ],
-      "id": "68fc2312-1e3c-49de-b939-f305d09e90fd",
-      "name": "Approved?"
-    },
-    {
-      "parameters": {
-        "chatId": "7281360444",
-        "text": "=LinkedIn Preview — Needs Approval\n\nTitle: {{ $json.title }}\nSource: {{ $json.url }}\n\nPost Body (draft):\n{{ $json.content.replace(/[\\\\`*_~|>#+\\-=!{}\\[\\]().]/g, '').replace(/<[^>]*>?/gm, '') }}\n\nApprove or reject below.",
-        "replyMarkup": "inlineKeyboard",
-        "inlineKeyboard": {
-          "rows": [
-            {
-              "row": {
-                "buttons": [
-                  {
-                    "text": "Approve",
-                    "additionalFields": {
-                      "url": "={{$execution.resumeUrl}}?action=approve&title={{ $json.title.replace(/[^a-zA-Z0-9]/g, '')}}"
-                    }
-                  },
-                  {
-                    "text": "Reject",
-                    "additionalFields": {
-                      "url": "={{$execution.resumeUrl}}?action=reject&title={{ $json.title.replace(/[^a-zA-Z0-9]/g, '') }}"
-                    }
-                  },
-                  {
-                    "text": "New Post",
-                    "additionalFields": {
-                      "url": "={{$execution.resumeUrl}}?action=new-post"
-                    }
-                  },
-                  {
-                    "text": "New Image",
-                    "additionalFields": {
-                      "url": "={{$execution.resumeUrl}}?action=new-image"
-                    }
-                  }
-                ]
-              }
-            }
-          ]
-        },
-        "additionalFields": {}
-      },
-      "id": "2c24e683-90f5-402f-b0cb-74212cf1a652",
-      "name": "Send Approval Request",
-      "type": "n8n-nodes-base.telegram",
-      "position": [
-        512,
-        1184
-      ],
+      "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1.2,
-      "webhookId": "6ac0ceb8-7dc4-4be5-9db7-1efb54bcfea7",
-      "credentials": {
-        "telegramApi": {
-          "id": "qlooKAX1PILExRwr",
-          "name": "News LinkedIn Post bot - Nayan"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "assignments": {
-          "assignments": [
-            {
-              "id": "0cb531b5-a591-4484-83d0-13518ba864cc",
-              "name": "title",
-              "value": "={{ $('Fetch a Random Article').item.json.title }}",
-              "type": "string"
-            },
-            {
-              "id": "905c9845-800d-4ab3-860b-5494e1ba7c0f",
-              "name": "url",
-              "value": "={{ $('Fetch a Random Article').item.json.url }}",
-              "type": "string"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 3.4,
       "position": [
-        1856,
-        1712
+        -1664,
+        224
       ],
-      "id": "adc51521-1acd-4442-8116-ab6c857d5e8e",
-      "name": "Prepare Rejection Payload"
+      "id": "b58d0685-413a-4b48-8a90-748b2233dfdb",
+      "name": "Schedule Trigger1"
     },
     {
       "parameters": {
-        "person": "SKNqCfgpq4",
-        "text": "={{ $('Remove EM Dashes').item.json.message.content.content }} #LearnWithNayan\n\nRead the full Blog: {{ $('Fetch a Random Article').item.json.url }}",
-        "shareMediaCategory": "IMAGE",
-        "additionalFields": {
-          "visibility": "PUBLIC"
-        }
-      },
-      "id": "f1618459-f9dc-4ba2-a9f4-d3633f22a8f1",
-      "name": "Create Linkedin Post",
-      "type": "n8n-nodes-base.linkedIn",
-      "position": [
-        1856,
-        1200
-      ],
-      "typeVersion": 1,
-      "credentials": {
-        "linkedInOAuth2Api": {
-          "id": "erF5vcdyH1ift5HA",
-          "name": "Nayan's Linkedin Account"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "jsCode": "function replaceDashesWithCommas(str) {\n  return str\n    // turn hyphen/en dash/em dash/horizontal bar into commas\n    .replace(/[\\u2012\\u2013\\u2014\\u2015]/g, ',')\n    // collapse multiple commas\n    .replace(/,+/g, ',')\n    // normalize spaces around commas (preserve newlines)\n    .replace(/[ \\t]*,[ \\t]*/g, ', ')\n    // remove leading/trailing spaces/tabs only (keep any \\n)\n    .replace(/^[ \\t]+|[ \\t]+$/g, '')\n    // drop a leading or trailing comma (with optional spaces/tabs)\n    .replace(/^[ \\t]*,|,[ \\t]*$/g, '');\n}\n\n$input.first().json.message.content.content =\n  replaceDashesWithCommas($input.first().json.message.content.content);\n\nconsole.log($input.first().json.message.content.content);\n$execution.customData.set(\"image_prompt\",$input.first().json.message.content.prompt)\nreturn $input.all();\n"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        -384,
-        1184
-      ],
-      "id": "3044ce60-f57b-40f0-b50c-b34a6a08b7b1",
-      "name": "Remove EM Dashes"
-    },
-    {
-      "parameters": {
-        "modelId": {
+        "documentId": {
           "__rl": true,
-          "value": "gpt-5-chat-latest",
+          "value": "1mERLGgeClTHy7wvZWQNPmPsCrLadKTCCrNl_FbWX6nQ",
           "mode": "list",
-          "cachedResultName": "GPT-5-CHAT-LATEST"
+          "cachedResultName": "upwork automation",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1mERLGgeClTHy7wvZWQNPmPsCrLadKTCCrNl_FbWX6nQ/edit?usp=drivesdk"
         },
-        "messages": {
-          "values": [
-            {
-              "content": "=Role: You are my LinkedIn content assistant. Your job is to write perfectly formatted LinkedIn posts that align with my brand voice, tone, and style based on the examples I've included here. Each post must revolve around summarising the provided content, which is a developer news, and avoid unsupported formatting.\n\nCritical Formatting Rules:\n\nThe generated post content should not exceed the 100-word limit. \n\nDon't use bold, italics or bullets.\n\nWhenever you want to add points, use emojis before the start of each pointer.\n\nStructure:\n\nAn Engaging Hook or an Interesting Question\n\nPersonal POV (first-person: \"I’ve seen…, I believe…, I think…\")\n\nInsights (trends/tools/case studies) in clear points\n\nClear spacing and new line wherever needed\n\nAdd emojis wherever required.\n\nCTA/question (\"What’s your take?\")\n\nRelavant 4-5 trending hashtags\n\nTrends: \nTie to recent news, tools, or debates (no generic advice).\n\nImage Prompt Rules:\nSuggest an AI image prompt related to the post. Based on the post context, it can be:\n- App interface or UX concept\n- Visual metaphor (e.g. “scaling servers as rocket engines”)\n- Stack or architecture illustration\n- Abstract concept visuals (e.g. speed, chaos, control, balance)\n- Tech-product mockups or feature highlights\n- Flowcharts, only suggest if explaining a process, framework, or system\n\nResponse Format (Strictly JSON):\n```json\n{\n  \"content\": \"<LinkedIn-ready post with proper formatting and no markdown symbols>\",\n  \"prompt\": \"<AI image generation prompt – relevant, visual, descriptive>\"\n}",
-              "role": "system"
-            },
-            {
-              "content": "=Examples of my past writings. Use them to align the new post with my brand voice, tone, and style,\n\n{{ $json.posts.join(\"\\n\\n\") }}",
-              "role": "system"
-            },
-            {
-              "content": "=You should use this content to write a new article for LinkedIn that adheres to my brand's voice, writing style, and tone. \nContent: {{ $('Fetch a Random Article').item.json.content }}"
-            }
-          ]
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1mERLGgeClTHy7wvZWQNPmPsCrLadKTCCrNl_FbWX6nQ/edit#gid=0"
         },
-        "jsonOutput": true,
-        "options": {}
+        "options": {
+          "returnFirstMatch": true
+        }
       },
-      "type": "@n8n/n8n-nodes-langchain.openAi",
-      "typeVersion": 1.8,
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
       "position": [
-        -736,
-        1392
+        -864,
+        240
       ],
-      "id": "8f19c86b-4c7e-43f6-976a-bf9b61efd4da",
-      "name": "Generate Post Content",
+      "id": "e59341a6-c355-4b9b-83bc-7c90c31a4e78",
+      "name": "GET Refresh Code",
       "credentials": {
-        "openAiApi": {
-          "id": "5Kzt6hGSZ1JHZqWN",
-          "name": "OpenAi account 2"
+        "googleSheetsOAuth2Api": {
+          "id": "kpPEOLCGn963qpoh",
+          "name": "automations@techdome.ai"
         }
       }
     },
     {
       "parameters": {
-        "mode": "raw",
-        "jsonOutput": "{\n  \"posts\": [\n    \"CORS doesn't apply to Websockets. Wait! What? While building WebSocket and Socket.IO support for the web version of Sparrow API Tool, I learned something interesting: CORS doesn’t apply to WebSockets. Since WebSockets operate on their own protocol (ws:// or wss://) after the initial HTTP handshake, they aren’t restricted by CORS like HTTP requests. So, while an HTTP request might get blocked if sent directly from a browser instead of being routed through a proxy server, the same issue won't occur with a raw WebSocket connection. However, if you need to send custom headers with your WebSocket requests, a backend proxy server might still be necessary. On the other hand, Socket.IO has its own server-side CORS configuration, letting you control which origins can connect. Always something new to learn when building tools like Sparrow! We also have a giveaway active on our Instagram channel for some cool Sparrow Merchandise. Check out the pinned comment for more details.\",\n    \"ChatGPT or Stackoverflow? Recently I was able to build a completely functional vscode extension with the help of GPT-4o. I was able to complete this in a days time which would have taken multiple days if I relied solely on reading docs and searching Stackoverflow/Google. I think reading official docs is the best way to learn something but sometimes its just about doing a quick POC that can be implemented a lot faster with just being a little good at prompt engineering. So in this age of GenAI, do you use chatbots for generating boilerplates or starting on POCs? PS - Before this I had no knowledge of working with/creating a vscode extension. I had absolutely no idea on how to start.\",\n    \"But it runs on my Docker!!! I recently came across a strange problem where I was trying to setup a cron using crontab. The cron calls a simple python django rest api and sends email to users. All of this was made to run on Docker. The whole application was started, crontab was installed and cron was setup. All in the Dockerfile itself. It was running perfectly fine on my Docker Desktop, on my friends Docker Desktop and also on a hosted standalone VM. But strangely so, the cron was not getting invoked on the Kubernetes pod on which it was supposed to run. It would run if manually invoked but not in intervals. After weeks of trying to solve the problem, I had to shift to Advance Python Scheduler to do the same task from within the python code. Share in the comments if you think you can guess what the problem might be.\",\n  \"Normal People - You can achieve anything if you focus on ONE thing at a time. Meanwhile Software Engineers - 100+ Tabs opened Working on multiple requirements Having Multi screen setup for multiple projects Scrolling Instagram and sending memes while attending a scrum call\",\n  \"10x Faster Typescript COMPILER!!! Still there is an ongoing debate on why Microsoft didn't choose Rust or their own C# for this rewrite. Although, according to the team, Go was a better choice as it provided a similar structure and seamless transition. Had it been a ground-up rewrite and not a migration, Rust or C# would have been a better choice.\",\n  \"I recently started working on a Teams to Signal messenger bot after realizing that so many people outright hate using MS Teams, but since it's an industry standard, they cannot directly ditch it. My current goal is to support forwarding incoming text messages on Teams to a messenger like Signal. The second will be to give support for the reply mechanism from Signal and sync it to Teams. Coming to the technical stuff, I am thinking of using automation tools like Cypress or Playwright to do this. But it all boils down to the availability of public APIs of both messengers. I will try to document my progress here, as I might fail trying, like a lot of other times 😅 Let's see how it pans out. How would you approach this kind of problem?\",\n    \"Do you know about the require cache in Node.js? Lets say you have a js module that you have imported in a js file using require statement. It is highly possible that after a few iterations to your module code, the changes wont reflect even after you have reloaded the api server/modules. This happens because there is a module cache that happens. You need to invalidate it in order for the new changes to reflect. More on this here -\",\n    \"How important is Out-of-Box experience for an open source contributor? Nowadays I have been working on creating a seamless out-of-box experience for the new contributors of Sparrow API Tool. A poor app setup experience or hard-to-understand README file can be a serious dealbreaker for the community. I am emphasizing on the following things to make the setup as smooth as possible: 1) Created and hosted Docker images for various microservices like api-service and auth-service on DockerHub. 2) Created an all-in-one docker-compose file to set up everything from database to queue service in one command. 3) Created a migration script that generates a test user on app start—bypassing auth flow for instant contribution. 4) Documented multiple setup methods (Docker and non-Docker). 5) Pre-filled example .env files with required variables for copy-paste convenience. Let me know if you have suggestions to improve this further—I’m open to feedback!\"\n]\n}\n",
-        "includeOtherFields": true,
-        "options": {}
-      },
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 3.4,
-      "position": [
-        -960,
-        1392
-      ],
-      "id": "7765b93d-121a-4dc2-b124-e79874e4af80",
-      "name": "Add Writing Examples",
-      "alwaysOutputData": false
-    },
-    {
-      "parameters": {
-        "jsCode": "const randomIndex = Math.floor(Math.random() * $('Get Latest Tech News').first().json.articles.length);\n\nreturn $('Get Latest Tech News').first().json.articles[randomIndex];"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        -1856,
-        1472
-      ],
-      "id": "f7121e51-8f81-408e-89c3-ccfb05d6e3a5",
-      "name": "Fetch a Random Article"
-    },
-    {
-      "parameters": {
-        "conditions": {
-          "options": {
-            "caseSensitive": true,
-            "leftValue": "",
-            "typeValidation": "strict",
-            "version": 1
-          },
-          "conditions": [
-            {
-              "id": "af0b5e17-0c96-4e4d-b71a-bd2bbcbb41e1",
-              "leftValue": "={{ $json.query.action }}",
-              "rightValue": "reject",
-              "operator": {
-                "type": "string",
-                "operation": "equals",
-                "name": "filter.operator.equals"
-              }
-            }
-          ],
-          "combinator": "and"
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.if",
-      "typeVersion": 2,
-      "position": [
-        1632,
-        1488
-      ],
-      "id": "de806782-e3f1-4287-916a-6ac416a993be",
-      "name": "Exit the Workflow?"
-    },
-    {
-      "parameters": {
-        "operation": "sendPhoto",
-        "chatId": "7281360444",
-        "binaryData": true,
-        "additionalFields": {}
-      },
-      "id": "5d7fa523-a0e2-4048-ba9f-e7c232ead3db",
-      "name": "Send Post Image",
-      "type": "n8n-nodes-base.telegram",
-      "position": [
-        64,
-        1184
-      ],
-      "typeVersion": 1.2,
-      "webhookId": "8adaa3bf-5957-438e-be83-6623a2b657c6",
-      "credentials": {
-        "telegramApi": {
-          "id": "qlooKAX1PILExRwr",
-          "name": "News LinkedIn Post bot - Nayan"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "chatId": "7281360444",
-        "text": "=Provide a new Tag to generate a new post.",
-        "replyMarkup": "forceReply",
-        "forceReply": {
-          "force_reply": "={{ true }}"
-        },
-        "additionalFields": {
-          "appendAttribution": false
-        }
-      },
-      "id": "556cb64d-dc00-4488-aa72-a4523ecaa92c",
-      "name": "Ask for new tag",
-      "type": "n8n-nodes-base.telegram",
-      "position": [
-        2080,
-        1056
-      ],
-      "typeVersion": 1.2,
-      "webhookId": "e465c643-3399-4f77-9b69-22736e46caed",
-      "credentials": {
-        "telegramApi": {
-          "id": "qlooKAX1PILExRwr",
-          "name": "News LinkedIn Post bot - Nayan"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "conditions": {
-          "options": {
-            "caseSensitive": true,
-            "leftValue": "",
-            "typeValidation": "strict",
-            "version": 1
-          },
-          "conditions": [
-            {
-              "id": "af0b5e17-0c96-4e4d-b71a-bd2bbcbb41e1",
-              "leftValue": "={{ $json.query.action }}",
-              "rightValue": "new-post",
-              "operator": {
-                "type": "string",
-                "operation": "equals",
-                "name": "filter.operator.equals"
-              }
-            }
-          ],
-          "combinator": "and"
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.if",
-      "typeVersion": 2,
-      "position": [
-        1856,
-        1440
-      ],
-      "id": "8f33f242-1121-42f4-991d-15003dc0b1af",
-      "name": "Suggest New Post"
-    },
-    {
-      "parameters": {
-        "resource": "image",
-        "model": "gpt-image-1",
-        "prompt": "={{ $json.headers.host }}",
-        "options": {}
-      },
-      "type": "@n8n/n8n-nodes-langchain.openAi",
-      "typeVersion": 1.8,
-      "position": [
-        2080,
-        1520
-      ],
-      "id": "c622b128-ae9a-43e2-a3ba-36f5ba801b98",
-      "name": "Generate Post Image",
-      "credentials": {
-        "openAiApi": {
-          "id": "5Kzt6hGSZ1JHZqWN",
-          "name": "OpenAi account 2"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "jsCode": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\nfor (const item of $input.all()) {\n  if(typeof(item.json.message) === 'object'){\n    $input.first().json.headers.host = item.json.message.content.prompt\n    $input.first().json.headers.accept = item.json.message.content.content\n\n  }\n}\n// console.log(Object.keys($input.first().json.message))\nreturn $input.first();"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        1184,
-        1392
-      ],
-      "id": "f88eb21d-0829-4146-8f5b-4b72dc514d91",
-      "name": "Merge Code"
-    },
-    {
-      "parameters": {
-        "chatId": "7281360444",
-        "text": "=Approve or reject below.",
-        "replyMarkup": "inlineKeyboard",
-        "inlineKeyboard": {
-          "rows": [
-            {
-              "row": {
-                "buttons": [
-                  {
-                    "text": "Approve",
-                    "additionalFields": {
-                      "url": "={{$execution.resumeUrl}}?action=approve&title={{ $json.title.replace(/[^a-zA-Z0-9]/g, '')}}"
-                    }
-                  },
-                  {
-                    "text": "Reject",
-                    "additionalFields": {
-                      "url": "={{$execution.resumeUrl}}?action=reject&title={{ $json.title.replace(/[^a-zA-Z0-9]/g, '') }}"
-                    }
-                  }
-                ]
-              }
-            }
-          ]
-        },
-        "additionalFields": {}
-      },
-      "id": "61aeb6d7-d508-48d3-b613-87a06391f7ca",
-      "name": "Send Approval Request1",
-      "type": "n8n-nodes-base.telegram",
-      "position": [
-        2528,
-        1520
-      ],
-      "typeVersion": 1.2,
-      "webhookId": "e047d248-4170-4883-b4a4-1220019953d6",
-      "credentials": {
-        "telegramApi": {
-          "id": "qlooKAX1PILExRwr",
-          "name": "News LinkedIn Post bot - Nayan"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "operation": "sendPhoto",
-        "chatId": "7281360444",
-        "binaryData": true,
-        "additionalFields": {}
-      },
-      "id": "3edcbb72-e0d9-4ba1-a4be-71bd7926cc8b",
-      "name": "Send Post Image1",
-      "type": "n8n-nodes-base.telegram",
-      "position": [
-        2304,
-        1520
-      ],
-      "typeVersion": 1.2,
-      "webhookId": "f96ddd7b-95bc-42c9-bf5a-0e2088f43d1b",
-      "credentials": {
-        "telegramApi": {
-          "id": "qlooKAX1PILExRwr",
-          "name": "News LinkedIn Post bot - Nayan"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "resume": "webhook",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.wait",
-      "typeVersion": 1,
-      "position": [
-        2752,
-        1520
-      ],
-      "id": "1ce76c90-adb3-4676-b2b5-a20fdcfe91f7",
-      "name": "Wait For Approval1",
-      "webhookId": "7a263e2f-ae27-4952-8fa2-c2b6f077f21d"
-    },
-    {
-      "parameters": {
-        "conditions": {
-          "options": {
-            "caseSensitive": true,
-            "leftValue": "",
-            "typeValidation": "strict",
-            "version": 1
-          },
-          "conditions": [
-            {
-              "id": "af0b5e17-0c96-4e4d-b71a-bd2bbcbb41e1",
-              "leftValue": "={{ $json.query.action }}",
-              "rightValue": "approve",
-              "operator": {
-                "type": "string",
-                "operation": "equals",
-                "name": "filter.operator.equals"
-              }
-            }
-          ],
-          "combinator": "and"
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.if",
-      "typeVersion": 2,
-      "position": [
-        2976,
-        1520
-      ],
-      "id": "ed76ded9-760b-4587-a8bb-59aa5d86efe5",
-      "name": "Approved?1",
-      "alwaysOutputData": false,
-      "notesInFlow": false
-    },
-    {
-      "parameters": {
-        "updates": [
-          "message"
-        ],
-        "additionalFields": {}
-      },
-      "type": "n8n-nodes-base.telegramTrigger",
-      "typeVersion": 1.2,
-      "position": [
-        -2528,
-        1568
-      ],
-      "id": "4856de5c-16d5-426c-86c6-35851f8156f2",
-      "name": "Message Received",
-      "webhookId": "17d504a4-d0ce-47f5-95e1-dbc19cd3c3ce",
-      "credentials": {
-        "telegramApi": {
-          "id": "qlooKAX1PILExRwr",
-          "name": "News LinkedIn Post bot - Nayan"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "conditions": {
-          "options": {
-            "caseSensitive": true,
-            "leftValue": "",
-            "typeValidation": "strict",
-            "version": 2
-          },
-          "conditions": [
-            {
-              "id": "fca4d3ea-7ed8-457c-afff-19537e5d20a9",
-              "leftValue": "={{ $json.totalResults }}",
-              "rightValue": 0,
-              "operator": {
-                "type": "number",
-                "operation": "gt"
-              }
-            }
-          ],
-          "combinator": "and"
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.if",
-      "typeVersion": 2.2,
-      "position": [
-        -2080,
-        1568
-      ],
-      "id": "d28ad6b2-63eb-4edd-9dd7-10f402e85212",
-      "name": "News Exist?"
-    },
-    {
-      "parameters": {
-        "chatId": "7281360444",
-        "text": "=No Posts found for the provided tag(s). Provide a new Tag to generate a post.",
-        "replyMarkup": "forceReply",
-        "forceReply": {
-          "force_reply": "={{ true }}"
-        },
-        "additionalFields": {
-          "appendAttribution": false
-        }
-      },
-      "id": "27bfc1df-116f-4b31-b875-cf8e08153e8b",
-      "name": "No Post Found",
-      "type": "n8n-nodes-base.telegram",
-      "position": [
-        -1856,
-        1664
-      ],
-      "typeVersion": 1.2,
-      "webhookId": "3b3714d4-842d-4eb8-a230-269098626644",
-      "credentials": {
-        "telegramApi": {
-          "id": "qlooKAX1PILExRwr",
-          "name": "News LinkedIn Post bot - Nayan"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "url": "={{ $('Fetch a Random Article').item.json.urlToImage }}",
-        "options": {}
-      },
-      "id": "cb4e7f46-ac2f-499a-a5dc-0231f5b02e28",
-      "name": "Download Post Image Again",
-      "type": "n8n-nodes-base.httpRequest",
-      "position": [
-        1632,
-        1200
-      ],
-      "typeVersion": 4.2
-    },
-    {
-      "parameters": {
-        "url": "={{ $('Fetch a Random Article').item.json.urlToImage }}",
-        "options": {}
-      },
-      "id": "7e5cf87a-3580-43bc-a44f-df0c1924642a",
-      "name": "Download Post Image",
-      "type": "n8n-nodes-base.httpRequest",
-      "position": [
-        -160,
-        1184
-      ],
-      "typeVersion": 4.2
-    },
-    {
-      "parameters": {},
-      "type": "n8n-nodes-base.merge",
-      "typeVersion": 3.2,
-      "position": [
-        960,
-        1392
-      ],
-      "id": "288ff8d5-cbcb-48f2-9109-0bfa72025aee",
-      "name": "Merge Responses"
-    },
-    {
-      "parameters": {
-        "person": "SKNqCfgpq4",
-        "text": "={{ $('Remove EM Dashes').item.json.message.content.content }} #LearnWithNayan\n\nRead the full Blog: {{ $('Prepare Approval Payload').item.json.url }}",
-        "shareMediaCategory": "IMAGE",
-        "binaryPropertyName": "=data",
-        "additionalFields": {
-          "visibility": "PUBLIC"
-        }
-      },
-      "id": "a782018d-ee46-4dcd-9aef-dbceb92f1900",
-      "name": "Create Linkedin Post Again",
-      "type": "n8n-nodes-base.linkedIn",
-      "position": [
-        3424,
-        1472
-      ],
-      "typeVersion": 1,
-      "credentials": {
-        "linkedInOAuth2Api": {
-          "id": "erF5vcdyH1ift5HA",
-          "name": "Nayan's Linkedin Account"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "chatId": "7281360444",
-        "text": "=LinkedIn Post Sent Successfully - Dev News\n\nTitle - {{ $('Fetch a Random Article').item.json.title }}\n\nNews URL - {{ $('Fetch a Random Article').item.json.url }}\n\nLinkedIn URL - https://www.linkedin.com/feed/update/{{ $json.urn }}\n\nPosted At - {{ DateTime.now() }}",
-        "replyMarkup": "inlineKeyboard",
-        "additionalFields": {
-          "appendAttribution": false
-        }
-      },
-      "id": "08b46a17-2f3a-4585-b3b1-8c5dd3662f73",
-      "name": "Send Post Created Message Again",
-      "type": "n8n-nodes-base.telegram",
-      "position": [
-        3648,
-        1472
-      ],
-      "webhookId": "f0c5ff3f-d435-402b-89f3-4f318e6ea9c5",
-      "typeVersion": 1.2,
-      "credentials": {
-        "telegramApi": {
-          "id": "qlooKAX1PILExRwr",
-          "name": "News LinkedIn Post bot - Nayan"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "chatId": "7281360444",
-        "text": "=LinkedIn Post Sent Successfully - Dev.to  \nTitle - {{ $('Fetch a Random Article').item.json.title }}\n\nURL - https://www.linkedin.com/feed/update/{{ $json.urn }}\n\nPosted At - {{ DateTime.now() }}",
-        "replyMarkup": "inlineKeyboard",
-        "additionalFields": {
-          "appendAttribution": false
-        }
-      },
-      "id": "0a4efe60-103b-497c-8970-f783dff7d5fd",
-      "name": "Send Post Created Message",
-      "type": "n8n-nodes-base.telegram",
-      "position": [
-        2080,
-        1248
-      ],
-      "webhookId": "020b8162-d8df-4dd4-9e41-e7d1715fcf00",
-      "typeVersion": 1.2,
-      "credentials": {
-        "telegramApi": {
-          "id": "qlooKAX1PILExRwr",
-          "name": "News LinkedIn Post bot - Nayan"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "jsCode": "return $('Generate Post Image').first()"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        3200,
-        1472
-      ],
-      "id": "31523669-d152-4a7f-9a22-1f4bcb8cb145",
-      "name": "Extract Generated Image"
-    },
-    {
-      "parameters": {
-        "chatId": "7281360444",
-        "text": "=LinkedIn post flow end",
-        "additionalFields": {
-          "appendAttribution": false
-        }
-      },
-      "id": "7e0174b8-fd5a-4d4b-a304-f90ef3c67361",
-      "name": "Send Exit Flow Message",
-      "type": "n8n-nodes-base.telegram",
-      "position": [
-        3200,
-        1776
-      ],
-      "typeVersion": 1.2,
-      "webhookId": "e9987248-092d-401c-82eb-248b2d57b1e6",
-      "credentials": {
-        "telegramApi": {
-          "id": "qlooKAX1PILExRwr",
-          "name": "News LinkedIn Post bot - Nayan"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "chatId": "7281360444",
-        "text": "=❌ LinkedIn post rejected\n\nTitle - {{ $json.title }}\nURL   - {{ $json.url }}",
-        "additionalFields": {
-          "appendAttribution": false
-        }
-      },
-      "id": "8c4bc1b4-2808-41c8-8860-b2db783bbf75",
-      "name": "Send Post Rejected Message",
-      "type": "n8n-nodes-base.telegram",
-      "position": [
-        2080,
-        1712
-      ],
-      "typeVersion": 1.2,
-      "webhookId": "3e471ded-9fd6-4981-a9b5-1cffbba63cac",
-      "credentials": {
-        "telegramApi": {
-          "id": "qlooKAX1PILExRwr",
-          "name": "News LinkedIn Post bot - Nayan"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "resume": "webhook",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.wait",
-      "typeVersion": 1,
-      "position": [
-        -1408,
-        1392
-      ],
-      "id": "a367cbe3-4eaa-41f9-acf0-e25014273830",
-      "name": "Wait For Approval2",
-      "webhookId": "5bd9949d-bb1e-481a-91a3-40698635394d"
-    },
-    {
-      "parameters": {
-        "rules": {
-          "values": [
-            {
-              "conditions": {
-                "options": {
-                  "caseSensitive": true,
-                  "leftValue": "",
-                  "typeValidation": "strict",
-                  "version": 2
-                },
-                "conditions": [
-                  {
-                    "leftValue": "={{ $json.query.action }}",
-                    "rightValue": "approve",
-                    "operator": {
-                      "type": "string",
-                      "operation": "equals"
-                    },
-                    "id": "e07e33d6-9c82-434b-b8a7-8428893e8643"
-                  }
-                ],
-                "combinator": "and"
-              }
-            },
-            {
-              "conditions": {
-                "options": {
-                  "caseSensitive": true,
-                  "leftValue": "",
-                  "typeValidation": "strict",
-                  "version": 2
-                },
-                "conditions": [
-                  {
-                    "id": "827c7f17-66d0-45a3-98c4-c8ffc004052c",
-                    "leftValue": "={{ $json.query.action }}",
-                    "rightValue": "exit",
-                    "operator": {
-                      "type": "string",
-                      "operation": "equals",
-                      "name": "filter.operator.equals"
-                    }
-                  }
-                ],
-                "combinator": "and"
-              }
-            },
-            {
-              "conditions": {
-                "options": {
-                  "caseSensitive": true,
-                  "leftValue": "",
-                  "typeValidation": "strict",
-                  "version": 2
-                },
-                "conditions": [
-                  {
-                    "id": "55711320-b9e3-4cff-b006-695547415de2",
-                    "leftValue": "={{ $json.query.action }}",
-                    "rightValue": "random-post",
-                    "operator": {
-                      "type": "string",
-                      "operation": "equals",
-                      "name": "filter.operator.equals"
-                    }
-                  }
-                ],
-                "combinator": "and"
-              }
-            },
-            {
-              "conditions": {
-                "options": {
-                  "caseSensitive": true,
-                  "leftValue": "",
-                  "typeValidation": "strict",
-                  "version": 2
-                },
-                "conditions": [
-                  {
-                    "id": "191a8283-2489-46af-8b3c-18c173a04310",
-                    "leftValue": "={{ $json.query.action }}",
-                    "rightValue": "new-tag",
-                    "operator": {
-                      "type": "string",
-                      "operation": "equals",
-                      "name": "filter.operator.equals"
-                    }
-                  }
-                ],
-                "combinator": "and"
-              }
-            }
-          ]
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.switch",
-      "typeVersion": 3.2,
-      "position": [
-        -1184,
-        1440
-      ],
-      "id": "b314ca86-4ead-49c8-bdde-6eab427866e5",
-      "name": "Switch"
-    },
-    {
-      "parameters": {
-        "chatId": "7281360444",
-        "text": "=Do you want to process this Article?\n\nTitle: {{ $json.title }}\nSource: {{ $json.url }}\n\nApprove or reject below.",
-        "replyMarkup": "inlineKeyboard",
-        "inlineKeyboard": {
-          "rows": [
-            {
-              "row": {
-                "buttons": [
-                  {
-                    "text": "Proceed",
-                    "additionalFields": {
-                      "url": "={{$execution.resumeUrl}}?action=approve&title={{ $json.title.replace(/[^a-zA-Z0-9]/g, '')}}"
-                    }
-                  },
-                  {
-                    "text": "Exit",
-                    "additionalFields": {
-                      "url": "={{$execution.resumeUrl}}?action=exit&title={{ $json.title.replace(/[^a-zA-Z0-9]/g, '') }}"
-                    }
-                  },
-                  {
-                    "text": "Randomize",
-                    "additionalFields": {
-                      "url": "={{$execution.resumeUrl}}?action=random-post"
-                    }
-                  },
-                  {
-                    "text": "New Tag",
-                    "additionalFields": {
-                      "url": "={{$execution.resumeUrl}}?action=new-tag"
-                    }
-                  }
-                ]
-              }
-            }
-          ]
-        },
-        "additionalFields": {}
-      },
-      "id": "b504b46b-f42c-4412-b2e0-4e6a817ab79c",
-      "name": "Proceed with the Article?",
-      "type": "n8n-nodes-base.telegram",
-      "position": [
-        -1632,
-        1392
-      ],
-      "typeVersion": 1.2,
-      "webhookId": "d7c65a5f-702d-4e6d-bb1f-6c6cec1d85d4",
-      "credentials": {
-        "telegramApi": {
-          "id": "qlooKAX1PILExRwr",
-          "name": "News LinkedIn Post bot - Nayan"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "content": "# LinkedIn Post Automation with Approval Workflow\n\n## Overview\nThis automated workflow fetches tech news articles, generates LinkedIn post content using AI, sends it for approval via Telegram, and publishes to LinkedIn upon approval.\n\n## Key Features\n- **Automated Content Creation**: Uses OpenAI to generate engaging LinkedIn posts from tech news articles\n- **Approval System**: Sends posts for human approval via Telegram with interactive buttons\n- **Flexible Options**: Allows approving, rejecting, requesting new posts, or providing new tags\n- **LinkedIn Integration**: Automatically publishes approved posts with proper formatting\n- **Image Handling**: Includes article images and supports AI-generated images\n\n## Workflow Steps\n1. **Trigger**: Starts when a message with a tech topic tag is received in Telegram\n2. **Article Fetching**: \n   - Queries NewsAPI for relevant tech articles\n   - Selects a random article to process\n3. **Content Generation**:\n   - Uses GPT to create LinkedIn-ready content\n   - Formats content according to brand guidelines\n4. **Approval Process**:\n   - Sends draft post to Telegram for review\n   - Provides Approve/Reject/New Post options\n5. **Publication**:\n   - Posts approved content to LinkedIn\n   - Sends confirmation message with post link\n\n## Configuration Requirements\n- Telegram bot credentials\n- LinkedIn API access\n- OpenAI API key\n- NewsAPI key\n\n## Usage Options\n- **Approve**: Publish the generated post\n- **Reject**: Discard the current post\n- **New Post**: Generate a different post from same article\n- **New Tag**: Request content for a different tech topic\n- **New Image**: Request an ai generated image for a different tech topic\n",
-        "height": 1056,
-        "width": 1200
-      },
-      "type": "n8n-nodes-base.stickyNote",
-      "position": [
-        -400,
-        0
-      ],
-      "typeVersion": 1,
-      "id": "7cb1630a-b436-4394-905c-0d60deff754c",
-      "name": "Sticky Note"
-    },
-    {
-      "parameters": {
-        "path": "article-scraper",
-        "options": {}
-      },
-      "name": "Webhook",
-      "type": "n8n-nodes-base.webhook",
-      "typeVersion": 1,
-      "position": [
-        -1888,
-        2592
-      ],
-      "id": "12f856cc-2be2-432f-a54a-d182f2c7a997",
-      "webhookId": "2931e127-cd3b-4dee-b8e5-74c835574610"
-    },
-    {
-      "parameters": {
-        "url": "={{ $json.url }}",
-        "responseFormat": "string",
-        "options": {}
-      },
-      "name": "HTTP Request",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 1,
-      "position": [
-        -1696,
-        2592
-      ],
-      "id": "44a49a2d-3878-4d71-80db-a473c541bd99"
-    },
-    {
-      "parameters": {
-        "extractionValues": {
-          "values": [
-            {
-              "key": "title",
-              "cssSelector": "h1.hdg1"
-            },
-            {
-              "key": "summary",
-              "cssSelector": "h2.hdg2"
-            },
-            {
-              "key": "author",
-              "cssSelector": ".authorDetail .name, [itemprop='author']"
-            },
-            {
-              "key": "publishDate",
-              "cssSelector": "time[datetime], .dateTime, [itemprop='datePublished']"
-            },
-            {
-              "key": "content",
-              "cssSelector": ".storyDetails, .storyHighlights, .detail .storyPage",
-              "returnValue": "html"
-            },
-            {
-              "key": "paragraphs",
-              "cssSelector": ".storyDetails p, .detail p",
-              "returnArray": true
-            },
-            {
-              "key": "imageUrl",
-              "cssSelector": ".storyDetails img, .mainImage img",
-              "returnValue": "attribute",
-              "attribute": "src"
-            },
-            {
-              "key": "categories",
-              "cssSelector": ".breadcrumb a, .topicPath a",
-              "returnArray": true
-            }
-          ]
-        },
-        "options": {}
-      },
-      "name": "HTML Extract1",
-      "type": "n8n-nodes-base.htmlExtract",
-      "typeVersion": 1,
-      "position": [
-        -1856,
-        2368
-      ],
-      "id": "efe767fc-fc16-4eaf-86df-13789b7ba145"
-    },
-    {
-      "parameters": {
-        "jsCode": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\nlet article = '';\nfor (const item of $input.first().json.paragraphs) {\n  article += item\n}\n\nreturn {content : article}"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        -1600,
-        2368
-      ],
-      "id": "f1b29e45-3b2f-4047-a4b3-29774987d193",
-      "name": "Code"
-    },
-    {
-      "parameters": {
-        "url": "https://gnews.io/api/v4/top-headlines",
-        "sendQuery": true,
-        "queryParameters": {
+        "method": "POST",
+        "url": "https://www.upwork.com/api/v3/oauth2/token",
+        "sendBody": true,
+        "contentType": "form-urlencoded",
+        "bodyParameters": {
           "parameters": [
             {
-              "name": "q",
-              "value": "={{ $json.message.text.toUpperCase().trim() }}"
+              "name": "grant_type",
+              "value": "refresh_token"
             },
             {
-              "name": "category",
-              "value": "technology"
+              "name": "client_id",
+              "value": "d52b9728a2f031bc81d360fee5d34b1f"
             },
             {
-              "name": "lang",
-              "value": "en"
+              "name": "client_secret",
+              "value": "7c6ac8fea04f7189"
             },
             {
-              "name": "country",
-              "value": "us"
-            },
-            {
-              "name": "max",
-              "value": "10"
-            },
-            {
-              "name": "apikey",
-              "value": "9f5693a20a598529c5d49bb6f49be0c9"
-            },
-            {
-              "name": "from",
-              "value": "={{ DateTime.now().minus(3, 'days').format('yyyy-MM-dd') }}"
-            },
-            {
-              "name": "to",
-              "value": "={{ DateTime.now().format('yyyy-MM-dd') }}"
+              "name": "refresh_token",
+              "value": "={{ $json['refresh token'] }}"
             }
           ]
         },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -656,
+        240
+      ],
+      "id": "79a3e243-d733-40b7-8115-acc1e9467f3a",
+      "name": "Access Token"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.upwork.com/graphql",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
             {
-              "name": "Cookie",
-              "value": "PHPSESSID=jm3plvof1kouaov0j70mt3dh1k"
+              "name": "Authorization",
+              "value": "=Bearer {{ $json.access_token }}"
             },
             {
-              "name": "cookie",
-              "value": "PHPSESSID=jm3plvof1kouaov0j70mt3dh1k;"
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "X-Upwork-API-TenantId",
+              "value": "1546843978739367937"
             }
           ]
         },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"query\": \"query marketplaceJobPostingsSearch($marketPlaceJobFilter: MarketplaceJobPostingsSearchFilter, $searchType: MarketplaceJobPostingSearchType, $sortAttributes: [MarketplaceJobPostingSearchSortAttribute]) { marketplaceJobPostingsSearch(marketPlaceJobFilter: $marketPlaceJobFilter, searchType: $searchType, sortAttributes: $sortAttributes) { totalCount edges { node { id title description createdDateTime publishedDateTime client { totalHires verificationStatus } } } pageInfo { endCursor hasNextPage } } }\",\n  \"variables\": {\n    \"marketPlaceJobFilter\": {\n      \"searchExpression_eq\": \"{{ $('Get row(s) in sheet').item.json['job filter'] }}\",\n      \"hourlyRate_eq\": { \"rangeStart\": 35, \"rangeEnd\": null },\n      \"budgetRange_eq\": { \"rangeStart\": 1000, \"rangeEnd\": null },\n      \"proposalRange_eq\": { \"rangeStart\": 0, \"rangeEnd\": 20 },\n      \"verifiedPaymentOnly_eq\": true,\n      \"clientHiresRange_eq\": { \"rangeStart\": 5, \"rangeEnd\": null }\n    },\n    \"searchType\": \"USER_JOBS_SEARCH\",\n    \"sortAttributes\": [\n      { \"field\": \"RECENCY\" }\n    ]\n  }\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -432,
+        240
+      ],
+      "id": "b8e6e164-96a1-4fc7-8571-07b8b3dabd6c",
+      "name": "Job Listings"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get all input items\nconst allItems = $input.all();\n\nlet output = [];\n\nallItems.forEach(item => {\n  const edges = item.json?.data?.marketplaceJobPostingsSearch?.edges;\n  if (edges && Array.isArray(edges)) {\n    edges.forEach((edge, index) => {\n      // Generate unique job identifier\n      const jobId = edge.node.id;\n      const uniqueId = `job_${jobId}_${Date.now()}_${index}`;\n      \n      output.push({\n        json: {\n          id: jobId,\n          title: edge.node.title,\n          description: edge.node.description,\n          upworkLink: `https://www.upwork.com/jobs/~02${jobId}`,\n          uniqueId: uniqueId,\n          acceptUrl: `https://n8n.tdwebsites.in/webhook/aceept?jobId=${jobId}&uniqueId=${uniqueId}`,\n          createdDateTime: edge.node.createdDateTime,\n          client: edge.node.client\n        }\n      });\n    });\n  }\n});\n\nreturn output;\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -208,
+        240
+      ],
+      "id": "be49da71-cfa2-459b-a45b-0a9646320537",
+      "name": "Process Jobs with Accept URLs"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get all input items and create a single item with all jobs\nconst allItems = $input.all();\n\nlet allJobs = [];\n\nallItems.forEach(item => {\n  allJobs.push(item.json);\n});\n\n// Create webhook URL for n8n instance\nconst webhookBaseUrl = 'https://n8n.tdwebsites.in/webhook';\n\n// Return single item with all jobs\nreturn [{\n  json: {\n    jobs: allJobs,\n    webhookBaseUrl: webhookBaseUrl,\n    totalJobs: allJobs.length\n  }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -16,
+        240
+      ],
+      "id": "30a97865-4f96-4d3d-8199-30c39aad374f",
+      "name": "Prepare Email Data"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $input }}",
+        "hasOutputParser": true,
         "options": {
-          "redirect": {
-            "redirect": {}
+          "systemMessage": "=You are tasked with generating a well-structured HTML email for job review with interactive accept buttons. Create an email that presents Upwork job postings with clickable accept buttons for each job.\n\nInput: You'll receive a single item containing:\n- jobs: Array of job objects with id, title, description, upworkLink, acceptUrl\n- webhookBaseUrl: Base URL for webhook calls\n- totalJobs: Number of jobs\n\nEmail Requirements:\n\n1. HTML Structure:\n   - Professional email layout with proper HTML structure\n   - Responsive design that works in email clients\n   - Clear header: \"Upwork Job Opportunities - [Current Date]\"\n\n2. For each job, include:\n   - Job number (1, 2, 3, etc.)\n   - Job title (bold and prominent)\n   - Job ID (clearly labeled)\n   - Concise 2-3 sentence summary of the job description\n   - Upwork link (\"View on Upwork\" button)\n   - Accept button (\"Accept for Proposal\" button in green)\n\n3. Accept Button Specifications:\n   - Green background color (#28a745)\n   - White text\n   - Clickable link that calls the acceptUrl\n   - Text: \"Accept for Proposal\"\n   - Should be prominent and clearly visible\n\n4. Styling:\n   - Use inline CSS for email compatibility\n   - Professional color scheme\n   - Clear separation between jobs\n   - Buttons should be styled as actual buttons, not just links\n\n5. Email Footer:\n   - Include note: \"Click 'Accept for Proposal' to automatically create a proposal for that job.\"\n   - Add timestamp and total job count\n\nOutput Format:\n- Subject: Plain text email subject\n- Body: Complete HTML email body with all jobs and interactive elements\n\nEnsure all accept buttons are functional and properly linked to their respective acceptUrl values."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.1,
+      "position": [
+        224,
+        240
+      ],
+      "id": "5e440724-83b1-4593-8c4b-83699341fdb4",
+      "name": "Create Interactive Email"
+    },
+    {
+      "parameters": {
+        "model": "gpt-4o",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatAzureOpenAi",
+      "typeVersion": 1,
+      "position": [
+        208,
+        432
+      ],
+      "id": "bd43eec5-1cd9-45f0-906b-bde29f2a9b61",
+      "name": "Azure OpenAI Chat Model",
+      "credentials": {
+        "azureOpenAiApi": {
+          "id": "C3WzT18XqF8OdVM6",
+          "name": "Azure Open AI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n\t\"Subject\": \" \",\n\t\"Body\": \" \"\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        400,
+        432
+      ],
+      "id": "84636aa1-3894-4713-b213-3d9903a9827f",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://www.upwork.com/api/v3/oauth2/token",
+        "sendBody": true,
+        "contentType": "form-urlencoded",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "grant_type",
+              "value": "refresh_token"
+            },
+            {
+              "name": "client_id",
+              "value": "d52b9728a2f031bc81d360fee5d34b1f"
+            },
+            {
+              "name": "client_secret",
+              "value": "7c6ac8fea04f7189"
+            },
+            {
+              "name": "refresh_token",
+              "value": "={{ $json['refresh token'] }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -976,
+        -304
+      ],
+      "id": "9a2d50dc-37d0-4f27-a883-c09a3054a422",
+      "name": "Get Access Token for Proposal"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://www.upwork.com/api/v3/oauth2/token",
+        "sendBody": true,
+        "contentType": "form-urlencoded",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "grant_type",
+              "value": "authorization_code"
+            },
+            {
+              "name": "client_id",
+              "value": "d52b9728a2f031bc81d360fee5d34b1f"
+            },
+            {
+              "name": "client_secret",
+              "value": "7c6ac8fea04f7189"
+            },
+            {
+              "name": "code",
+              "value": "3916109a76085af6da9181e1791b8185"
+            },
+            {
+              "name": "redirect_uri",
+              "value": "https://n8n.tdwebsites.in/rest/oauth2-credential/callback"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -624,
+        848
+      ],
+      "id": "8a2e0e01-7e33-4722-83be-b90a03de41f2",
+      "name": "Refresh Token",
+      "notes": "https://www.upwork.com/ab/account-security/oauth2/authorize?client_id=d52b9728a2f031bc81d360fee5d34b1f&response_type=code&redirect_uri=https%3A%2F%2Fn8n.tdwebsites.in%2Frest%2Foauth2-credential%2Fcallback"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1mERLGgeClTHy7wvZWQNPmPsCrLadKTCCrNl_FbWX6nQ",
+          "mode": "list",
+          "cachedResultName": "upwork automation",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1mERLGgeClTHy7wvZWQNPmPsCrLadKTCCrNl_FbWX6nQ/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1mERLGgeClTHy7wvZWQNPmPsCrLadKTCCrNl_FbWX6nQ/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "row_number": 2,
+            "refresh token": "={{ $json.refresh_token }}",
+            "date": "={{ $json.expires_in }}"
+          },
+          "matchingColumns": [
+            "row_number"
+          ],
+          "schema": [
+            {
+              "id": "refresh token",
+              "displayName": "refresh token",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "date",
+              "displayName": "date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        -416,
+        848
+      ],
+      "id": "b57ff7ab-7ca9-40bd-8653-166ea2f58267",
+      "name": "Update row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "kpPEOLCGn963qpoh",
+          "name": "automations@techdome.ai"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -864,
+        848
+      ],
+      "id": "3e3669eb-ad96-4b36-9e8b-39e8c7b4eaee",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "operation": "pdf",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        1040,
+        1024
+      ],
+      "id": "3f9d4be1-7917-47c6-8076-b47eeac8a7ec",
+      "name": "Extract from File1"
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "returnAll": true,
+        "filter": {
+          "folderId": {
+            "__rl": true,
+            "value": "1xwIvbVU2rN_tpBHMAiqXk-BzxZZk0MQI",
+            "mode": "list",
+            "cachedResultName": "upworks pdfs",
+            "cachedResultUrl": "https://drive.google.com/drive/folders/1xwIvbVU2rN_tpBHMAiqXk-BzxZZk0MQI"
+          }
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1056,
+        384
+      ],
+      "id": "e88ad781-f0a4-4e9c-9857-cc7c8b2e059e",
+      "name": "List CV1",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "E7nEqUL27GUx1xHa",
+          "name": "Techdome Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{ $json.isNotEmpty() }}",
+              "operation": "larger"
+            }
+          ]
+        }
+      },
+      "id": "70bf2192-1512-4a79-a715-5d000d8e7e91",
+      "name": "CV Exist1",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1040,
+        592
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.id }} ",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "id": "7eb11b4b-c432-4a4b-b791-30534b0b60f0",
+      "name": "Download CV PDF1",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 2,
+      "position": [
+        1056,
+        784
+      ],
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "E7nEqUL27GUx1xHa",
+          "name": "Techdome Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// n8n Function Node - Merge all `text` fields into a single array\nconst inputItems = $input.all();\nlet allTexts = [];\n\nfor (const item of inputItems) {\n  if (item.json && typeof item.json.text === 'string') {\n    allTexts.push(item.json.text);\n  }\n}\n\nreturn [\n  {\n    json: {\n      texts: allTexts\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1264,
+        1024
+      ],
+      "id": "4ff68830-c457-49ef-8a5c-fdeb2066f152",
+      "name": "Flatten Results3"
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "returnAll": true,
+        "filter": {
+          "folderId": {
+            "__rl": true,
+            "value": "1MGFjKRu3_NHVA3KnMeWTJrOzOu6Slm1D",
+            "mode": "list",
+            "cachedResultName": "Upwork attached cv",
+            "cachedResultUrl": "https://drive.google.com/drive/folders/1MGFjKRu3_NHVA3KnMeWTJrOzOu6Slm1D"
+          }
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -288,
+        -304
+      ],
+      "id": "fc8bd915-2a8e-4e45-8a84-3d31fc72cfdc",
+      "name": "List  Case Study2",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "E7nEqUL27GUx1xHa",
+          "name": "Techdome Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{ $json.isNotEmpty() }}",
+              "operation": "larger"
+            }
+          ]
+        }
+      },
+      "id": "8a1811ca-74d8-4cb1-bffa-c9aee01ca372",
+      "name": "Case Study Exist2",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        -96,
+        -304
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.id }} ",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "id": "63b0506c-75a0-45bc-9890-55eab5b85dde",
+      "name": "Download Case Study2",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 2,
+      "position": [
+        128,
+        -304
+      ],
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "E7nEqUL27GUx1xHa",
+          "name": "Techdome Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.mistral.ai/v1/files",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "purpose",
+              "value": "ocr"
+            },
+            {
+              "parameterType": "formBinaryData",
+              "name": "=file",
+              "inputDataFieldName": "=data"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        336,
+        -304
+      ],
+      "id": "8a15f9e2-be43-4f3e-b947-cf6c3f6f362c",
+      "name": "Upload to mistral ai1",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "047ISRvu3ma9yfxk",
+          "name": "saurabh 1"
+        },
+        "httpBearerAuth": {
+          "id": "cR1TcHqDvuy7Oexw",
+          "name": "Bearer Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "=https://api.mistral.ai/v1/files/{{ $json.id }}/url ",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "expiry",
+              "value": "24"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        512,
+        -304
+      ],
+      "id": "9865d9e1-fad4-413b-b858-6b131e0fccf7",
+      "name": "Get Signed URL1",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "047ISRvu3ma9yfxk",
+          "name": "saurabh 1"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.mistral.ai/v1/ocr",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"mistral-ocr-latest\",\n  \"document\": {\n    \"type\": \"document_url\",\n    \"document_url\": \"{{ $json.url }}\"\n  },\n  \"include_image_base64\": false\n} ",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "json"
+            }
           }
         }
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -2304,
-        1568
+        672,
+        -304
       ],
-      "id": "8ed8ee44-6f2d-4d82-9e8f-da9450855d43",
-      "name": "GNews API"
+      "id": "991bb122-1c27-4513-996b-602dc33c8c45",
+      "name": "Get Ocr Result1",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "047ISRvu3ma9yfxk",
+          "name": "saurabh 1"
+        }
+      }
     },
     {
       "parameters": {
-        "jsCode": "// Process GNews response and prepare for scraping\nconst articles = $input.first().json.articles;\n\nif (!articles || !Array.isArray(articles)) {\n    throw new Error('No articles found in response');\n}\n\n// Create array of URLs to scrape\nconst urlsToScrape = articles.map((article, index) => ({\n    json: {\n        id: index + 1,\n        originalTitle: article.title,\n        url: article.url,\n        source: article.source?.name,\n        gnewsContent: article.content // Keep the truncated content as fallback\n    }\n}));\n\nreturn urlsToScrape;"
+        "jsCode": "// n8n Function node\n// Input items: each has { pages: [{ markdown?: string, text?: string }, ...] }\n// Output: ONE item -> { texts: [ \"<pdf1 markdown>\", \"<pdf2 markdown>\", ... ] }\n\n// optional: strip inline image markdown like ![alt](img-x.jpeg)\nconst stripImages = s => (s || '').replace(/!\\[[^\\]]*]\\([^)]*\\)/g, '');\n\nconst inputItems = $input.all();\nconst texts = [];\n\nfor (const item of inputItems) {\n  const pages = Array.isArray(item.json?.pages) ? item.json.pages : [];\n  let combined = '';\n\n  for (const p of pages) {\n    // prefer markdown, fallback to text\n    combined += (p?.markdown ?? p?.text ?? '') + '\\n\\n';\n  }\n\n  const cleaned = stripImages(combined).trim();\n  if (cleaned) texts.push(cleaned);\n}\n\n// Return ONE item with the same shape you used earlier\nreturn [\n  {\n    json: {\n      texts\n    }\n  }\n];\n"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -2112,
-        1792
+        848,
+        -304
       ],
-      "id": "8b573753-1b22-4785-9cc4-d20cfac8b379",
-      "name": "Code1"
+      "id": "764ad5ec-707c-4500-bd34-d03b6b8af8d5",
+      "name": "flatten study1"
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "returnAll": true,
+        "filter": {
+          "folderId": {
+            "__rl": true,
+            "value": "1MGFjKRu3_NHVA3KnMeWTJrOzOu6Slm1D",
+            "mode": "list",
+            "cachedResultName": "Upwork attached cv",
+            "cachedResultUrl": "https://drive.google.com/drive/folders/1MGFjKRu3_NHVA3KnMeWTJrOzOu6Slm1D"
+          }
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1072,
+        -304
+      ],
+      "id": "19fd2163-3adc-47f5-9a5e-bb99d904a250",
+      "name": "List  Case Study3",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "E7nEqUL27GUx1xHa",
+          "name": "Techdome Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{ $json.isNotEmpty() }}",
+              "operation": "larger"
+            }
+          ]
+        }
+      },
+      "id": "8679b0ae-5fac-45e2-bc51-80115c942f2c",
+      "name": "Case Study Exist3",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1264,
+        -304
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.id }} ",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "id": "2a36de97-3b30-45b6-9514-b6b3bb3995c4",
+      "name": "Download Case Study3",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 2,
+      "position": [
+        1056,
+        -64
+      ],
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "E7nEqUL27GUx1xHa",
+          "name": "Techdome Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Collect all incoming items\nconst items = $input.all();\n\n// Build {id,name} list (with tolerant fallbacks)\nconst caseStudies = items.map((it, idx) => {\n  const j = it.json || {};\n  const id   = j.id ?? j.fileId ?? j.file_id ?? j.gdriveId ?? null;\n  const name = j.name ?? j.fileName ?? j.title ?? `document_${idx + 1}.pdf`;\n  return { id, name };\n}).filter(cs => cs.id && cs.name);\n\n// Pre-format variants for prompts\nconst caseStudiesStr = JSON.stringify(caseStudies);                 // JSON string\nconst caseStudiesLines = caseStudies.map((cs,i)=>`${i+1}. ${cs.name} — ${cs.id}`).join(\"\\n\");\n\nreturn [{\n  json: {\n    caseStudies,\n    caseStudiesStr,     // use in text fields: {{ $json.caseStudiesStr }}\n    caseStudiesLines    // or this: {{ $json.caseStudiesLines }}\n  }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1040,
+        176
+      ],
+      "id": "16075ca2-df48-42ca-b57e-5df0d4a9b54c",
+      "name": "format case study1"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.upwork.com/graphql",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $json.access_token }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "X-Upwork-API-TenantId",
+              "value": "1546843978739367937"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"query\": \"query GetJobPostingDetails($ids: [ID!]!) { marketplaceJobPostingsContents(ids: $ids) { id title description publishedDateTime ciphertext } }\",\n  \"variables\": {\n    \"ids\": [\n      \"{{ $('Edit Fields').item.json.query.jobId }}\"\n    ]\n  }\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -752,
+        -304
+      ],
+      "id": "11ac7515-c8eb-4186-8119-b36140088390",
+      "name": "Particular job details"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "50b5b9bf-c2ed-4bbc-9ee2-35fe00bf5be0",
+              "name": "query",
+              "value": "={{ $json.query }}",
+              "type": "object"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1392,
+        -304
+      ],
+      "id": "2b051409-416d-4daf-bef2-a2460b8a3946",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "jsCode": "// n8n Function Node - Simple Professional Proposal Generator (Upwork Ready)\n// Input: JSON with \"output\" field containing the proposal text\n\nconst input = $input.all()[0]; // Get first input item\nif (!input || !input.json || !input.json.output) {\n  throw new Error(\"Input must contain 'output' field with proposal text\");\n}\n\nfunction generateSimpleHTML(text) {\n  // Parse the text into structured sections\n  const sections = parseProposalText(text);\n  \n  return `\n<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>Professional Proposal</title>\n</head>\n<body style=\"font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 800px; margin: 0 auto; padding: 20px; background-color: #ffffff;\">\n    ${generateSimpleContent(sections)}\n</body>\n</html>`;\n}\n\nfunction parseProposalText(text) {\n  const lines = text.split('\\n').map(line => line.trim()).filter(line => line.length > 0);\n  const sections = [];\n  let currentSection = null;\n  \n  for (let line of lines) {\n    // Remove markdown bold formatting but keep content\n    line = line.replace(/\\*\\*(.*?)\\*\\*/g, '$1');\n    \n    // Check if it's a header line (starts with Hello, Hi, or contains name)\n    if (/^(Hello!|Hi!|Hey!)/i.test(line)) {\n      currentSection = {\n        type: 'header',\n        title: line,\n        content: []\n      };\n      sections.push(currentSection);\n    }\n    // Check if it's a section title\n    else if (/^(Why Work with Me|What I Offer|Core Competencies|Tools & Technologies|My Approach|Featured Projects|Let's.*Together)/i.test(line)) {\n      currentSection = {\n        type: 'section',\n        title: line.replace(/\\*\\*/g, '').replace(/\\?$/, '?'),\n        content: []\n      };\n      sections.push(currentSection);\n    }\n    // Check if it's a bullet point\n    else if (/^[-*•]\\s/.test(line) || /^\\*\\*\\w+.*:\\*\\*/.test(line)) {\n      if (currentSection) {\n        let bulletText = line.replace(/^[-*•]\\s*/, '').replace(/\\*\\*(.*?):\\*\\*/g, '<strong>$1:</strong>');\n        \n        // Split title and description if there's a colon\n        const colonIndex = bulletText.indexOf(':');\n        if (colonIndex > 0 && colonIndex < 60) {\n          const title = bulletText.substring(0, colonIndex + 1);\n          const description = bulletText.substring(colonIndex + 1).trim();\n          currentSection.content.push({\n            type: 'bullet',\n            title: title,\n            description: description\n          });\n        } else {\n          currentSection.content.push({\n            type: 'bullet',\n            title: bulletText,\n            description: ''\n          });\n        }\n      }\n    }\n    // Regular text content\n    else if (line.length > 0) {\n      if (currentSection) {\n        currentSection.content.push({\n          type: 'text',\n          content: line\n        });\n      } else {\n        // Create intro section for orphaned text\n        currentSection = {\n          type: 'intro',\n          content: [{\n            type: 'text',\n            content: line\n          }]\n        };\n        sections.push(currentSection);\n      }\n    }\n  }\n  \n  return sections;\n}\n\nfunction generateSimpleContent(sections) {\n  let html = '';\n  \n  for (let section of sections) {\n    if (section.type === 'header') {\n      // Header section\n      html += `<h1 style=\"font-size: 24px; font-weight: bold; color: #2c3e50; margin-bottom: 20px; border-bottom: none;\">${section.title}</h1>\\n`;\n      section.content.forEach(item => {\n        if (item.type === 'text') {\n          html += `<p style=\"font-size: 16px; line-height: 1.6; margin-bottom: 20px; color: #4a5568;\">${item.content}</p>\\n`;\n        }\n      });\n    } else if (section.type === 'intro') {\n      // Intro text\n      section.content.forEach(item => {\n        if (item.type === 'text') {\n          html += `<p style=\"font-size: 16px; line-height: 1.6; margin-bottom: 20px; color: #4a5568;\">${item.content}</p>\\n`;\n        }\n      });\n    } else if (section.type === 'section') {\n      const isCTASection = /Let's.*Together/i.test(section.title);\n      \n      if (isCTASection) {\n        // CTA Section\n        html += `<h2 style=\"font-size: 20px; font-weight: bold; color: #2c3e50; margin: 30px 0 15px 0;\">${section.title}</h2>\\n`;\n        section.content.forEach(item => {\n          if (item.type === 'text') {\n            html += `<p style=\"font-size: 16px; line-height: 1.6; margin-bottom: 20px; color: #4a5568;\">${item.content}</p>\\n`;\n          }\n        });\n      } else {\n        // Regular Section\n        html += `<h2 style=\"font-size: 20px; font-weight: bold; color: #2c3e50; margin: 30px 0 15px 0;\">${section.title}</h2>\\n`;\n        \n        // Add any text content\n        section.content.forEach(item => {\n          if (item.type === 'text') {\n            html += `<p style=\"font-size: 16px; line-height: 1.6; margin-bottom: 15px; color: #4a5568;\">${item.content}</p>\\n`;\n          }\n        });\n        \n        // Add bullet points\n        const bullets = section.content.filter(item => item.type === 'bullet');\n        if (bullets.length > 0) {\n          html += `<ul style=\"margin: 15px 0; padding-left: 20px;\">\\n`;\n          bullets.forEach(bullet => {\n            html += `<li style=\"margin-bottom: 12px; font-size: 16px; line-height: 1.6;\">`;\n            if (bullet.title.includes('<strong>') || bullet.title.includes(':')) {\n              // Format as bold title with description\n              const cleanTitle = bullet.title.replace(/<\\/?strong>/g, '').replace(':', '');\n              html += `<strong>${cleanTitle}:</strong>`;\n              if (bullet.description) {\n                html += ` ${bullet.description}`;\n              }\n            } else {\n              // Regular bullet point\n              html += bullet.title;\n              if (bullet.description) {\n                html += ` ${bullet.description}`;\n              }\n            }\n            html += `</li>\\n`;\n          });\n          html += `</ul>\\n`;\n        }\n      } \n    }\n  }\n  \n  return html;\n}\n\n// Main execution\nconst emailHTML = generateSimpleHTML(input.json.output);\n\nreturn [{\n  json: {\n    htmlContent: emailHTML,\n    originalText: input.json.output,\n    contentType: \"text/html\"\n  }\n}];"
+      },
+      "id": "bd8b981b-312c-4c26-92c0-3cda709b949e",
+      "name": "Format Output1",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [
+        2160,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "subject": "=Proposal",
+        "includeHtml": true,
+        "htmlMessage": "={{ $('Format Output1').item.json.htmlContent }}",
+        "message": "Proposal",
+        "toList": [
+          "newscctv22@gmail.com",
+          "anmolkushwah19@gmail.com "
+        ],
+        "additionalFields": {
+          "attachmentsUi": {
+            "attachmentsBinary": [
+              {
+                "property": "=data"
+              }
+            ]
+          },
+          "ccList": []
+        }
+      },
+      "id": "b966847a-d822-4fc8-a5d2-87bba0f166c7",
+      "name": "Send Proposals1",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 1,
+      "position": [
+        3280,
+        384
+      ],
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "gEIaWCTvGfYjMSb3",
+          "name": "Gmail credentials"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "gpt-4o-mini",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatAzureOpenAi",
+      "typeVersion": 1,
+      "position": [
+        1440,
+        1232
+      ],
+      "id": "d616d881-a3b3-4770-94a3-3d7fc3adf35b",
+      "name": "Azure OpenAI Chat Model5",
+      "credentials": {
+        "azureOpenAiApi": {
+          "id": "C3WzT18XqF8OdVM6",
+          "name": "Azure Open AI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "gpt-4o-mini",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatAzureOpenAi",
+      "typeVersion": 1,
+      "position": [
+        2384,
+        656
+      ],
+      "id": "bf3d4bab-e2e9-40be-9e17-2dd88a7e0eb5",
+      "name": "Azure OpenAI Chat Model6",
+      "credentials": {
+        "azureOpenAiApi": {
+          "id": "C3WzT18XqF8OdVM6",
+          "name": "Azure Open AI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Job ID: {{ $('Edit Fields1').first().json.query.id }}\nJob Title: {{ $('Edit Fields1').first().json.query.title }}\nJob Description: {{ $('Edit Fields1').first().json.query.description }}\n\nCandidate CVs: {{ $json.texts }}\n",
+        "options": {
+          "systemMessage": "=You are an AI CV-Matching Assistant.\n\nTask:\n1. Read the Job ID, Job Title, and Job Description provided in the user message.  \n2. Extract key requirements such as skills, technologies, experience level, industry domain, and responsibilities.  \n3. Compare these requirements against the Candidate CVs provided.  \n\nInstructions:\n- Identify the single CV that best matches the job description.  \n- Consider skills, experience, domain relevance, and role suitability.  \n- Do not explain or rank multiple CVs. Select only one.  \n\nOutput strictly in the following format:\n\nBest_CV_Name: <Name of the best matching candidate>  \nMatched_Job: <Exact Job Description text from the user message>  \n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.1,
+      "position": [
+        1520,
+        1024
+      ],
+      "id": "cbd9568e-5c7b-4ed4-9491-7d2bd1bee171",
+      "name": "AI Agent finding best Job1"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Candidate Name:\n{{ $json.output.match(/Best_CV_Name:\\s*([^\\n]+)/)?.[1] }}\n\nJob Context:\n{{ $json.output }}\n\nCandidate Experience (CV Extract):\n{{ $('Flatten Results3').item.json.texts }}\n\n════════════════════════════\nTASK\n════════════════════════════\nWrite a senior-level proposal that feels like it was written by an experienced specialist who understands execution risk, buyer intent, and long-term outcomes.\n\nThis is NOT a resume.\nThis is NOT a generic proposal.\nThis is NOT an agency pitch.\n\n════════════════════════════\nWRITING STYLE\n════════════════════════════\n- Short paragraphs (1–3 lines)\n- Human, direct, confident\n- Consultant-style thinking\n- No formal section headers\n- No repetition of CV structure\n\n════════════════════════════\nSTRUCTURE (FOLLOW THIS FLOW)\n════════════════════════════\n\n1. Greeting  \nUse:\n\"Hello [Client Name],\"\nIf name is unavailable:\n\"Hello,\"\n\n2. Opening Alignment  \n- Mirror what the client is trying to achieve\n- Show understanding of the real problem beneath the task\n\n3. Credibility Framing  \n- Introduce yourself naturally (name + role + specialization)\n- Tie experience directly to this type of work\n\n4. Problem Understanding  \n- Explain the business or operational risk clearly\n- Focus on clarity, not features\n\n5. Execution Approach (bullets)  \nUse bullets like:\n• Architecture before execution  \n• Predictability over experimentation  \n• Clear ownership and boundaries  \n• Systems designed to scale cleanly  \n\nAdapt bullets based on CV relevance.\n\n6. Process (tight bullets only)\n• Requirements distillation  \n• System/workflow design  \n• Controlled execution  \n• Validation and refinement  \n\n7. Deliverables & Outcomes  \n- What the client will receive\n- Why it reduces risk or rework\n- Mention readiness for future phases if relevant\n\n8. Clarifying Questions  \nAsk 2–3 sharp questions tied to the job.\n\n9. Close  \nEnd exactly with:\n\"Happy to discuss this further if it aligns with what you’re looking for.\"\n",
+        "options": {
+          "systemMessage": "=You are a senior independent specialist who writes high-conviction, execution-focused proposals for Upwork-style engagements.\n\nYou do NOT write resumes.\nYou do NOT write profile summaries.\nYou do NOT use sectioned resume formats.\n\nYour writing is calm, confident, and senior.\nYou write like an experienced operator, not a marketer or agency.\n\nHard rules:\n- Write strictly in first person (“I”)\n- No emojis\n- No buzzwords or hype\n- No agency language\n- No invented skills\n- Never restate the CV verbatim\n- No headings like PROFILE, CORE COMPETENCIES, TOOLS, etc.\n\nYour goal is to build trust through clarity, judgment, and execution logic.\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.1,
+      "position": [
+        1840,
+        688
+      ],
+      "id": "f14f74a6-2a21-4c13-b99b-4f4beb3de67e",
+      "name": "AI Agent proposal writer1"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Proposal Context (plain text):\n{{ $('AI Agent proposal writer1').item.json.output }}\n\nAvailable Case Studies (JSON):\n{{ $('format case study1').first().json.caseStudiesStr }}\n\nTask:\n1. Infer the PRIMARY professional discipline required by the proposal.\n   (Examples: UI/UX Design, Product Design, Product Management, Backend Engineering, Automation, CRM, Marketing, etc.)\n\n2. From the available case studies, select the ONE case study that:\n   - Matches the inferred discipline\n   - Demonstrates execution, not just strategy\n   - Is most relevant to the proposal’s core problem\n\nSTRICT RULES:\n- The case study discipline MUST match the inferred discipline\n- Do NOT select case studies from a different discipline\n- Prefer hands-on execution over planning or strategy\n- Use only the provided case study list\n\nReturn ONLY valid JSON in this exact format:\n{\n  \"inferredDiscipline\": \"string\",\n  \"fileId\": \"string\",\n  \"fileName\": \"string\",\n  \"reason\": \"string\"\n}\n",
+        "options": {
+          "systemMessage": "=You are a strict decision-making AI.\n\nYour job is to:\n1. Infer the dominant professional discipline from the proposal\n2. Select the most relevant case study that matches that discipline\n\nHARD CONSTRAINTS:\n- Discipline mismatch = automatic rejection\n- Design ≠ Product Management\n- Engineering ≠ Strategy\n- Marketing ≠ Operations\n- You MUST choose based on execution relevance, not keyword overlap\n- You MUST return valid JSON only\n- No explanations outside the JSON\n\nIf multiple case studies partially match, choose the one with the clearest execution alignment.\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.1,
+      "position": [
+        2384,
+        400
+      ],
+      "id": "b62b7bc1-c8dd-4dbe-a016-147e2629f76c",
+      "name": "AI Agent Best Case Study1"
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\n\nreturn items.map((item, index) => {\n  let parsed = {};\n  \n  if (typeof item.json.output === 'string') {\n    try {\n      parsed = JSON.parse(item.json.output);\n    } catch (err) {\n      const m = item.json.output.match(/\\{[\\s\\S]*\\}/);\n      if (m) parsed = JSON.parse(m[0]);\n    }\n  }\n\n  return {\n    json: {\n      id: index + 1,\n      name: parsed.fileName ?? item.json.name ?? `Item ${index + 1}`,\n      description: parsed.reason ?? item.json.description ?? \"N/A\",\n      fileId: parsed.fileId ?? null,\n      fileName: parsed.fileName ?? null,\n      reason: parsed.reason ?? null,\n      myNewField: 1\n    }\n  };\n});\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2800,
+        400
+      ],
+      "id": "14aaa3d9-e041-4857-8fa5-a92cd1889004",
+      "name": "formal case studies1"
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.fileId }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "id": "a4c433ef-c53b-4a3f-80f3-ec1c123dad3a",
+      "name": "Download Best Case Study1",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 2,
+      "position": [
+        3040,
+        384
+      ],
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "E7nEqUL27GUx1xHa",
+          "name": "Techdome Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "gpt-4o-mini",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatAzureOpenAi",
+      "typeVersion": 1,
+      "position": [
+        1904,
+        896
+      ],
+      "id": "c93da072-5579-484f-8ac8-c8bdee3c38cf",
+      "name": "Azure OpenAI Chat Model7",
+      "credentials": {
+        "azureOpenAiApi": {
+          "id": "C3WzT18XqF8OdVM6",
+          "name": "Azure Open AI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "subject": "={{ $json.output.Subject }}",
+        "includeHtml": true,
+        "htmlMessage": "={{ $json.output.Body }}",
+        "message": "Upwork Job ",
+        "toList": [
+          "snehygupta99@gmail.com  ",
+          "rahuljoshi0808@gmail.com "
+        ],
+        "additionalFields": {
+          "ccList": []
+        }
+      },
+      "id": "ed666828-65be-4e80-b5a0-50c28f526101",
+      "name": "Send Proposals",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 1,
+      "position": [
+        624,
+        240
+      ],
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "gEIaWCTvGfYjMSb3",
+          "name": "Gmail credentials"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "50b5b9bf-c2ed-4bbc-9ee2-35fe00bf5be0",
+              "name": "query",
+              "value": "={{ $json.data.marketplaceJobPostingsContents[0] }}",
+              "type": "object"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -512,
+        -304
+      ],
+      "id": "a0dc0756-60a7-4b87-be44-cf242c1be944",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1mERLGgeClTHy7wvZWQNPmPsCrLadKTCCrNl_FbWX6nQ",
+          "mode": "list",
+          "cachedResultName": "upwork automation",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1mERLGgeClTHy7wvZWQNPmPsCrLadKTCCrNl_FbWX6nQ/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1mERLGgeClTHy7wvZWQNPmPsCrLadKTCCrNl_FbWX6nQ/edit#gid=0"
+        },
+        "options": {
+          "returnFirstMatch": true
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        -1184,
+        -304
+      ],
+      "id": "63209b42-2ed4-438a-a53e-b87e4c091bd5",
+      "name": "GET Refresh Code1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "kpPEOLCGn963qpoh",
+          "name": "automations@techdome.ai"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        -1840,
+        896
+      ],
+      "id": "1f7595dc-25de-40ea-b144-3384e627d248",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "path": "aceept",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -1632,
+        -304
+      ],
+      "id": "5e2d6189-f1cd-408b-bdf2-e7553f6e0b67",
+      "name": "Webhook",
+      "webhookId": "de3fcc29-45a9-429b-a4e6-5d345a13682d"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1bl92PGX8Mnfi5p0MoGN9LiZ0Q1DF_iOBqrDdYFhIqmU",
+          "mode": "list",
+          "cachedResultName": "upwork data sheet ",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1bl92PGX8Mnfi5p0MoGN9LiZ0Q1DF_iOBqrDdYFhIqmU/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1bl92PGX8Mnfi5p0MoGN9LiZ0Q1DF_iOBqrDdYFhIqmU/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "day",
+              "lookupValue": "={{$now.weekdayLong}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -1408,
+        224
+      ],
+      "id": "151610fa-e400-4749-8eaa-914aa57bbebe",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "kpPEOLCGn963qpoh",
+          "name": "automations@techdome.ai"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        -1120,
+        224
+      ],
+      "id": "48c740eb-ccdc-413b-b464-cdb37f58110b",
+      "name": "Loop Over Items"
     }
   ],
   "connections": {
-    "Prepare Approval Payload": {
+    "Schedule Trigger1": {
       "main": [
         [
           {
-            "node": "Send Approval Request",
+            "node": "Get row(s) in sheet",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Wait For Approval": {
+    "GET Refresh Code": {
       "main": [
         [
           {
-            "node": "Merge Responses",
+            "node": "Access Token",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Approved?": {
+    "Access Token": {
       "main": [
         [
           {
-            "node": "Download Post Image Again",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "Exit the Workflow?",
+            "node": "Job Listings",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Send Approval Request": {
+    "Job Listings": {
       "main": [
         [
           {
-            "node": "Wait For Approval",
+            "node": "Process Jobs with Accept URLs",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Prepare Rejection Payload": {
+    "Process Jobs with Accept URLs": {
       "main": [
         [
           {
-            "node": "Send Post Rejected Message",
+            "node": "Prepare Email Data",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Create Linkedin Post": {
+    "Prepare Email Data": {
       "main": [
         [
           {
-            "node": "Send Post Created Message",
+            "node": "Create Interactive Email",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Remove EM Dashes": {
+    "Create Interactive Email": {
       "main": [
         [
           {
-            "node": "Download Post Image",
+            "node": "Send Proposals",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Generate Post Content": {
-      "main": [
+    "Azure OpenAI Chat Model": {
+      "ai_languageModel": [
         [
           {
-            "node": "Remove EM Dashes",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "Merge Responses",
-            "type": "main",
-            "index": 1
-          }
-        ]
-      ]
-    },
-    "Add Writing Examples": {
-      "main": [
-        [
-          {
-            "node": "Generate Post Content",
-            "type": "main",
+            "node": "Create Interactive Email",
+            "type": "ai_languageModel",
             "index": 0
           }
         ]
       ]
     },
-    "Fetch a Random Article": {
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Create Interactive Email",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Access Token for Proposal": {
       "main": [
         [
           {
-            "node": "Proceed with the Article?",
+            "node": "Particular job details",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Exit the Workflow?": {
+    "Refresh Token": {
       "main": [
         [
           {
-            "node": "Prepare Rejection Payload",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "Suggest New Post",
+            "node": "Update row in sheet",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Send Post Image": {
+    "When clicking ‘Execute workflow’": {
       "main": [
         [
           {
-            "node": "Prepare Approval Payload",
+            "node": "Refresh Token",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Suggest New Post": {
+    "Extract from File1": {
       "main": [
         [
           {
-            "node": "Ask for new tag",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "Generate Post Image",
+            "node": "Flatten Results3",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Generate Post Image": {
+    "List CV1": {
       "main": [
         [
           {
-            "node": "Send Post Image1",
+            "node": "CV Exist1",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Merge Code": {
+    "CV Exist1": {
       "main": [
         [
           {
-            "node": "Approved?",
+            "node": "Download CV PDF1",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Send Approval Request1": {
+    "Download CV PDF1": {
       "main": [
         [
           {
-            "node": "Wait For Approval1",
+            "node": "Extract from File1",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Send Post Image1": {
+    "List  Case Study2": {
       "main": [
         [
           {
-            "node": "Send Approval Request1",
+            "node": "Case Study Exist2",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Wait For Approval1": {
+    "Case Study Exist2": {
       "main": [
         [
           {
-            "node": "Approved?1",
+            "node": "Download Case Study2",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Approved?1": {
+    "Download Case Study2": {
       "main": [
         [
           {
-            "node": "Extract Generated Image",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "Send Exit Flow Message",
+            "node": "Upload to mistral ai1",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Message Received": {
+    "Upload to mistral ai1": {
       "main": [
         [
           {
-            "node": "GNews API",
+            "node": "Get Signed URL1",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "News Exist?": {
+    "Get Signed URL1": {
       "main": [
         [
           {
-            "node": "Fetch a Random Article",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "No Post Found",
+            "node": "Get Ocr Result1",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Download Post Image Again": {
+    "Get Ocr Result1": {
       "main": [
         [
           {
-            "node": "Create Linkedin Post",
+            "node": "flatten study1",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Download Post Image": {
+    "flatten study1": {
       "main": [
         [
           {
-            "node": "Send Post Image",
+            "node": "List  Case Study3",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Merge Responses": {
+    "List  Case Study3": {
       "main": [
         [
           {
-            "node": "Merge Code",
+            "node": "Case Study Exist3",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Create Linkedin Post Again": {
+    "Case Study Exist3": {
       "main": [
         [
           {
-            "node": "Send Post Created Message Again",
+            "node": "Download Case Study3",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Extract Generated Image": {
+    "Download Case Study3": {
       "main": [
         [
           {
-            "node": "Create Linkedin Post Again",
+            "node": "format case study1",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Wait For Approval2": {
+    "format case study1": {
       "main": [
         [
           {
-            "node": "Switch",
+            "node": "List CV1",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Switch": {
+    "Flatten Results3": {
       "main": [
         [
           {
-            "node": "Add Writing Examples",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "Send Exit Flow Message",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "Fetch a Random Article",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "Ask for new tag",
+            "node": "AI Agent finding best Job1",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Proceed with the Article?": {
+    "Edit Fields": {
       "main": [
         [
           {
-            "node": "Wait For Approval2",
+            "node": "GET Refresh Code1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Output1": {
+      "main": [
+        [
+          {
+            "node": "AI Agent Best Case Study1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Azure OpenAI Chat Model5": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent finding best Job1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Azure OpenAI Chat Model6": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent Best Case Study1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent finding best Job1": {
+      "main": [
+        [
+          {
+            "node": "AI Agent proposal writer1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent proposal writer1": {
+      "main": [
+        [
+          {
+            "node": "Format Output1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent Best Case Study1": {
+      "main": [
+        [
+          {
+            "node": "formal case studies1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "formal case studies1": {
+      "main": [
+        [
+          {
+            "node": "Download Best Case Study1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download Best Case Study1": {
+      "main": [
+        [
+          {
+            "node": "Send Proposals1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Azure OpenAI Chat Model7": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent proposal writer1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Particular job details": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "List  Case Study2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GET Refresh Code1": {
+      "main": [
+        [
+          {
+            "node": "Get Access Token for Proposal",
             "type": "main",
             "index": 0
           }
@@ -1575,34 +1651,41 @@
       "main": [
         [
           {
-            "node": "HTTP Request",
+            "node": "Edit Fields",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "HTTP Request": {
-      "main": [
-        []
-      ]
-    },
-    "HTML Extract1": {
+    "Get row(s) in sheet": {
       "main": [
         [
           {
-            "node": "Code",
+            "node": "Loop Over Items",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "GNews API": {
+    "Loop Over Items": {
+      "main": [
+        [],
+        [
+          {
+            "node": "GET Refresh Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Proposals": {
       "main": [
         [
           {
-            "node": "Code1",
+            "node": "Loop Over Items",
             "type": "main",
             "index": 0
           }
@@ -1613,23 +1696,1725 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "staticData": null,
+  "staticData": {
+    "node:Schedule Trigger1": {
+      "recurrenceRules": [
+        20
+      ]
+    }
+  },
   "meta": {
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "bcf40584-b194-42a6-a178-5ef720015e52",
-  "activeVersionId": null,
-  "triggerCount": 1,
+  "versionId": "aa7d7767-c611-41ca-a0e3-47e533ecaf24",
+  "activeVersionId": "bf6183ef-4f7b-4f21-bf3b-9b78b9906518",
+  "triggerCount": 2,
   "shared": [
     {
-      "updatedAt": "2025-08-24T09:05:41.844Z",
-      "createdAt": "2025-08-24T09:05:41.844Z",
+      "updatedAt": "2025-08-20T12:29:06.943Z",
+      "createdAt": "2025-08-20T12:29:06.943Z",
       "role": "workflow:owner",
-      "workflowId": "5hNTYI4UuXABlp7o",
-      "projectId": "aALJdd9xxB2njp4k"
+      "workflowId": "bY9HGgxOJvIhlfQ1",
+      "projectId": "iXigq15mRQoAAIrt"
     }
   ],
-  "activeVersion": null,
+  "activeVersion": {
+    "updatedAt": "2025-12-22T13:35:27.708Z",
+    "createdAt": "2025-12-22T13:35:27.708Z",
+    "versionId": "bf6183ef-4f7b-4f21-bf3b-9b78b9906518",
+    "workflowId": "bY9HGgxOJvIhlfQ1",
+    "nodes": [
+      {
+        "parameters": {
+          "rule": {
+            "interval": [
+              {
+                "field": "cronExpression",
+                "expression": " 0 0 10,15,20 * * *"
+              }
+            ]
+          }
+        },
+        "type": "n8n-nodes-base.scheduleTrigger",
+        "typeVersion": 1.2,
+        "position": [
+          -1664,
+          224
+        ],
+        "id": "b58d0685-413a-4b48-8a90-748b2233dfdb",
+        "name": "Schedule Trigger1"
+      },
+      {
+        "parameters": {
+          "documentId": {
+            "__rl": true,
+            "value": "1mERLGgeClTHy7wvZWQNPmPsCrLadKTCCrNl_FbWX6nQ",
+            "mode": "list",
+            "cachedResultName": "upwork automation",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1mERLGgeClTHy7wvZWQNPmPsCrLadKTCCrNl_FbWX6nQ/edit?usp=drivesdk"
+          },
+          "sheetName": {
+            "__rl": true,
+            "value": "gid=0",
+            "mode": "list",
+            "cachedResultName": "Sheet1",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1mERLGgeClTHy7wvZWQNPmPsCrLadKTCCrNl_FbWX6nQ/edit#gid=0"
+          },
+          "options": {
+            "returnFirstMatch": true
+          }
+        },
+        "type": "n8n-nodes-base.googleSheets",
+        "typeVersion": 4.6,
+        "position": [
+          -864,
+          240
+        ],
+        "id": "e59341a6-c355-4b9b-83bc-7c90c31a4e78",
+        "name": "GET Refresh Code",
+        "credentials": {
+          "googleSheetsOAuth2Api": {
+            "id": "kpPEOLCGn963qpoh",
+            "name": "automations@techdome.ai"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "method": "POST",
+          "url": "https://www.upwork.com/api/v3/oauth2/token",
+          "sendBody": true,
+          "contentType": "form-urlencoded",
+          "bodyParameters": {
+            "parameters": [
+              {
+                "name": "grant_type",
+                "value": "refresh_token"
+              },
+              {
+                "name": "client_id",
+                "value": "d52b9728a2f031bc81d360fee5d34b1f"
+              },
+              {
+                "name": "client_secret",
+                "value": "7c6ac8fea04f7189"
+              },
+              {
+                "name": "refresh_token",
+                "value": "={{ $json['refresh token'] }}"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "position": [
+          -656,
+          240
+        ],
+        "id": "79a3e243-d733-40b7-8115-acc1e9467f3a",
+        "name": "Access Token"
+      },
+      {
+        "parameters": {
+          "method": "POST",
+          "url": "https://api.upwork.com/graphql",
+          "sendHeaders": true,
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "Authorization",
+                "value": "=Bearer {{ $json.access_token }}"
+              },
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "name": "X-Upwork-API-TenantId",
+                "value": "1546843978739367937"
+              }
+            ]
+          },
+          "sendBody": true,
+          "specifyBody": "json",
+          "jsonBody": "={\n  \"query\": \"query marketplaceJobPostingsSearch($marketPlaceJobFilter: MarketplaceJobPostingsSearchFilter, $searchType: MarketplaceJobPostingSearchType, $sortAttributes: [MarketplaceJobPostingSearchSortAttribute]) { marketplaceJobPostingsSearch(marketPlaceJobFilter: $marketPlaceJobFilter, searchType: $searchType, sortAttributes: $sortAttributes) { totalCount edges { node { id title description createdDateTime publishedDateTime client { totalHires verificationStatus } } } pageInfo { endCursor hasNextPage } } }\",\n  \"variables\": {\n    \"marketPlaceJobFilter\": {\n      \"searchExpression_eq\": \"{{ $('Get row(s) in sheet').item.json['job filter'] }}\",\n      \"hourlyRate_eq\": { \"rangeStart\": 35, \"rangeEnd\": null },\n      \"budgetRange_eq\": { \"rangeStart\": 1000, \"rangeEnd\": null },\n      \"proposalRange_eq\": { \"rangeStart\": 0, \"rangeEnd\": 20 },\n      \"verifiedPaymentOnly_eq\": true,\n      \"clientHiresRange_eq\": { \"rangeStart\": 5, \"rangeEnd\": null }\n    },\n    \"searchType\": \"USER_JOBS_SEARCH\",\n    \"sortAttributes\": [\n      { \"field\": \"RECENCY\" }\n    ]\n  }\n}\n",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "position": [
+          -432,
+          240
+        ],
+        "id": "b8e6e164-96a1-4fc7-8571-07b8b3dabd6c",
+        "name": "Job Listings"
+      },
+      {
+        "parameters": {
+          "jsCode": "// Get all input items\nconst allItems = $input.all();\n\nlet output = [];\n\nallItems.forEach(item => {\n  const edges = item.json?.data?.marketplaceJobPostingsSearch?.edges;\n  if (edges && Array.isArray(edges)) {\n    edges.forEach((edge, index) => {\n      // Generate unique job identifier\n      const jobId = edge.node.id;\n      const uniqueId = `job_${jobId}_${Date.now()}_${index}`;\n      \n      output.push({\n        json: {\n          id: jobId,\n          title: edge.node.title,\n          description: edge.node.description,\n          upworkLink: `https://www.upwork.com/jobs/~02${jobId}`,\n          uniqueId: uniqueId,\n          acceptUrl: `https://n8n.tdwebsites.in/webhook/aceept?jobId=${jobId}&uniqueId=${uniqueId}`,\n          createdDateTime: edge.node.createdDateTime,\n          client: edge.node.client\n        }\n      });\n    });\n  }\n});\n\nreturn output;\n"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          -208,
+          240
+        ],
+        "id": "be49da71-cfa2-459b-a45b-0a9646320537",
+        "name": "Process Jobs with Accept URLs"
+      },
+      {
+        "parameters": {
+          "jsCode": "// Get all input items and create a single item with all jobs\nconst allItems = $input.all();\n\nlet allJobs = [];\n\nallItems.forEach(item => {\n  allJobs.push(item.json);\n});\n\n// Create webhook URL for n8n instance\nconst webhookBaseUrl = 'https://n8n.tdwebsites.in/webhook';\n\n// Return single item with all jobs\nreturn [{\n  json: {\n    jobs: allJobs,\n    webhookBaseUrl: webhookBaseUrl,\n    totalJobs: allJobs.length\n  }\n}];\n"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          -16,
+          240
+        ],
+        "id": "30a97865-4f96-4d3d-8199-30c39aad374f",
+        "name": "Prepare Email Data"
+      },
+      {
+        "parameters": {
+          "promptType": "define",
+          "text": "={{ $input }}",
+          "hasOutputParser": true,
+          "options": {
+            "systemMessage": "=You are tasked with generating a well-structured HTML email for job review with interactive accept buttons. Create an email that presents Upwork job postings with clickable accept buttons for each job.\n\nInput: You'll receive a single item containing:\n- jobs: Array of job objects with id, title, description, upworkLink, acceptUrl\n- webhookBaseUrl: Base URL for webhook calls\n- totalJobs: Number of jobs\n\nEmail Requirements:\n\n1. HTML Structure:\n   - Professional email layout with proper HTML structure\n   - Responsive design that works in email clients\n   - Clear header: \"Upwork Job Opportunities - [Current Date]\"\n\n2. For each job, include:\n   - Job number (1, 2, 3, etc.)\n   - Job title (bold and prominent)\n   - Job ID (clearly labeled)\n   - Concise 2-3 sentence summary of the job description\n   - Upwork link (\"View on Upwork\" button)\n   - Accept button (\"Accept for Proposal\" button in green)\n\n3. Accept Button Specifications:\n   - Green background color (#28a745)\n   - White text\n   - Clickable link that calls the acceptUrl\n   - Text: \"Accept for Proposal\"\n   - Should be prominent and clearly visible\n\n4. Styling:\n   - Use inline CSS for email compatibility\n   - Professional color scheme\n   - Clear separation between jobs\n   - Buttons should be styled as actual buttons, not just links\n\n5. Email Footer:\n   - Include note: \"Click 'Accept for Proposal' to automatically create a proposal for that job.\"\n   - Add timestamp and total job count\n\nOutput Format:\n- Subject: Plain text email subject\n- Body: Complete HTML email body with all jobs and interactive elements\n\nEnsure all accept buttons are functional and properly linked to their respective acceptUrl values."
+          }
+        },
+        "type": "@n8n/n8n-nodes-langchain.agent",
+        "typeVersion": 2.1,
+        "position": [
+          224,
+          240
+        ],
+        "id": "5e440724-83b1-4593-8c4b-83699341fdb4",
+        "name": "Create Interactive Email"
+      },
+      {
+        "parameters": {
+          "model": "gpt-4o",
+          "options": {}
+        },
+        "type": "@n8n/n8n-nodes-langchain.lmChatAzureOpenAi",
+        "typeVersion": 1,
+        "position": [
+          208,
+          432
+        ],
+        "id": "bd43eec5-1cd9-45f0-906b-bde29f2a9b61",
+        "name": "Azure OpenAI Chat Model",
+        "credentials": {
+          "azureOpenAiApi": {
+            "id": "C3WzT18XqF8OdVM6",
+            "name": "Azure Open AI account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "jsonSchemaExample": "{\n\t\"Subject\": \" \",\n\t\"Body\": \" \"\n}"
+        },
+        "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+        "typeVersion": 1.3,
+        "position": [
+          400,
+          432
+        ],
+        "id": "84636aa1-3894-4713-b213-3d9903a9827f",
+        "name": "Structured Output Parser"
+      },
+      {
+        "parameters": {
+          "method": "POST",
+          "url": "https://www.upwork.com/api/v3/oauth2/token",
+          "sendBody": true,
+          "contentType": "form-urlencoded",
+          "bodyParameters": {
+            "parameters": [
+              {
+                "name": "grant_type",
+                "value": "refresh_token"
+              },
+              {
+                "name": "client_id",
+                "value": "d52b9728a2f031bc81d360fee5d34b1f"
+              },
+              {
+                "name": "client_secret",
+                "value": "7c6ac8fea04f7189"
+              },
+              {
+                "name": "refresh_token",
+                "value": "={{ $json['refresh token'] }}"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "position": [
+          -976,
+          -304
+        ],
+        "id": "9a2d50dc-37d0-4f27-a883-c09a3054a422",
+        "name": "Get Access Token for Proposal"
+      },
+      {
+        "parameters": {
+          "method": "POST",
+          "url": "https://www.upwork.com/api/v3/oauth2/token",
+          "sendBody": true,
+          "contentType": "form-urlencoded",
+          "bodyParameters": {
+            "parameters": [
+              {
+                "name": "grant_type",
+                "value": "authorization_code"
+              },
+              {
+                "name": "client_id",
+                "value": "d52b9728a2f031bc81d360fee5d34b1f"
+              },
+              {
+                "name": "client_secret",
+                "value": "7c6ac8fea04f7189"
+              },
+              {
+                "name": "code",
+                "value": "3916109a76085af6da9181e1791b8185"
+              },
+              {
+                "name": "redirect_uri",
+                "value": "https://n8n.tdwebsites.in/rest/oauth2-credential/callback"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "position": [
+          -624,
+          848
+        ],
+        "id": "8a2e0e01-7e33-4722-83be-b90a03de41f2",
+        "name": "Refresh Token",
+        "notes": "https://www.upwork.com/ab/account-security/oauth2/authorize?client_id=d52b9728a2f031bc81d360fee5d34b1f&response_type=code&redirect_uri=https%3A%2F%2Fn8n.tdwebsites.in%2Frest%2Foauth2-credential%2Fcallback"
+      },
+      {
+        "parameters": {
+          "operation": "update",
+          "documentId": {
+            "__rl": true,
+            "value": "1mERLGgeClTHy7wvZWQNPmPsCrLadKTCCrNl_FbWX6nQ",
+            "mode": "list",
+            "cachedResultName": "upwork automation",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1mERLGgeClTHy7wvZWQNPmPsCrLadKTCCrNl_FbWX6nQ/edit?usp=drivesdk"
+          },
+          "sheetName": {
+            "__rl": true,
+            "value": "gid=0",
+            "mode": "list",
+            "cachedResultName": "Sheet1",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1mERLGgeClTHy7wvZWQNPmPsCrLadKTCCrNl_FbWX6nQ/edit#gid=0"
+          },
+          "columns": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "row_number": 2,
+              "refresh token": "={{ $json.refresh_token }}",
+              "date": "={{ $json.expires_in }}"
+            },
+            "matchingColumns": [
+              "row_number"
+            ],
+            "schema": [
+              {
+                "id": "refresh token",
+                "displayName": "refresh token",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "date",
+                "displayName": "date",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "row_number",
+                "displayName": "row_number",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "number",
+                "canBeUsedToMatch": true,
+                "readOnly": true,
+                "removed": false
+              }
+            ],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": false
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.googleSheets",
+        "typeVersion": 4.6,
+        "position": [
+          -416,
+          848
+        ],
+        "id": "b57ff7ab-7ca9-40bd-8653-166ea2f58267",
+        "name": "Update row in sheet",
+        "credentials": {
+          "googleSheetsOAuth2Api": {
+            "id": "kpPEOLCGn963qpoh",
+            "name": "automations@techdome.ai"
+          }
+        }
+      },
+      {
+        "parameters": {},
+        "type": "n8n-nodes-base.manualTrigger",
+        "typeVersion": 1,
+        "position": [
+          -864,
+          848
+        ],
+        "id": "3e3669eb-ad96-4b36-9e8b-39e8c7b4eaee",
+        "name": "When clicking ‘Execute workflow’"
+      },
+      {
+        "parameters": {
+          "operation": "pdf",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.extractFromFile",
+        "typeVersion": 1,
+        "position": [
+          1040,
+          1024
+        ],
+        "id": "3f9d4be1-7917-47c6-8076-b47eeac8a7ec",
+        "name": "Extract from File1"
+      },
+      {
+        "parameters": {
+          "resource": "fileFolder",
+          "returnAll": true,
+          "filter": {
+            "folderId": {
+              "__rl": true,
+              "value": "1xwIvbVU2rN_tpBHMAiqXk-BzxZZk0MQI",
+              "mode": "list",
+              "cachedResultName": "upworks pdfs",
+              "cachedResultUrl": "https://drive.google.com/drive/folders/1xwIvbVU2rN_tpBHMAiqXk-BzxZZk0MQI"
+            }
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.googleDrive",
+        "typeVersion": 3,
+        "position": [
+          1056,
+          384
+        ],
+        "id": "e88ad781-f0a4-4e9c-9857-cc7c8b2e059e",
+        "name": "List CV1",
+        "alwaysOutputData": true,
+        "credentials": {
+          "googleDriveOAuth2Api": {
+            "id": "E7nEqUL27GUx1xHa",
+            "name": "Techdome Account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "conditions": {
+            "number": [
+              {
+                "value1": "={{ $json.isNotEmpty() }}",
+                "operation": "larger"
+              }
+            ]
+          }
+        },
+        "id": "70bf2192-1512-4a79-a715-5d000d8e7e91",
+        "name": "CV Exist1",
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 1,
+        "position": [
+          1040,
+          592
+        ]
+      },
+      {
+        "parameters": {
+          "operation": "download",
+          "fileId": {
+            "__rl": true,
+            "value": "={{ $json.id }} ",
+            "mode": "id"
+          },
+          "options": {}
+        },
+        "id": "7eb11b4b-c432-4a4b-b791-30534b0b60f0",
+        "name": "Download CV PDF1",
+        "type": "n8n-nodes-base.googleDrive",
+        "typeVersion": 2,
+        "position": [
+          1056,
+          784
+        ],
+        "credentials": {
+          "googleDriveOAuth2Api": {
+            "id": "E7nEqUL27GUx1xHa",
+            "name": "Techdome Account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "jsCode": "// n8n Function Node - Merge all `text` fields into a single array\nconst inputItems = $input.all();\nlet allTexts = [];\n\nfor (const item of inputItems) {\n  if (item.json && typeof item.json.text === 'string') {\n    allTexts.push(item.json.text);\n  }\n}\n\nreturn [\n  {\n    json: {\n      texts: allTexts\n    }\n  }\n];\n"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          1264,
+          1024
+        ],
+        "id": "4ff68830-c457-49ef-8a5c-fdeb2066f152",
+        "name": "Flatten Results3"
+      },
+      {
+        "parameters": {
+          "resource": "fileFolder",
+          "returnAll": true,
+          "filter": {
+            "folderId": {
+              "__rl": true,
+              "value": "1MGFjKRu3_NHVA3KnMeWTJrOzOu6Slm1D",
+              "mode": "list",
+              "cachedResultName": "Upwork attached cv",
+              "cachedResultUrl": "https://drive.google.com/drive/folders/1MGFjKRu3_NHVA3KnMeWTJrOzOu6Slm1D"
+            }
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.googleDrive",
+        "typeVersion": 3,
+        "position": [
+          -288,
+          -304
+        ],
+        "id": "fc8bd915-2a8e-4e45-8a84-3d31fc72cfdc",
+        "name": "List  Case Study2",
+        "alwaysOutputData": true,
+        "credentials": {
+          "googleDriveOAuth2Api": {
+            "id": "E7nEqUL27GUx1xHa",
+            "name": "Techdome Account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "conditions": {
+            "number": [
+              {
+                "value1": "={{ $json.isNotEmpty() }}",
+                "operation": "larger"
+              }
+            ]
+          }
+        },
+        "id": "8a1811ca-74d8-4cb1-bffa-c9aee01ca372",
+        "name": "Case Study Exist2",
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 1,
+        "position": [
+          -96,
+          -304
+        ]
+      },
+      {
+        "parameters": {
+          "operation": "download",
+          "fileId": {
+            "__rl": true,
+            "value": "={{ $json.id }} ",
+            "mode": "id"
+          },
+          "options": {}
+        },
+        "id": "63b0506c-75a0-45bc-9890-55eab5b85dde",
+        "name": "Download Case Study2",
+        "type": "n8n-nodes-base.googleDrive",
+        "typeVersion": 2,
+        "position": [
+          128,
+          -304
+        ],
+        "credentials": {
+          "googleDriveOAuth2Api": {
+            "id": "E7nEqUL27GUx1xHa",
+            "name": "Techdome Account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "method": "POST",
+          "url": "https://api.mistral.ai/v1/files",
+          "authentication": "genericCredentialType",
+          "genericAuthType": "httpHeaderAuth",
+          "sendBody": true,
+          "contentType": "multipart-form-data",
+          "bodyParameters": {
+            "parameters": [
+              {
+                "name": "purpose",
+                "value": "ocr"
+              },
+              {
+                "parameterType": "formBinaryData",
+                "name": "=file",
+                "inputDataFieldName": "=data"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "position": [
+          336,
+          -304
+        ],
+        "id": "8a15f9e2-be43-4f3e-b947-cf6c3f6f362c",
+        "name": "Upload to mistral ai1",
+        "credentials": {
+          "httpHeaderAuth": {
+            "id": "047ISRvu3ma9yfxk",
+            "name": "saurabh 1"
+          },
+          "httpBearerAuth": {
+            "id": "cR1TcHqDvuy7Oexw",
+            "name": "Bearer Auth account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "url": "=https://api.mistral.ai/v1/files/{{ $json.id }}/url ",
+          "authentication": "genericCredentialType",
+          "genericAuthType": "httpHeaderAuth",
+          "sendQuery": true,
+          "queryParameters": {
+            "parameters": [
+              {
+                "name": "expiry",
+                "value": "24"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "position": [
+          512,
+          -304
+        ],
+        "id": "9865d9e1-fad4-413b-b858-6b131e0fccf7",
+        "name": "Get Signed URL1",
+        "credentials": {
+          "httpHeaderAuth": {
+            "id": "047ISRvu3ma9yfxk",
+            "name": "saurabh 1"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "method": "POST",
+          "url": "https://api.mistral.ai/v1/ocr",
+          "authentication": "genericCredentialType",
+          "genericAuthType": "httpHeaderAuth",
+          "sendBody": true,
+          "specifyBody": "json",
+          "jsonBody": "={\n  \"model\": \"mistral-ocr-latest\",\n  \"document\": {\n    \"type\": \"document_url\",\n    \"document_url\": \"{{ $json.url }}\"\n  },\n  \"include_image_base64\": false\n} ",
+          "options": {
+            "response": {
+              "response": {
+                "responseFormat": "json"
+              }
+            }
+          }
+        },
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "position": [
+          672,
+          -304
+        ],
+        "id": "991bb122-1c27-4513-996b-602dc33c8c45",
+        "name": "Get Ocr Result1",
+        "credentials": {
+          "httpHeaderAuth": {
+            "id": "047ISRvu3ma9yfxk",
+            "name": "saurabh 1"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "jsCode": "// n8n Function node\n// Input items: each has { pages: [{ markdown?: string, text?: string }, ...] }\n// Output: ONE item -> { texts: [ \"<pdf1 markdown>\", \"<pdf2 markdown>\", ... ] }\n\n// optional: strip inline image markdown like ![alt](img-x.jpeg)\nconst stripImages = s => (s || '').replace(/!\\[[^\\]]*]\\([^)]*\\)/g, '');\n\nconst inputItems = $input.all();\nconst texts = [];\n\nfor (const item of inputItems) {\n  const pages = Array.isArray(item.json?.pages) ? item.json.pages : [];\n  let combined = '';\n\n  for (const p of pages) {\n    // prefer markdown, fallback to text\n    combined += (p?.markdown ?? p?.text ?? '') + '\\n\\n';\n  }\n\n  const cleaned = stripImages(combined).trim();\n  if (cleaned) texts.push(cleaned);\n}\n\n// Return ONE item with the same shape you used earlier\nreturn [\n  {\n    json: {\n      texts\n    }\n  }\n];\n"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          848,
+          -304
+        ],
+        "id": "764ad5ec-707c-4500-bd34-d03b6b8af8d5",
+        "name": "flatten study1"
+      },
+      {
+        "parameters": {
+          "resource": "fileFolder",
+          "returnAll": true,
+          "filter": {
+            "folderId": {
+              "__rl": true,
+              "value": "1MGFjKRu3_NHVA3KnMeWTJrOzOu6Slm1D",
+              "mode": "list",
+              "cachedResultName": "Upwork attached cv",
+              "cachedResultUrl": "https://drive.google.com/drive/folders/1MGFjKRu3_NHVA3KnMeWTJrOzOu6Slm1D"
+            }
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.googleDrive",
+        "typeVersion": 3,
+        "position": [
+          1072,
+          -304
+        ],
+        "id": "19fd2163-3adc-47f5-9a5e-bb99d904a250",
+        "name": "List  Case Study3",
+        "alwaysOutputData": true,
+        "credentials": {
+          "googleDriveOAuth2Api": {
+            "id": "E7nEqUL27GUx1xHa",
+            "name": "Techdome Account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "conditions": {
+            "number": [
+              {
+                "value1": "={{ $json.isNotEmpty() }}",
+                "operation": "larger"
+              }
+            ]
+          }
+        },
+        "id": "8679b0ae-5fac-45e2-bc51-80115c942f2c",
+        "name": "Case Study Exist3",
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 1,
+        "position": [
+          1264,
+          -304
+        ]
+      },
+      {
+        "parameters": {
+          "operation": "download",
+          "fileId": {
+            "__rl": true,
+            "value": "={{ $json.id }} ",
+            "mode": "id"
+          },
+          "options": {}
+        },
+        "id": "2a36de97-3b30-45b6-9514-b6b3bb3995c4",
+        "name": "Download Case Study3",
+        "type": "n8n-nodes-base.googleDrive",
+        "typeVersion": 2,
+        "position": [
+          1056,
+          -64
+        ],
+        "credentials": {
+          "googleDriveOAuth2Api": {
+            "id": "E7nEqUL27GUx1xHa",
+            "name": "Techdome Account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "jsCode": "// Collect all incoming items\nconst items = $input.all();\n\n// Build {id,name} list (with tolerant fallbacks)\nconst caseStudies = items.map((it, idx) => {\n  const j = it.json || {};\n  const id   = j.id ?? j.fileId ?? j.file_id ?? j.gdriveId ?? null;\n  const name = j.name ?? j.fileName ?? j.title ?? `document_${idx + 1}.pdf`;\n  return { id, name };\n}).filter(cs => cs.id && cs.name);\n\n// Pre-format variants for prompts\nconst caseStudiesStr = JSON.stringify(caseStudies);                 // JSON string\nconst caseStudiesLines = caseStudies.map((cs,i)=>`${i+1}. ${cs.name} — ${cs.id}`).join(\"\\n\");\n\nreturn [{\n  json: {\n    caseStudies,\n    caseStudiesStr,     // use in text fields: {{ $json.caseStudiesStr }}\n    caseStudiesLines    // or this: {{ $json.caseStudiesLines }}\n  }\n}];\n"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          1040,
+          176
+        ],
+        "id": "16075ca2-df48-42ca-b57e-5df0d4a9b54c",
+        "name": "format case study1"
+      },
+      {
+        "parameters": {
+          "method": "POST",
+          "url": "https://api.upwork.com/graphql",
+          "sendHeaders": true,
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "Authorization",
+                "value": "=Bearer {{ $json.access_token }}"
+              },
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "name": "X-Upwork-API-TenantId",
+                "value": "1546843978739367937"
+              }
+            ]
+          },
+          "sendBody": true,
+          "specifyBody": "json",
+          "jsonBody": "={\n  \"query\": \"query GetJobPostingDetails($ids: [ID!]!) { marketplaceJobPostingsContents(ids: $ids) { id title description publishedDateTime ciphertext } }\",\n  \"variables\": {\n    \"ids\": [\n      \"{{ $('Edit Fields').item.json.query.jobId }}\"\n    ]\n  }\n}\n",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "position": [
+          -752,
+          -304
+        ],
+        "id": "11ac7515-c8eb-4186-8119-b36140088390",
+        "name": "Particular job details"
+      },
+      {
+        "parameters": {
+          "assignments": {
+            "assignments": [
+              {
+                "id": "50b5b9bf-c2ed-4bbc-9ee2-35fe00bf5be0",
+                "name": "query",
+                "value": "={{ $json.query }}",
+                "type": "object"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 3.4,
+        "position": [
+          -1392,
+          -304
+        ],
+        "id": "2b051409-416d-4daf-bef2-a2460b8a3946",
+        "name": "Edit Fields"
+      },
+      {
+        "parameters": {
+          "jsCode": "// n8n Function Node - Simple Professional Proposal Generator (Upwork Ready)\n// Input: JSON with \"output\" field containing the proposal text\n\nconst input = $input.all()[0]; // Get first input item\nif (!input || !input.json || !input.json.output) {\n  throw new Error(\"Input must contain 'output' field with proposal text\");\n}\n\nfunction generateSimpleHTML(text) {\n  // Parse the text into structured sections\n  const sections = parseProposalText(text);\n  \n  return `\n<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>Professional Proposal</title>\n</head>\n<body style=\"font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 800px; margin: 0 auto; padding: 20px; background-color: #ffffff;\">\n    ${generateSimpleContent(sections)}\n</body>\n</html>`;\n}\n\nfunction parseProposalText(text) {\n  const lines = text.split('\\n').map(line => line.trim()).filter(line => line.length > 0);\n  const sections = [];\n  let currentSection = null;\n  \n  for (let line of lines) {\n    // Remove markdown bold formatting but keep content\n    line = line.replace(/\\*\\*(.*?)\\*\\*/g, '$1');\n    \n    // Check if it's a header line (starts with Hello, Hi, or contains name)\n    if (/^(Hello!|Hi!|Hey!)/i.test(line)) {\n      currentSection = {\n        type: 'header',\n        title: line,\n        content: []\n      };\n      sections.push(currentSection);\n    }\n    // Check if it's a section title\n    else if (/^(Why Work with Me|What I Offer|Core Competencies|Tools & Technologies|My Approach|Featured Projects|Let's.*Together)/i.test(line)) {\n      currentSection = {\n        type: 'section',\n        title: line.replace(/\\*\\*/g, '').replace(/\\?$/, '?'),\n        content: []\n      };\n      sections.push(currentSection);\n    }\n    // Check if it's a bullet point\n    else if (/^[-*•]\\s/.test(line) || /^\\*\\*\\w+.*:\\*\\*/.test(line)) {\n      if (currentSection) {\n        let bulletText = line.replace(/^[-*•]\\s*/, '').replace(/\\*\\*(.*?):\\*\\*/g, '<strong>$1:</strong>');\n        \n        // Split title and description if there's a colon\n        const colonIndex = bulletText.indexOf(':');\n        if (colonIndex > 0 && colonIndex < 60) {\n          const title = bulletText.substring(0, colonIndex + 1);\n          const description = bulletText.substring(colonIndex + 1).trim();\n          currentSection.content.push({\n            type: 'bullet',\n            title: title,\n            description: description\n          });\n        } else {\n          currentSection.content.push({\n            type: 'bullet',\n            title: bulletText,\n            description: ''\n          });\n        }\n      }\n    }\n    // Regular text content\n    else if (line.length > 0) {\n      if (currentSection) {\n        currentSection.content.push({\n          type: 'text',\n          content: line\n        });\n      } else {\n        // Create intro section for orphaned text\n        currentSection = {\n          type: 'intro',\n          content: [{\n            type: 'text',\n            content: line\n          }]\n        };\n        sections.push(currentSection);\n      }\n    }\n  }\n  \n  return sections;\n}\n\nfunction generateSimpleContent(sections) {\n  let html = '';\n  \n  for (let section of sections) {\n    if (section.type === 'header') {\n      // Header section\n      html += `<h1 style=\"font-size: 24px; font-weight: bold; color: #2c3e50; margin-bottom: 20px; border-bottom: none;\">${section.title}</h1>\\n`;\n      section.content.forEach(item => {\n        if (item.type === 'text') {\n          html += `<p style=\"font-size: 16px; line-height: 1.6; margin-bottom: 20px; color: #4a5568;\">${item.content}</p>\\n`;\n        }\n      });\n    } else if (section.type === 'intro') {\n      // Intro text\n      section.content.forEach(item => {\n        if (item.type === 'text') {\n          html += `<p style=\"font-size: 16px; line-height: 1.6; margin-bottom: 20px; color: #4a5568;\">${item.content}</p>\\n`;\n        }\n      });\n    } else if (section.type === 'section') {\n      const isCTASection = /Let's.*Together/i.test(section.title);\n      \n      if (isCTASection) {\n        // CTA Section\n        html += `<h2 style=\"font-size: 20px; font-weight: bold; color: #2c3e50; margin: 30px 0 15px 0;\">${section.title}</h2>\\n`;\n        section.content.forEach(item => {\n          if (item.type === 'text') {\n            html += `<p style=\"font-size: 16px; line-height: 1.6; margin-bottom: 20px; color: #4a5568;\">${item.content}</p>\\n`;\n          }\n        });\n      } else {\n        // Regular Section\n        html += `<h2 style=\"font-size: 20px; font-weight: bold; color: #2c3e50; margin: 30px 0 15px 0;\">${section.title}</h2>\\n`;\n        \n        // Add any text content\n        section.content.forEach(item => {\n          if (item.type === 'text') {\n            html += `<p style=\"font-size: 16px; line-height: 1.6; margin-bottom: 15px; color: #4a5568;\">${item.content}</p>\\n`;\n          }\n        });\n        \n        // Add bullet points\n        const bullets = section.content.filter(item => item.type === 'bullet');\n        if (bullets.length > 0) {\n          html += `<ul style=\"margin: 15px 0; padding-left: 20px;\">\\n`;\n          bullets.forEach(bullet => {\n            html += `<li style=\"margin-bottom: 12px; font-size: 16px; line-height: 1.6;\">`;\n            if (bullet.title.includes('<strong>') || bullet.title.includes(':')) {\n              // Format as bold title with description\n              const cleanTitle = bullet.title.replace(/<\\/?strong>/g, '').replace(':', '');\n              html += `<strong>${cleanTitle}:</strong>`;\n              if (bullet.description) {\n                html += ` ${bullet.description}`;\n              }\n            } else {\n              // Regular bullet point\n              html += bullet.title;\n              if (bullet.description) {\n                html += ` ${bullet.description}`;\n              }\n            }\n            html += `</li>\\n`;\n          });\n          html += `</ul>\\n`;\n        }\n      } \n    }\n  }\n  \n  return html;\n}\n\n// Main execution\nconst emailHTML = generateSimpleHTML(input.json.output);\n\nreturn [{\n  json: {\n    htmlContent: emailHTML,\n    originalText: input.json.output,\n    contentType: \"text/html\"\n  }\n}];"
+        },
+        "id": "bd8b981b-312c-4c26-92c0-3cda709b949e",
+        "name": "Format Output1",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 1,
+        "position": [
+          2160,
+          400
+        ]
+      },
+      {
+        "parameters": {
+          "resource": "message",
+          "subject": "=Proposal",
+          "includeHtml": true,
+          "htmlMessage": "={{ $('Format Output1').item.json.htmlContent }}",
+          "message": "Proposal",
+          "toList": [
+            "newscctv22@gmail.com",
+            "anmolkushwah19@gmail.com "
+          ],
+          "additionalFields": {
+            "attachmentsUi": {
+              "attachmentsBinary": [
+                {
+                  "property": "=data"
+                }
+              ]
+            },
+            "ccList": []
+          }
+        },
+        "id": "b966847a-d822-4fc8-a5d2-87bba0f166c7",
+        "name": "Send Proposals1",
+        "type": "n8n-nodes-base.gmail",
+        "typeVersion": 1,
+        "position": [
+          3280,
+          384
+        ],
+        "credentials": {
+          "gmailOAuth2": {
+            "id": "gEIaWCTvGfYjMSb3",
+            "name": "Gmail credentials"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "model": "gpt-4o-mini",
+          "options": {}
+        },
+        "type": "@n8n/n8n-nodes-langchain.lmChatAzureOpenAi",
+        "typeVersion": 1,
+        "position": [
+          1440,
+          1232
+        ],
+        "id": "d616d881-a3b3-4770-94a3-3d7fc3adf35b",
+        "name": "Azure OpenAI Chat Model5",
+        "credentials": {
+          "azureOpenAiApi": {
+            "id": "C3WzT18XqF8OdVM6",
+            "name": "Azure Open AI account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "model": "gpt-4o-mini",
+          "options": {}
+        },
+        "type": "@n8n/n8n-nodes-langchain.lmChatAzureOpenAi",
+        "typeVersion": 1,
+        "position": [
+          2384,
+          656
+        ],
+        "id": "bf3d4bab-e2e9-40be-9e17-2dd88a7e0eb5",
+        "name": "Azure OpenAI Chat Model6",
+        "credentials": {
+          "azureOpenAiApi": {
+            "id": "C3WzT18XqF8OdVM6",
+            "name": "Azure Open AI account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "promptType": "define",
+          "text": "=Job ID: {{ $('Edit Fields1').first().json.query.id }}\nJob Title: {{ $('Edit Fields1').first().json.query.title }}\nJob Description: {{ $('Edit Fields1').first().json.query.description }}\n\nCandidate CVs: {{ $json.texts }}\n",
+          "options": {
+            "systemMessage": "=You are an AI CV-Matching Assistant.\n\nTask:\n1. Read the Job ID, Job Title, and Job Description provided in the user message.  \n2. Extract key requirements such as skills, technologies, experience level, industry domain, and responsibilities.  \n3. Compare these requirements against the Candidate CVs provided.  \n\nInstructions:\n- Identify the single CV that best matches the job description.  \n- Consider skills, experience, domain relevance, and role suitability.  \n- Do not explain or rank multiple CVs. Select only one.  \n\nOutput strictly in the following format:\n\nBest_CV_Name: <Name of the best matching candidate>  \nMatched_Job: <Exact Job Description text from the user message>  \n"
+          }
+        },
+        "type": "@n8n/n8n-nodes-langchain.agent",
+        "typeVersion": 2.1,
+        "position": [
+          1520,
+          1024
+        ],
+        "id": "cbd9568e-5c7b-4ed4-9491-7d2bd1bee171",
+        "name": "AI Agent finding best Job1"
+      },
+      {
+        "parameters": {
+          "promptType": "define",
+          "text": "=Candidate Name:\n{{ $json.output.match(/Best_CV_Name:\\s*([^\\n]+)/)?.[1] }}\n\nJob Context:\n{{ $json.output }}\n\nCandidate Experience (CV Extract):\n{{ $('Flatten Results3').item.json.texts }}\n\n════════════════════════════\nTASK\n════════════════════════════\nWrite a senior-level proposal that feels like it was written by an experienced specialist who understands execution risk, buyer intent, and long-term outcomes.\n\nThis is NOT a resume.\nThis is NOT a generic proposal.\nThis is NOT an agency pitch.\n\n════════════════════════════\nWRITING STYLE\n════════════════════════════\n- Short paragraphs (1–3 lines)\n- Human, direct, confident\n- Consultant-style thinking\n- No formal section headers\n- No repetition of CV structure\n\n════════════════════════════\nSTRUCTURE (FOLLOW THIS FLOW)\n════════════════════════════\n\n1. Greeting  \nUse:\n\"Hello [Client Name],\"\nIf name is unavailable:\n\"Hello,\"\n\n2. Opening Alignment  \n- Mirror what the client is trying to achieve\n- Show understanding of the real problem beneath the task\n\n3. Credibility Framing  \n- Introduce yourself naturally (name + role + specialization)\n- Tie experience directly to this type of work\n\n4. Problem Understanding  \n- Explain the business or operational risk clearly\n- Focus on clarity, not features\n\n5. Execution Approach (bullets)  \nUse bullets like:\n• Architecture before execution  \n• Predictability over experimentation  \n• Clear ownership and boundaries  \n• Systems designed to scale cleanly  \n\nAdapt bullets based on CV relevance.\n\n6. Process (tight bullets only)\n• Requirements distillation  \n• System/workflow design  \n• Controlled execution  \n• Validation and refinement  \n\n7. Deliverables & Outcomes  \n- What the client will receive\n- Why it reduces risk or rework\n- Mention readiness for future phases if relevant\n\n8. Clarifying Questions  \nAsk 2–3 sharp questions tied to the job.\n\n9. Close  \nEnd exactly with:\n\"Happy to discuss this further if it aligns with what you’re looking for.\"\n",
+          "options": {
+            "systemMessage": "=You are a senior independent specialist who writes high-conviction, execution-focused proposals for Upwork-style engagements.\n\nYou do NOT write resumes.\nYou do NOT write profile summaries.\nYou do NOT use sectioned resume formats.\n\nYour writing is calm, confident, and senior.\nYou write like an experienced operator, not a marketer or agency.\n\nHard rules:\n- Write strictly in first person (“I”)\n- No emojis\n- No buzzwords or hype\n- No agency language\n- No invented skills\n- Never restate the CV verbatim\n- No headings like PROFILE, CORE COMPETENCIES, TOOLS, etc.\n\nYour goal is to build trust through clarity, judgment, and execution logic.\n"
+          }
+        },
+        "type": "@n8n/n8n-nodes-langchain.agent",
+        "typeVersion": 2.1,
+        "position": [
+          1840,
+          688
+        ],
+        "id": "f14f74a6-2a21-4c13-b99b-4f4beb3de67e",
+        "name": "AI Agent proposal writer1"
+      },
+      {
+        "parameters": {
+          "promptType": "define",
+          "text": "=Proposal Context (plain text):\n{{ $('AI Agent proposal writer1').item.json.output }}\n\nAvailable Case Studies (JSON):\n{{ $('format case study1').first().json.caseStudiesStr }}\n\nTask:\n1. Infer the PRIMARY professional discipline required by the proposal.\n   (Examples: UI/UX Design, Product Design, Product Management, Backend Engineering, Automation, CRM, Marketing, etc.)\n\n2. From the available case studies, select the ONE case study that:\n   - Matches the inferred discipline\n   - Demonstrates execution, not just strategy\n   - Is most relevant to the proposal’s core problem\n\nSTRICT RULES:\n- The case study discipline MUST match the inferred discipline\n- Do NOT select case studies from a different discipline\n- Prefer hands-on execution over planning or strategy\n- Use only the provided case study list\n\nReturn ONLY valid JSON in this exact format:\n{\n  \"inferredDiscipline\": \"string\",\n  \"fileId\": \"string\",\n  \"fileName\": \"string\",\n  \"reason\": \"string\"\n}\n",
+          "options": {
+            "systemMessage": "=You are a strict decision-making AI.\n\nYour job is to:\n1. Infer the dominant professional discipline from the proposal\n2. Select the most relevant case study that matches that discipline\n\nHARD CONSTRAINTS:\n- Discipline mismatch = automatic rejection\n- Design ≠ Product Management\n- Engineering ≠ Strategy\n- Marketing ≠ Operations\n- You MUST choose based on execution relevance, not keyword overlap\n- You MUST return valid JSON only\n- No explanations outside the JSON\n\nIf multiple case studies partially match, choose the one with the clearest execution alignment.\n"
+          }
+        },
+        "type": "@n8n/n8n-nodes-langchain.agent",
+        "typeVersion": 2.1,
+        "position": [
+          2384,
+          400
+        ],
+        "id": "b62b7bc1-c8dd-4dbe-a016-147e2629f76c",
+        "name": "AI Agent Best Case Study1"
+      },
+      {
+        "parameters": {
+          "jsCode": "const items = $input.all();\n\nreturn items.map((item, index) => {\n  let parsed = {};\n  \n  if (typeof item.json.output === 'string') {\n    try {\n      parsed = JSON.parse(item.json.output);\n    } catch (err) {\n      const m = item.json.output.match(/\\{[\\s\\S]*\\}/);\n      if (m) parsed = JSON.parse(m[0]);\n    }\n  }\n\n  return {\n    json: {\n      id: index + 1,\n      name: parsed.fileName ?? item.json.name ?? `Item ${index + 1}`,\n      description: parsed.reason ?? item.json.description ?? \"N/A\",\n      fileId: parsed.fileId ?? null,\n      fileName: parsed.fileName ?? null,\n      reason: parsed.reason ?? null,\n      myNewField: 1\n    }\n  };\n});\n"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          2800,
+          400
+        ],
+        "id": "14aaa3d9-e041-4857-8fa5-a92cd1889004",
+        "name": "formal case studies1"
+      },
+      {
+        "parameters": {
+          "operation": "download",
+          "fileId": {
+            "__rl": true,
+            "value": "={{ $json.fileId }}",
+            "mode": "id"
+          },
+          "options": {}
+        },
+        "id": "a4c433ef-c53b-4a3f-80f3-ec1c123dad3a",
+        "name": "Download Best Case Study1",
+        "type": "n8n-nodes-base.googleDrive",
+        "typeVersion": 2,
+        "position": [
+          3040,
+          384
+        ],
+        "credentials": {
+          "googleDriveOAuth2Api": {
+            "id": "E7nEqUL27GUx1xHa",
+            "name": "Techdome Account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "model": "gpt-4o-mini",
+          "options": {}
+        },
+        "type": "@n8n/n8n-nodes-langchain.lmChatAzureOpenAi",
+        "typeVersion": 1,
+        "position": [
+          1904,
+          896
+        ],
+        "id": "c93da072-5579-484f-8ac8-c8bdee3c38cf",
+        "name": "Azure OpenAI Chat Model7",
+        "credentials": {
+          "azureOpenAiApi": {
+            "id": "C3WzT18XqF8OdVM6",
+            "name": "Azure Open AI account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "resource": "message",
+          "subject": "={{ $json.output.Subject }}",
+          "includeHtml": true,
+          "htmlMessage": "={{ $json.output.Body }}",
+          "message": "Upwork Job ",
+          "toList": [
+            "anmolkushwah19@gmail.com  ",
+            "rahuljoshi0808@gmail.com "
+          ],
+          "additionalFields": {
+            "ccList": []
+          }
+        },
+        "id": "ed666828-65be-4e80-b5a0-50c28f526101",
+        "name": "Send Proposals",
+        "type": "n8n-nodes-base.gmail",
+        "typeVersion": 1,
+        "position": [
+          624,
+          240
+        ],
+        "credentials": {
+          "gmailOAuth2": {
+            "id": "gEIaWCTvGfYjMSb3",
+            "name": "Gmail credentials"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "assignments": {
+            "assignments": [
+              {
+                "id": "50b5b9bf-c2ed-4bbc-9ee2-35fe00bf5be0",
+                "name": "query",
+                "value": "={{ $json.data.marketplaceJobPostingsContents[0] }}",
+                "type": "object"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 3.4,
+        "position": [
+          -512,
+          -304
+        ],
+        "id": "a0dc0756-60a7-4b87-be44-cf242c1be944",
+        "name": "Edit Fields1"
+      },
+      {
+        "parameters": {
+          "documentId": {
+            "__rl": true,
+            "value": "1mERLGgeClTHy7wvZWQNPmPsCrLadKTCCrNl_FbWX6nQ",
+            "mode": "list",
+            "cachedResultName": "upwork automation",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1mERLGgeClTHy7wvZWQNPmPsCrLadKTCCrNl_FbWX6nQ/edit?usp=drivesdk"
+          },
+          "sheetName": {
+            "__rl": true,
+            "value": "gid=0",
+            "mode": "list",
+            "cachedResultName": "Sheet1",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1mERLGgeClTHy7wvZWQNPmPsCrLadKTCCrNl_FbWX6nQ/edit#gid=0"
+          },
+          "options": {
+            "returnFirstMatch": true
+          }
+        },
+        "type": "n8n-nodes-base.googleSheets",
+        "typeVersion": 4.6,
+        "position": [
+          -1184,
+          -304
+        ],
+        "id": "63209b42-2ed4-438a-a53e-b87e4c091bd5",
+        "name": "GET Refresh Code1",
+        "credentials": {
+          "googleSheetsOAuth2Api": {
+            "id": "kpPEOLCGn963qpoh",
+            "name": "automations@techdome.ai"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "mode": "combine",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.merge",
+        "typeVersion": 3.2,
+        "position": [
+          -1840,
+          896
+        ],
+        "id": "1f7595dc-25de-40ea-b144-3384e627d248",
+        "name": "Merge"
+      },
+      {
+        "parameters": {
+          "path": "aceept",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.webhook",
+        "typeVersion": 2.1,
+        "position": [
+          -1632,
+          -304
+        ],
+        "id": "5e2d6189-f1cd-408b-bdf2-e7553f6e0b67",
+        "name": "Webhook",
+        "webhookId": "de3fcc29-45a9-429b-a4e6-5d345a13682d"
+      },
+      {
+        "parameters": {
+          "documentId": {
+            "__rl": true,
+            "value": "1bl92PGX8Mnfi5p0MoGN9LiZ0Q1DF_iOBqrDdYFhIqmU",
+            "mode": "list",
+            "cachedResultName": "upwork data sheet ",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1bl92PGX8Mnfi5p0MoGN9LiZ0Q1DF_iOBqrDdYFhIqmU/edit?usp=drivesdk"
+          },
+          "sheetName": {
+            "__rl": true,
+            "value": "gid=0",
+            "mode": "list",
+            "cachedResultName": "Sheet1",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1bl92PGX8Mnfi5p0MoGN9LiZ0Q1DF_iOBqrDdYFhIqmU/edit#gid=0"
+          },
+          "filtersUI": {
+            "values": [
+              {
+                "lookupColumn": "day",
+                "lookupValue": "={{$now.weekdayLong}}"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.googleSheets",
+        "typeVersion": 4.7,
+        "position": [
+          -1408,
+          224
+        ],
+        "id": "151610fa-e400-4749-8eaa-914aa57bbebe",
+        "name": "Get row(s) in sheet",
+        "credentials": {
+          "googleSheetsOAuth2Api": {
+            "id": "kpPEOLCGn963qpoh",
+            "name": "automations@techdome.ai"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "options": {}
+        },
+        "type": "n8n-nodes-base.splitInBatches",
+        "typeVersion": 3,
+        "position": [
+          -1120,
+          224
+        ],
+        "id": "48c740eb-ccdc-413b-b464-cdb37f58110b",
+        "name": "Loop Over Items"
+      }
+    ],
+    "connections": {
+      "Schedule Trigger1": {
+        "main": [
+          [
+            {
+              "node": "Get row(s) in sheet",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "GET Refresh Code": {
+        "main": [
+          [
+            {
+              "node": "Access Token",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Access Token": {
+        "main": [
+          [
+            {
+              "node": "Job Listings",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Job Listings": {
+        "main": [
+          [
+            {
+              "node": "Process Jobs with Accept URLs",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Process Jobs with Accept URLs": {
+        "main": [
+          [
+            {
+              "node": "Prepare Email Data",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Prepare Email Data": {
+        "main": [
+          [
+            {
+              "node": "Create Interactive Email",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Create Interactive Email": {
+        "main": [
+          [
+            {
+              "node": "Send Proposals",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Azure OpenAI Chat Model": {
+        "ai_languageModel": [
+          [
+            {
+              "node": "Create Interactive Email",
+              "type": "ai_languageModel",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Structured Output Parser": {
+        "ai_outputParser": [
+          [
+            {
+              "node": "Create Interactive Email",
+              "type": "ai_outputParser",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Get Access Token for Proposal": {
+        "main": [
+          [
+            {
+              "node": "Particular job details",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Refresh Token": {
+        "main": [
+          [
+            {
+              "node": "Update row in sheet",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "When clicking ‘Execute workflow’": {
+        "main": [
+          [
+            {
+              "node": "Refresh Token",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Extract from File1": {
+        "main": [
+          [
+            {
+              "node": "Flatten Results3",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "List CV1": {
+        "main": [
+          [
+            {
+              "node": "CV Exist1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "CV Exist1": {
+        "main": [
+          [
+            {
+              "node": "Download CV PDF1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Download CV PDF1": {
+        "main": [
+          [
+            {
+              "node": "Extract from File1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "List  Case Study2": {
+        "main": [
+          [
+            {
+              "node": "Case Study Exist2",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Case Study Exist2": {
+        "main": [
+          [
+            {
+              "node": "Download Case Study2",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Download Case Study2": {
+        "main": [
+          [
+            {
+              "node": "Upload to mistral ai1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Upload to mistral ai1": {
+        "main": [
+          [
+            {
+              "node": "Get Signed URL1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Get Signed URL1": {
+        "main": [
+          [
+            {
+              "node": "Get Ocr Result1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Get Ocr Result1": {
+        "main": [
+          [
+            {
+              "node": "flatten study1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "flatten study1": {
+        "main": [
+          [
+            {
+              "node": "List  Case Study3",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "List  Case Study3": {
+        "main": [
+          [
+            {
+              "node": "Case Study Exist3",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Case Study Exist3": {
+        "main": [
+          [
+            {
+              "node": "Download Case Study3",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Download Case Study3": {
+        "main": [
+          [
+            {
+              "node": "format case study1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "format case study1": {
+        "main": [
+          [
+            {
+              "node": "List CV1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Flatten Results3": {
+        "main": [
+          [
+            {
+              "node": "AI Agent finding best Job1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Edit Fields": {
+        "main": [
+          [
+            {
+              "node": "GET Refresh Code1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Format Output1": {
+        "main": [
+          [
+            {
+              "node": "AI Agent Best Case Study1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Azure OpenAI Chat Model5": {
+        "ai_languageModel": [
+          [
+            {
+              "node": "AI Agent finding best Job1",
+              "type": "ai_languageModel",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Azure OpenAI Chat Model6": {
+        "ai_languageModel": [
+          [
+            {
+              "node": "AI Agent Best Case Study1",
+              "type": "ai_languageModel",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "AI Agent finding best Job1": {
+        "main": [
+          [
+            {
+              "node": "AI Agent proposal writer1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "AI Agent proposal writer1": {
+        "main": [
+          [
+            {
+              "node": "Format Output1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "AI Agent Best Case Study1": {
+        "main": [
+          [
+            {
+              "node": "formal case studies1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "formal case studies1": {
+        "main": [
+          [
+            {
+              "node": "Download Best Case Study1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Download Best Case Study1": {
+        "main": [
+          [
+            {
+              "node": "Send Proposals1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Azure OpenAI Chat Model7": {
+        "ai_languageModel": [
+          [
+            {
+              "node": "AI Agent proposal writer1",
+              "type": "ai_languageModel",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Particular job details": {
+        "main": [
+          [
+            {
+              "node": "Edit Fields1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Edit Fields1": {
+        "main": [
+          [
+            {
+              "node": "List  Case Study2",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "GET Refresh Code1": {
+        "main": [
+          [
+            {
+              "node": "Get Access Token for Proposal",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Webhook": {
+        "main": [
+          [
+            {
+              "node": "Edit Fields",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Get row(s) in sheet": {
+        "main": [
+          [
+            {
+              "node": "Loop Over Items",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Loop Over Items": {
+        "main": [
+          [],
+          [
+            {
+              "node": "GET Refresh Code",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Send Proposals": {
+        "main": [
+          [
+            {
+              "node": "Loop Over Items",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "authors": "IT Support",
+    "name": null,
+    "description": null
+  },
   "tags": []
 }
